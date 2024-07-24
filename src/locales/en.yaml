@@ -434,6 +434,10 @@ app:
       edit_chart: Edit Chart
       endstops: Endstops
       fans_outputs: Fans & Outputs
+      controllable_fans: Controllable Fans
+      output_pins: Output Pins
+      leds: LEDs
+      other_fans: Other Fans
       gcode_preview: Gcode Preview
       history: History
       home: Home

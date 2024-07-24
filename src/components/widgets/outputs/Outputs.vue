@@ -17,7 +17,7 @@
             </v-icon>
           </template>
           <div>
-            Controllable Fans
+            {{ $t('app.general.title.controllable_fans') }}
             <v-chip
               small
               class="ml-2"
@@ -53,7 +53,7 @@
             </v-icon>
           </template>
           <div>
-            Other Fans
+            {{ $t('app.general.title.other_fans') }}
             <v-chip
               small
               class="ml-2"
@@ -89,7 +89,7 @@
             </v-icon>
           </template>
           <div>
-            Output Pins
+            {{ $t('app.general.title.output_pins') }}
             <v-chip
               small
               class="ml-2"
@@ -125,7 +125,7 @@
             </v-icon>
           </template>
           <div>
-            LEDs
+            {{ $t('app.general.title.leds') }}
             <v-chip
               small
               class="ml-2"
