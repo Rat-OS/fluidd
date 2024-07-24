@@ -19,6 +19,45 @@
         {{ $t('app.general.btn.calibrate') }}
       </app-btn>
 
+      <v-menu
+        left
+        offset-y
+        transition="slide-y-transition"
+      >
+        <template #activator="{ on, attrs, value }">
+          <app-btn
+            v-bind="attrs"
+            small
+            class="ms-1 my-1"
+            :disabled="!klippyReady || printerPrinting"
+            v-on="on"
+          >
+            Load
+            <v-icon
+              small
+              class="ml-1"
+              :class="{ 'rotate-180': value }"
+            >
+              $chevronDown
+            </v-icon>
+          </app-btn>
+        </template>
+        <v-list dense>
+          <template v-for="item in bedMeshProfiles">
+            <v-list-item
+              :key="item.name"
+              @click="loadProfile(item.name)"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ item.name }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>
+      </v-menu>
+
       <v-tooltip
         v-if="canCopyImage"
         bottom
@@ -75,7 +114,10 @@ import BedMeshChart from './BedMeshChart.vue'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
-import type { AppMeshes } from '@/store/mesh/types'
+import type {
+  AppMeshes,
+  BedMeshProfileListEntry
+} from '@/store/mesh/types'
 
 @Component({
   components: {
@@ -242,6 +284,25 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
 
   copyImage () {
     this.bedMeshChart.copyImage()
+  }
+
+  // The available meshes.
+  get bedMeshProfiles (): BedMeshProfileListEntry[] {
+    return this.$store.getters['mesh/getBedMeshProfiles']
+  }
+
+  async loadProfile (name: string) {
+    const result = (
+      !this.printerPrinting ||
+      await this.$confirm(
+        this.$tc('app.general.simple_form.msg.confirm_clear_mesh'),
+        { title: this.$tc('app.general.label.confirm'), color: 'card-heading', icon: '$error' }
+      )
+    )
+
+    if (result) {
+      this.sendGcode(`BED_MESH_PROFILE LOAD="${name}"`)
+    }
   }
 }
 </script>
