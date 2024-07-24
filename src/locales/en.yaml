@@ -738,6 +738,13 @@ app:
       bed_screws_adjust: Bed Screws Adjust
       manual_probe: Manual Probe
       screws_tilt_adjust: Screws Tilt Adjust
+    idex:
+      single_mode: Single
+      single_mode_swapped: Swapped
+      copy_mode: Copy
+      mirror_mode: Mirror
+      spool_join: Spool Join
+      park_toolhead: Park
     tooltip:
       absolute_positioning: Absolute Positioning
       extruder_disabled: extruder disabled, below min_extrude_temp (%{min}<small>°C</small>)

@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card-text>
+      <tool-head-idex-control />
       <tool-change-commands />
 
       <v-row
@@ -58,6 +59,7 @@ import PressureAdvanceAdjust from './PressureAdvanceAdjust.vue'
 import ExtruderStats from './ExtruderStats.vue'
 import ExtruderSteppers from './ExtruderSteppers.vue'
 import ToolChangeCommands from './ToolChangeCommands.vue'
+import ToolHeadIdexControl from './ToolHeadIdexControl.vue'
 import type { ToolheadControlStyle } from '@/store/config/types'
 
 @Component({
@@ -73,7 +75,8 @@ import type { ToolheadControlStyle } from '@/store/config/types'
     PressureAdvanceAdjust,
     ExtruderStats,
     ExtruderSteppers,
-    ToolChangeCommands
+    ToolChangeCommands,
+    ToolHeadIdexControl
   }
 })
 export default class Toolhead extends Mixins(StateMixin, ToolheadMixin) {
