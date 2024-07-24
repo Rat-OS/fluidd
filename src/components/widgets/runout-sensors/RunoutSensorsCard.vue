@@ -25,7 +25,7 @@
         v-for="item in sensors"
         :key="item.name"
         align-center
-        justify-start
+        justify-space-between
         class="py-1"
       >
         <span class="text-subtitle-1">{{ item.name }}</span>
