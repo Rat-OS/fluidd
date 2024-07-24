@@ -10,7 +10,7 @@
             :item="item"
           />
           <v-divider
-            v-if="i < all.length - 1 || $vuetify.breakpoint.mdAndDown"
+            v-if="i < all.length - 1"
             :key="`divider-0${i}`"
             class="my-2"
           />
