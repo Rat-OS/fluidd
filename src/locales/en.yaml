@@ -455,6 +455,7 @@ app:
       temperature: Thermals
       timelapse: Timelapse
       tool: Tool
+      idex_tool: Idex Tool
       tune: Tune
     tooltip:
       browse_metrics: Browse available metrics

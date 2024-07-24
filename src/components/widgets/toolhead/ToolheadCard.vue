@@ -1,6 +1,6 @@
 <template>
   <collapsable-card
-    :title="$t('app.general.title.tool')"
+    :title="!isIdex ? $t('app.general.title.tool') : $t('app.general.title.idex_tool')"
     icon="$printer3dNozzle"
     draggable
     layout-path="dashboard.toolhead-card"
@@ -10,7 +10,7 @@
       <v-icon left>
         $printer3dNozzle
       </v-icon>
-      <span class="font-weight-light">{{ $t('app.general.title.tool') }}</span>
+      <span class="font-weight-light">{{ !isIdex ? $t('app.general.title.tool') : $t('app.general.title.idex_tool') }}</span>
 
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
@@ -176,6 +176,10 @@ export default class ToolheadCard extends Mixins(StateMixin, ToolheadMixin) {
 
   @Prop({ type: Boolean })
   readonly menuCollapsed?: boolean
+
+  get isIdex (): boolean {
+    return 'dual_carriage' in this.$store.state.printer.printer
+  }
 
   get printerSettings () {
     return this.$store.getters['printer/getPrinterSettings']()
