@@ -531,7 +531,7 @@ export const getters: GetterTree<PrinterState, RootState> = {
     ])
   },
 
-  getUnctrollableAllFans: (_, getters) => {
+  getUnctrollableFans: (_, getters) => {
     return getters.getOutputs([
       'controller_fan',
       'temperature_fan',
