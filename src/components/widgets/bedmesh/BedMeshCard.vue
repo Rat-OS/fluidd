@@ -108,7 +108,7 @@
     </v-card-text>
     <v-divider />
     <v-row
-      v-if="!fullscreen"
+      v-if="!fullscreen && hasMeshLoaded"
       class="py-1 px-2"
     >
       <v-col
