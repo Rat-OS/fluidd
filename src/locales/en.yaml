@@ -11,6 +11,7 @@ app:
       remove_profile: Remove %{name} profile
       scale: Color scale
       wireframe: Wireframe
+      profile: Profile
     msg:
       hint: >-
         If saving as something other than %{name}, you can choose to also remove

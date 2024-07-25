@@ -8,17 +8,6 @@
     layout-path="dashboard.bed-mesh-card"
   >
     <template #menu>
-      <app-btn
-        v-if="!fullscreen"
-        small
-        class="ms-1 my-1"
-        :loading="hasWait($waits.onMeshCalibrate)"
-        :disabled="printerBusy || !allHomed"
-        @click="calibrate()"
-      >
-        {{ $t('app.general.btn.calibrate') }}
-      </app-btn>
-
       <v-menu
         left
         offset-y
@@ -33,7 +22,7 @@
             :disabled="!klippyReady || printerPrinting"
             v-on="on"
           >
-            Load
+            {{ $t('app.bedmesh.label.profile') }}
             <v-icon
               small
               class="ml-1"
@@ -56,6 +45,80 @@
               </v-list-item-content>
             </v-list-item>
           </template>
+        </v-list>
+      </v-menu>
+
+      <v-menu
+        v-if="!fullscreen"
+        left
+        offset-y
+        transition="slide-y-transition"
+      >
+        <template #activator="{ on, attrs, value }">
+          <app-btn
+            v-bind="attrs"
+            small
+            class="ms-1 my-1"
+            v-on="on"
+          >
+            <v-icon
+              small
+              class="mr-1"
+            >
+              $tools
+            </v-icon>
+            {{ $t('app.tool.tooltip.tools') }}
+            <v-icon
+              small
+              class="ml-1"
+              :class="{ 'rotate-180': value }"
+            >
+              $chevronDown
+            </v-icon>
+          </app-btn>
+        </template>
+        <v-list dense>
+          <v-list-item
+            :loading="hasWait($waits.onMeshCalibrate)"
+            :disabled="printerBusy || !allHomed"
+            @click="calibrate()"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.calibrate') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            :disabled="!hasMeshLoaded"
+            @click="handleOpenSaveDialog()"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.save_as') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            :disabled="!hasMeshLoaded"
+            @click="clearMesh()"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.clear_profile') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            :disabled="!hasMeshLoaded"
+            @click="removeProfile()"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.bedmesh.tooltip.delete') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
 
@@ -190,25 +253,35 @@
 
       <span v-else>{{ $t('app.bedmesh.msg.not_loaded') }}</span>
     </v-card-text>
+
+    <save-mesh-dialog
+      v-if="saveDialogState.open"
+      v-model="saveDialogState.open"
+      :existing-name="saveDialogState.existingName"
+      :adaptive="saveDialogState.adaptive"
+      @save="handleMeshSave"
+    />
   </collapsable-card>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop, Ref } from 'vue-property-decorator'
 import BedMeshChart from './BedMeshChart.vue'
+import SaveMeshDialog from './SaveMeshDialog.vue'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
 import type {
   AppMeshes,
+  KlipperBedMesh,
   MatrixType,
-  // KlipperBedMesh,
   BedMeshProfileListEntry
 } from '@/store/mesh/types'
 
 @Component({
   components: {
-    BedMeshChart
+    BedMeshChart,
+    SaveMeshDialog
   }
 })
 export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
@@ -217,6 +290,12 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
 
   @Ref('chart')
   readonly bedMeshChart!: BedMeshChart
+
+  saveDialogState = {
+    open: false,
+    existingName: 'default',
+    adaptive: false
+  }
 
   get hasMeshLoaded () {
     const mesh = this.mesh
@@ -402,6 +481,46 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
 
   set matrix (val: MatrixType) {
     this.$store.dispatch('mesh/onMatrix', val)
+  }
+
+  async clearMesh () {
+    const result = (
+      !this.printerPrinting ||
+      await this.$confirm(
+        this.$t('app.general.simple_form.msg.confirm_load_bedmesh_profile', { name }).toString(),
+        { title: this.$tc('app.general.label.confirm'), color: 'card-heading', icon: '$error' }
+      )
+    )
+    if (result) {
+      this.sendGcode('BED_MESH_CLEAR')
+    }
+  }
+
+  removeProfile () {
+    this.sendGcode(`BED_MESH_PROFILE REMOVE="${this.currentMesh.profile_name}"`)
+  }
+
+  // The current mesh, unprocessed.
+  get currentMesh () {
+    return this.$store.state.printer.printer.bed_mesh as KlipperBedMesh
+  }
+
+  handleOpenSaveDialog () {
+    const profile = this.bedMeshProfiles.find(mesh => mesh.name === this.currentMesh.profile_name)
+    this.saveDialogState = {
+      open: true,
+      existingName: this.currentMesh.profile_name,
+      adaptive: profile?.adaptive ?? false
+    }
+  }
+
+  handleMeshSave (config: {name: string; removeDefault: boolean}) {
+    if (config.name !== this.currentMesh.profile_name) {
+      this.sendGcode(`BED_MESH_PROFILE SAVE="${config.name}"`)
+    }
+    if (config.removeDefault) {
+      this.sendGcode(`BED_MESH_PROFILE REMOVE="${this.currentMesh.profile_name}"`)
+    }
   }
 }
 </script>
