@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col class="pa-0 mt-1">
+      <v-col class="pa-0 mt-2">
         <!--
           Inspired on Pronterface and Mainsail Toolhead Circle controls
         -->

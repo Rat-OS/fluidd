@@ -7,7 +7,7 @@
     <v-row justify="end">
       <v-col
         cols="6"
-        class="text-right"
+        class="mt-2 text-right"
       >
         <v-text-field
           v-model.number="extrudeLength"
@@ -40,7 +40,7 @@
     </v-row>
     <v-row
       justify="end"
-      class="mt-0"
+      class="mt-2"
     >
       <v-col
         cols="6"

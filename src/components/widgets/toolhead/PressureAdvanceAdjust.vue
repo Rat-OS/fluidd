@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      sm="6"
+      class="pa-0 ml-0 mr-0"
     >
       <app-named-slider
         :label="$t('app.general.label.pressure_advance')"
@@ -18,11 +18,6 @@
         :step="0.0001"
         @submit="handleSetPressureAdvance"
       />
-    </v-col>
-    <v-col
-      cols="12"
-      sm="6"
-    >
       <app-named-slider
         :label="$t('app.general.label.smooth_time')"
         suffix="s"

@@ -9,19 +9,23 @@
         align="start"
       >
         <v-col class="controls-wrapper">
-          <extruder-selection v-if="hasMultipleExtruders" />
           <template v-if="!printerPrinting">
+            <toolhead-position />
             <toolhead-control-cross v-if="toolheadControlStyle === 'cross'" />
             <toolhead-control-bars v-else-if="toolheadControlStyle === 'bars'" />
             <toolhead-control-circle v-else-if="toolheadControlStyle === 'circle'" />
+            <z-height-adjust v-if="!printerPrinting" />
           </template>
           <z-height-adjust v-else />
         </v-col>
 
         <v-col class="controls-wrapper">
-          <toolhead-position />
+          <extruder-selection v-if="hasMultipleExtruders" />
           <extruder-moves v-if="!printerPrinting && hasExtruder" />
-          <z-height-adjust v-if="!printerPrinting" />
+          <v-card-text>
+            <speed-and-flow-adjust />
+            <pressure-advance-adjust v-if="showPressureAdvance" />
+          </v-card-text>
         </v-col>
       </v-row>
     </v-card-text>
@@ -33,11 +37,6 @@
 
       <v-divider />
     </template>
-
-    <v-card-text>
-      <speed-and-flow-adjust />
-      <pressure-advance-adjust v-if="showPressureAdvance" />
-    </v-card-text>
 
     <extruder-steppers />
   </div>

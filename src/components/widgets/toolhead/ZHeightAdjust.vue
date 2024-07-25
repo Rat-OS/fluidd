@@ -1,12 +1,10 @@
 <template>
   <v-row
     v-if="hasZOffsetApplyEndstop || hasZOffsetApplyProbe"
-    align="start"
-    justify="end"
+    class="mt-2"
   >
     <v-col
       cols="6"
-      class="text-right"
     >
       <v-btn-toggle
         v-model="moveDistance"

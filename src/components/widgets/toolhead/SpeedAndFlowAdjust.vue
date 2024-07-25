@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      sm="6"
+      class="pa-0 ml-0 mr-0"
     >
       <app-named-slider
         :label="$t('app.general.label.speed')"
@@ -17,11 +17,6 @@
         :max="200"
         @submit="handleSetSpeed"
       />
-    </v-col>
-    <v-col
-      cols="12"
-      sm="6"
-    >
       <app-named-slider
         :label="$t('app.general.label.flow')"
         suffix="%"
