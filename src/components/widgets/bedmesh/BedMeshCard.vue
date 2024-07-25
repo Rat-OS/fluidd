@@ -106,7 +106,7 @@
 
       <span v-else>{{ $t('app.bedmesh.msg.not_loaded') }}</span>
     </v-card-text>
-
+    <v-divider />
     <v-row
       v-if="!fullscreen"
       class="py-1 px-2"
