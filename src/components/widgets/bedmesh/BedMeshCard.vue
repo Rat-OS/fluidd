@@ -81,6 +81,90 @@
         <span>{{ $t('app.bedmesh.tooltip.copy_image') }}</span>
       </v-tooltip>
 
+      <v-menu
+        v-if="!fullscreen"
+        bottom
+        left
+        offset-y
+        transition="slide-y-transition"
+        :close-on-content-click="false"
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn
+            fab
+            x-small
+            text
+            v-bind="attrs"
+            class="ms-1 my-1"
+            v-on="on"
+          >
+            <v-icon>
+              $cog
+            </v-icon>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item>
+            <v-list-item-action class="my-0">
+              <v-checkbox
+                v-model="wireframe"
+                :disabled="!hasMeshLoaded"
+              />
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.bedmesh.label.wireframe') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-action class="my-0">
+              <v-checkbox
+                v-model="flatSurface"
+                :disabled="!hasMeshLoaded"
+              />
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.bedmesh.label.flat_surface') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-radio-group
+            v-model="matrix"
+            :disabled="!hasMeshLoaded"
+            column
+            hide-details
+            class="mt-0 mb-2"
+          >
+            <v-list-item>
+              <v-list-item-action class="my-0">
+                <v-radio value="probed_matrix" />
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('app.bedmesh.label.probed_matrix') }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-action class="my-0">
+                <v-radio value="mesh_matrix" />
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('app.bedmesh.label.mesh_matrix') }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-radio-group>
+        </v-list>
+      </v-menu>
+
       <app-btn
         v-if="!fullscreen"
         color=""
@@ -106,52 +190,6 @@
 
       <span v-else>{{ $t('app.bedmesh.msg.not_loaded') }}</span>
     </v-card-text>
-    <v-divider />
-    <v-row
-      v-if="!fullscreen && hasMeshLoaded"
-      class="py-1 px-2"
-    >
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <v-radio-group
-          v-model="matrix"
-          :disabled="!hasMeshLoaded"
-          column
-          hide-details
-          class="mt-0 mb-2"
-        >
-          <v-radio
-            :label="$t('app.bedmesh.label.probed_matrix')"
-            value="probed_matrix"
-          />
-          <v-radio
-            :label="$t('app.bedmesh.label.mesh_matrix')"
-            value="mesh_matrix"
-          />
-        </v-radio-group>
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <v-checkbox
-          v-model="wireframe"
-          :disabled="!hasMeshLoaded"
-          :label="$t('app.bedmesh.label.wireframe')"
-          hide-details
-          class="mt-0"
-        />
-        <v-checkbox
-          v-model="flatSurface"
-          :disabled="!hasMeshLoaded"
-          :label="$t('app.bedmesh.label.flat_surface')"
-          hide-details
-          class="mt-1"
-        />
-      </v-col>
-    </v-row>
   </collapsable-card>
 </template>
 
@@ -365,15 +403,5 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
   set matrix (val: MatrixType) {
     this.$store.dispatch('mesh/onMatrix', val)
   }
-
-  // // The current mesh, unprocessed.
-  // get currentMesh () {
-  //   return this.$store.state.printer.printer.bed_mesh as KlipperBedMesh
-  // }
-
-  // // If we have a mesh loaded.
-  // get meshLoaded (): boolean {
-  //   return ('profile_name' in this.currentMesh && this.currentMesh.profile_name.length > 0)
-  // }
 }
 </script>
