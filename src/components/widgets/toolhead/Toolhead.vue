@@ -22,6 +22,10 @@
         <v-col class="controls-wrapper">
           <extruder-selection v-if="hasMultipleExtruders" />
           <extruder-moves v-if="!printerPrinting && hasExtruder" />
+          <template v-if="!printerPrinting">
+            <extruder-stats />
+            <v-divider />
+          </template>
           <v-card-text>
             <speed-and-flow-adjust />
             <pressure-advance-adjust v-if="showPressureAdvance" />
@@ -29,14 +33,6 @@
         </v-col>
       </v-row>
     </v-card-text>
-
-    <template v-if="!printerPrinting">
-      <v-divider />
-
-      <extruder-stats />
-
-      <v-divider />
-    </template>
 
     <extruder-steppers />
   </div>

@@ -4,10 +4,13 @@
     v-model="valid"
     @submit.prevent
   >
-    <v-row justify="end">
+    <v-row
+      justify="end"
+      class="mt-2"
+    >
       <v-col
         cols="6"
-        class="mt-2 text-right"
+        class="text-right"
       >
         <v-text-field
           v-model.number="extrudeLength"
