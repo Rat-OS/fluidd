@@ -26,6 +26,7 @@
       >
         <template #activator="{ on, attrs, value }">
           <app-btn
+            v-if="!fullscreen"
             v-bind="attrs"
             small
             class="ms-1 my-1"
@@ -105,6 +106,49 @@
 
       <span v-else>{{ $t('app.bedmesh.msg.not_loaded') }}</span>
     </v-card-text>
+
+    <v-row class="py-1 px-2">
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-radio-group
+          v-model="matrix"
+          :disabled="!hasMeshLoaded"
+          column
+          hide-details
+          class="mt-0 mb-2"
+        >
+          <v-radio
+            :label="$t('app.bedmesh.label.probed_matrix')"
+            value="probed_matrix"
+          />
+          <v-radio
+            :label="$t('app.bedmesh.label.mesh_matrix')"
+            value="mesh_matrix"
+          />
+        </v-radio-group>
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-checkbox
+          v-model="wireframe"
+          :disabled="!hasMeshLoaded"
+          :label="$t('app.bedmesh.label.wireframe')"
+          hide-details
+          class="mt-0"
+        />
+        <v-checkbox
+          v-model="flatSurface"
+          :disabled="!hasMeshLoaded"
+          :label="$t('app.bedmesh.label.flat_surface')"
+          hide-details
+          class="mt-1"
+        />
+      </v-col>
+    </v-row>
   </collapsable-card>
 </template>
 
@@ -116,6 +160,8 @@ import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
 import type {
   AppMeshes,
+  MatrixType,
+  // KlipperBedMesh,
   BedMeshProfileListEntry
 } from '@/store/mesh/types'
 
@@ -304,5 +350,27 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
       this.sendGcode(`BED_MESH_PROFILE LOAD="${name}"`)
     }
   }
+
+  set wireframe (val: boolean) {
+    this.$store.dispatch('mesh/onWireframe', val)
+  }
+
+  set flatSurface (val: boolean) {
+    this.$store.dispatch('mesh/onFlatSurface', val)
+  }
+
+  set matrix (val: MatrixType) {
+    this.$store.dispatch('mesh/onMatrix', val)
+  }
+
+  // // The current mesh, unprocessed.
+  // get currentMesh () {
+  //   return this.$store.state.printer.printer.bed_mesh as KlipperBedMesh
+  // }
+
+  // // If we have a mesh loaded.
+  // get meshLoaded (): boolean {
+  //   return ('profile_name' in this.currentMesh && this.currentMesh.profile_name.length > 0)
+  // }
 }
 </script>
