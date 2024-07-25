@@ -153,6 +153,7 @@
               v-if="printerSupportsLeveling"
               class="cc-btn"
               :class="levelingClasses"
+              style="fill: black"
               @click="sendLevelingGcode"
             >
               <circle
@@ -420,6 +421,7 @@
               v-else
               class="cc-btn"
               :class="xyzHomeClasses"
+              style="fill: black"
               @click="homeAll"
             >
               <circle
@@ -438,6 +440,7 @@
             <a
               class="cc-btn large"
               :class="xHomeClasses"
+              style="fill: black"
               @click="sendGcode('G28 X', $waits.onHomeX)"
             >
               <path
@@ -452,6 +455,7 @@
             <a
               class="cc-btn large"
               :class="yHomeClasses"
+              style="fill: black"
               @click="sendGcode('G28 Y', $waits.onHomeX)"
             >
               <path
@@ -469,6 +473,7 @@
             <a
               class="cc-btn large"
               :class="zHomeClasses"
+              style="fill: black"
               @click="sendGcode('G28 Z', $waits.onHomeZ)"
             >
               <path
@@ -487,6 +492,7 @@
               v-if="enableXYHoming"
               class="cc-btn large"
               :class="xyHomeClasses"
+              style="fill: black"
               @click="sendGcode('G28 X Y', $waits.onHomeXY)"
             >
               <path
@@ -502,6 +508,7 @@
               v-else
               class="cc-btn large"
               :class="xyzHomeClasses"
+              style="fill: black"
               @click="homeAll"
             >
               <path
@@ -775,13 +782,13 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   @include theme(app-circle-control) using ($material) {
     .disabled {
-      fill: map-deep-get($material, 'buttons', 'disabled') !important;
+      fill: var(--v-btncolor-darken4) !important;
       stroke: map-deep-get($material, 'buttons', 'disabled') !important;
     }
 
     .cc-btn,
     .cc-lbl {
-      fill: map-deep-get($material, 'text', 'primary');
+      fill: var(--v-btncolor-darken4);
       stroke: map-deep-get($material, 'text', 'primary');
     }
   }
