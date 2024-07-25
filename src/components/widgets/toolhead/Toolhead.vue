@@ -5,8 +5,8 @@
       <tool-change-commands />
 
       <v-row
-        justify="space-between"
-        align="start"
+        align-content="center"
+        justify="center"
       >
         <v-col class="controls-wrapper">
           <template v-if="!printerPrinting">
@@ -88,6 +88,5 @@ export default class Toolhead extends Mixins(StateMixin, ToolheadMixin) {
 <style type="scss" scoped>
   .controls-wrapper {
     min-width: 380px !important;
-    max-width: 450px !important;
   }
 </style>

@@ -824,7 +824,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   .app-circle-control {
     font-size: 16px;
-    max-height: 350px;
+    max-height: 480px;
     min-height: 275px;
     user-select: none;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2)) drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.12));
