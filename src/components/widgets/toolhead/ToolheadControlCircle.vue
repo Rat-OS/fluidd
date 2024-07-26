@@ -521,7 +521,6 @@
         </svg>
       </v-col>
     </v-row>
-    <v-divider class="mt-5" />
   </div>
 </template>
 
