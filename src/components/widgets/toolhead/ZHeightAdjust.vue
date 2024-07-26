@@ -1,7 +1,7 @@
 <template>
   <v-container
     v-if="hasZOffsetApplyEndstop || hasZOffsetApplyProbe"
-    class="pa-0 mt-2 mb-0"
+    class="pa-0 mt-2 mb-1"
   >
     <v-row>
       <v-col class="secondary--text pr-0 mt-2">
@@ -116,9 +116,9 @@
         </v-item-group>
       </v-col>
     </v-row>
-    <v-divider
+    <!-- <v-divider
       class="mt-5"
-    />
+    /> -->
   </v-container>
 </template>
 

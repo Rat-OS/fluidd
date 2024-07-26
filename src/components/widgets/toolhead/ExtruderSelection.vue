@@ -9,7 +9,7 @@
     hide-details
     outlined
     dense
-    class="mb-2 v-input--x-dense"
+    class="mb-4 v-input--x-dense"
   />
 </template>
 

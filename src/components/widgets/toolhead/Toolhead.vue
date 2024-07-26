@@ -9,27 +9,27 @@
         justify="center"
       >
         <v-col class="controls-wrapper">
-          <template v-if="!printerPrinting">
+          <template v-if="klippyReady">
             <toolhead-position />
             <toolhead-control-cross v-if="toolheadControlStyle === 'cross'" />
             <toolhead-control-bars v-else-if="toolheadControlStyle === 'bars'" />
             <toolhead-control-circle v-else-if="toolheadControlStyle === 'circle'" />
-            <z-height-adjust v-if="!printerPrinting" />
+            <z-height-adjust />
           </template>
-          <z-height-adjust v-else />
         </v-col>
 
         <v-col class="controls-wrapper">
-          <extruder-selection v-if="hasMultipleExtruders" />
-          <extruder-moves v-if="!printerPrinting && hasExtruder" />
-          <template v-if="!printerPrinting">
+          <template v-if="klippyReady">
+            <extruder-selection v-if="hasMultipleExtruders" />
+            <extruder-moves v-if="hasExtruder" />
             <extruder-stats />
             <v-divider />
+            <v-card-text>
+              <speed-and-flow-adjust />
+              <v-divider />
+              <pressure-advance-adjust v-if="showPressureAdvance" />
+            </v-card-text>
           </template>
-          <v-card-text>
-            <speed-and-flow-adjust />
-            <pressure-advance-adjust v-if="showPressureAdvance" />
-          </v-card-text>
         </v-col>
       </v-row>
     </v-card-text>
