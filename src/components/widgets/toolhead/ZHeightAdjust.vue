@@ -1,141 +1,125 @@
 <template>
-  <v-row
+  <v-container
     v-if="hasZOffsetApplyEndstop || hasZOffsetApplyProbe"
-    class="mt-2"
+    class="pa-0 mt-2 mb-0"
   >
-    <v-col
-      cols="6"
-    >
-      <v-btn-toggle
-        v-model="moveDistance"
-        mandatory
-        dense
-        class="elevation-2"
-      >
-        <app-btn
-          v-for="(value, i) in zAdjustValues"
-          :key="i"
+    <v-row>
+      <v-col class="secondary--text pr-0 mt-2">
+        <v-icon
           small
-          class="px-1"
-          :disabled="!klippyReady"
-          min-width="36"
-          :value="value"
+          class="mr-1"
         >
-          {{ value }}
-        </app-btn>
-      </v-btn-toggle>
-      <div
-        class="mt-1"
-        :class="{ 'text--disabled': !klippyReady }"
-      >
-        <span class="secondary--text">{{ $t('app.general.label.z_offset') }}&nbsp;</span>
-        <span>{{ zHomingOrigin.toFixed(3) }}mm</span>
-      </div>
-    </v-col>
-    <v-col cols="6">
-      <v-row
-        justify="space-between"
-        no-gutters
-        class="mr-n1"
-      >
-        <v-col
-          cols="4"
-          class="pr-1"
-        >
-          <app-btn
-            :loading="hasWait($waits.onZAdjust)"
-            :disabled="!klippyReady"
+          $expandVertical
+        </v-icon>
+        <span>{{ $t('app.general.label.z_offset') }}: <span class="primary--text">{{ zHomingOrigin.toFixed(3) }}mm</span></span>
+      </v-col>
+      <v-col class="v-subheader justify-end pl-0 mt-0">
+        <div class="d-flex align-center">
+          <v-btn
+            v-if="zHomingOrigin !== 0"
+            :loading="hasWait($waits.onZClear)"
+            color="warning"
+            text
             small
-            block
-            @click="sendZAdjustGcode('+')"
+            plain
+            class="px-2 mr-1"
+            @click="sendClearZAdjustGcode()"
           >
-            <v-icon small>
-              $zUp
+            <v-icon
+              small
+            >
+              $close
             </v-icon>
-          </app-btn>
-        </v-col>
-        <v-col
-          cols="4"
-          class="pr-1"
-        >
-          <app-btn
-            :loading="hasWait($waits.onZAdjust)"
-            :disabled="!klippyReady"
+            <span
+              class="ml-1"
+            >
+              {{ $t('app.general.btn.clear') }}
+            </span>
+          </v-btn>
+          <v-btn
+            v-if="!(!klippyReady || printerPrinting || zHomingOrigin === 0) && (hasZOffsetApplyEndstop !== hasZOffsetApplyProbe)"
+            color="primary"
+            text
             small
-            block
-            @click="sendZAdjustGcode('-')"
-          >
-            <v-icon small>
-              $zDown
-            </v-icon>
-          </app-btn>
-        </v-col>
-        <v-col
-          cols="4"
-          class="pr-1"
-        >
-          <app-btn
-            v-if="hasZOffsetApplyEndstop !== hasZOffsetApplyProbe"
-            :disabled="!klippyReady || printerPrinting || zHomingOrigin === 0"
-            small
-            block
+            plain
+            class="px-2"
             @click="handleZOffsetApply"
           >
-            <v-icon small>
+            <v-icon
+              small
+            >
               $save
             </v-icon>
-          </app-btn>
-
-          <v-menu
-            v-else
-            left
-            offset-y
-            transition="slide-y-transition"
-          >
-            <template #activator="{ on, attrs, value }">
-              <app-btn
-                v-bind="attrs"
-                :disabled="!klippyReady || printerPrinting || zHomingOrigin === 0"
+            <span
+              class="ml-1"
+            >
+              {{ $t('app.general.btn.save') }}
+            </span>
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row
+      class="pa-0 mt-0"
+      dense
+    >
+      <v-col
+        cols="12"
+      >
+        <div class="d-flex align-center">
+          <v-item-group class="_btn-group">
+            <v-btn
+              v-for="(value, index) in zAdjustValues"
+              :key="`zUp-${index}`"
+              :loading="hasWait($waits.onZAdjust)"
+              small
+              class="_btn-qs flex-grow-1 px-1"
+              @click="sendZAdjustGcode('+', value)"
+            >
+              <span>&plus;{{ value }}</span>
+              <v-icon
+                v-if="index === zAdjustValues.length - 1"
+                left
                 small
-                block
-                v-on="on"
+                class="mr-n1 ml-1"
               >
-                <v-icon small>
-                  $save
-                </v-icon>
-                <v-icon
-                  small
-                  class="ml-1"
-                  :class="{ 'rotate-180': value }"
-                >
-                  $chevronDown
-                </v-icon>
-              </app-btn>
-            </template>
-            <v-list dense>
-              <template v-for="command of ['Z_OFFSET_APPLY_ENDSTOP', 'Z_OFFSET_APPLY_PROBE']">
-                <v-list-item
-                  :key="command"
-                  @click="sendGcode(command)"
-                >
-                  <v-list-item-icon>
-                    <v-icon>
-                      $expandVertical
-                    </v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ command }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-list>
-          </v-menu>
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+                $zUp
+              </v-icon>
+            </v-btn>
+          </v-item-group>
+        </div>
+      </v-col>
+      <v-col
+        cols="12"
+      >
+        <v-item-group
+          class="_btn-group"
+        >
+          <v-btn
+            v-for="(value, index) in zAdjustValues"
+            :key="`zDown-${index}`"
+            :loading="hasWait($waits.onZAdjust)"
+            small
+            class="_btn-qs flex-grow-1 px-1"
+            @click="sendZAdjustGcode('-', value)"
+          >
+            <span>&minus;{{ value }}</span>
+            <v-icon
+              v-if="index === zAdjustValues.length - 1"
+              left
+              small
+              class="mr-n1 ml-1"
+            >
+              $zDown
+            </v-icon>
+          </v-btn>
+        </v-item-group>
+      </v-col>
+    </v-row>
+    <v-divider
+      class="mt-5"
+    />
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -186,10 +170,19 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
   /**
    * Send a Z adjust gcode script.
    */
-  sendZAdjustGcode (direction: '+' | '-') {
+  sendZAdjustGcode (direction: '+' | '-', zValue: any) {
     const zHomed = this.$store.getters['printer/getHomedAxes']('z')
-    const gcode = `SET_GCODE_OFFSET Z_ADJUST=${direction}${this.moveDistance} MOVE=${+zHomed}`
+    const gcode = `SET_GCODE_OFFSET Z_ADJUST=${direction}${zValue} MOVE=${+zHomed}`
     this.sendGcode(gcode, this.$waits.onZAdjust)
+  }
+
+  /**
+   * Clear Z adjust gcode script.
+   */
+  sendClearZAdjustGcode () {
+    const zHomed = this.$store.getters['printer/getHomedAxes']('z')
+    const gcode = `SET_GCODE_OFFSET Z=0 MOVE=${+zHomed}`
+    this.sendGcode(gcode, this.$waits.onZClear)
   }
 
   handleZOffsetApply () {
@@ -203,3 +196,49 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
   }
 }
 </script>
+
+<style scoped>
+._btn-group {
+    border-radius: 4px;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+
+    .v-btn {
+        border-radius: 0;
+        border-color: rgba(255, 255, 255, 0.12);
+        border-style: solid;
+        border-width: thin;
+        box-shadow: none;
+        height: 28px;
+        opacity: 0.8;
+        min-width: auto !important;
+    }
+
+    .v-btn:first-child {
+        border-top-left-radius: inherit;
+        border-bottom-left-radius: inherit;
+    }
+
+    .v-btn:last-child {
+        border-top-right-radius: inherit;
+        border-bottom-right-radius: inherit;
+    }
+
+    .v-btn:not(:first-child) {
+        border-left-width: 0;
+    }
+}
+
+html.theme--light ._btn-group .v-btn {
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+._btn-qs {
+    font-size: 0.8rem !important;
+    font-weight: 400;
+    max-height: 28px;
+}
+</style>

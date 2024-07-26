@@ -203,6 +203,7 @@ app:
       retry: Retry
       return_dashboard: Return to the dashboard
       save: Save
+      clear: Clear
       save_as: Save As
       save_restart: Save & Restart
       save_config_and_restart: Save config & restart
