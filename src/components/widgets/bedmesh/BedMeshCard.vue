@@ -6,144 +6,165 @@
     :draggable="!fullscreen"
     :collapsable="!fullscreen"
     layout-path="dashboard.bed-mesh-card"
+    menu-breakpoint="lg"
   >
     <template #menu>
-      <v-menu
-        left
-        offset-y
-        transition="slide-y-transition"
-      >
-        <template #activator="{ on, attrs, value }">
-          <app-btn
-            v-if="!fullscreen"
-            v-bind="attrs"
-            small
-            class="ms-1 my-1"
-            :disabled="!klippyReady || printerPrinting"
-            v-on="on"
-          >
-            {{ $t('app.bedmesh.label.profile') }}
-            <v-icon
+      <app-btn-collapse-group :collapsed="menuCollapsed">
+        <!-- load profile -->
+        <v-menu
+          left
+          offset-y
+          transition="slide-y-transition"
+        >
+          <template #activator="{ on, attrs, value }">
+            <app-btn
+              v-if="!fullscreen"
+              v-bind="attrs"
               small
-              class="ml-1"
-              :class="{ 'rotate-180': value }"
+              class="ms-1 my-1"
+              :disabled="!klippyReady || printerPrinting"
+              v-on="on"
             >
-              $chevronDown
-            </v-icon>
-          </app-btn>
-        </template>
-        <v-list dense>
-          <template v-for="item in bedMeshProfiles">
+              {{ $t('app.bedmesh.label.profile') }}
+              <v-icon
+                small
+                class="ml-1"
+                :class="{ 'rotate-180': value }"
+              >
+                $chevronDown
+              </v-icon>
+            </app-btn>
+          </template>
+
+          <v-list dense>
+            <template v-for="item in bedMeshProfiles">
+              <v-list-item
+                :key="item.name"
+                @click="loadProfile(item.name)"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.name }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+
+        <!-- tools -->
+        <v-menu
+          v-if="!fullscreen"
+          left
+          offset-y
+          transition="slide-y-transition"
+        >
+          <template #activator="{ on, attrs, value }">
+            <app-btn
+              v-bind="attrs"
+              small
+              class="ms-1 my-1"
+              v-on="on"
+            >
+              <v-icon
+                small
+                class="mr-1"
+              >
+                $tools
+              </v-icon>
+              {{ $t('app.tool.tooltip.tools') }}
+              <v-icon
+                small
+                class="ml-1"
+                :class="{ 'rotate-180': value }"
+              >
+                $chevronDown
+              </v-icon>
+            </app-btn>
+          </template>
+          <v-list dense>
             <v-list-item
-              :key="item.name"
-              @click="loadProfile(item.name)"
+              :loading="hasWait($waits.onMeshCalibrate)"
+              :disabled="printerBusy || !allHomed"
+              @click="calibrate()"
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ item.name }}
+                  {{ $t('app.general.btn.calibrate') }}
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+            <v-list-item
+              :disabled="!hasMeshLoaded"
+              @click="handleOpenSaveDialog()"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('app.general.btn.save_as') }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item
+              :disabled="!hasMeshLoaded"
+              @click="clearMesh()"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('app.general.btn.clear_profile') }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item
+              :disabled="!hasMeshLoaded"
+              @click="removeProfile()"
+            >
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ $t('app.bedmesh.tooltip.delete') }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <!-- copy image -->
+        <v-tooltip
+          v-if="canCopyImage"
+          bottom
+        >
+          <template #activator="{ on, attrs }">
+            <app-btn
+              v-bind="attrs"
+              color=""
+              fab
+              x-small
+              text
+              class="ms-1 my-1"
+              :disabled="!hasMeshLoaded"
+              v-on="on"
+              @click="copyImage()"
+            >
+              <v-icon>$screenshot</v-icon>
+            </app-btn>
           </template>
-        </v-list>
-      </v-menu>
+          <span>{{ $t('app.bedmesh.tooltip.copy_image') }}</span>
+        </v-tooltip>
+      </app-btn-collapse-group>
 
-      <v-menu
+      <!-- fullscreen -->
+      <app-btn
         v-if="!fullscreen"
-        left
-        offset-y
-        transition="slide-y-transition"
+        color=""
+        fab
+        x-small
+        text
+        class="ms-1 my-1"
+        @click="$filters.routeTo($router, '/tune')"
       >
-        <template #activator="{ on, attrs, value }">
-          <app-btn
-            v-bind="attrs"
-            small
-            class="ms-1 my-1"
-            v-on="on"
-          >
-            <v-icon
-              small
-              class="mr-1"
-            >
-              $tools
-            </v-icon>
-            {{ $t('app.tool.tooltip.tools') }}
-            <v-icon
-              small
-              class="ml-1"
-              :class="{ 'rotate-180': value }"
-            >
-              $chevronDown
-            </v-icon>
-          </app-btn>
-        </template>
-        <v-list dense>
-          <v-list-item
-            :loading="hasWait($waits.onMeshCalibrate)"
-            :disabled="printerBusy || !allHomed"
-            @click="calibrate()"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.general.btn.calibrate') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            :disabled="!hasMeshLoaded"
-            @click="handleOpenSaveDialog()"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.general.btn.save_as') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            :disabled="!hasMeshLoaded"
-            @click="clearMesh()"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.general.btn.clear_profile') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item
-            :disabled="!hasMeshLoaded"
-            @click="removeProfile()"
-          >
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ $t('app.bedmesh.tooltip.delete') }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+        <v-icon>$fullScreen</v-icon>
+      </app-btn>
 
-      <v-tooltip
-        v-if="canCopyImage"
-        bottom
-      >
-        <template #activator="{ on, attrs }">
-          <app-btn
-            v-bind="attrs"
-            color=""
-            fab
-            x-small
-            text
-            class="ms-1 my-1"
-            :disabled="!hasMeshLoaded"
-            v-on="on"
-            @click="copyImage()"
-          >
-            <v-icon>$screenshot</v-icon>
-          </app-btn>
-        </template>
-        <span>{{ $t('app.bedmesh.tooltip.copy_image') }}</span>
-      </v-tooltip>
-
+      <!-- settings -->
       <v-menu
         v-if="!fullscreen"
         bottom
@@ -227,18 +248,6 @@
           </v-radio-group>
         </v-list>
       </v-menu>
-
-      <app-btn
-        v-if="!fullscreen"
-        color=""
-        fab
-        x-small
-        text
-        class="ms-1 my-1"
-        @click="$filters.routeTo($router, '/tune')"
-      >
-        <v-icon>$fullScreen</v-icon>
-      </app-btn>
     </template>
 
     <v-card-text>
@@ -287,6 +296,9 @@ import type {
 export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
   @Prop({ type: Boolean })
   readonly fullscreen?: boolean
+
+  @Prop({ type: Boolean })
+  readonly menuCollapsed?: boolean
 
   @Ref('chart')
   readonly bedMeshChart!: BedMeshChart
