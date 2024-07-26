@@ -1,12 +1,84 @@
 <template>
-  <div class="mb-2">
+  <div class="mb-3">
     <!-- <div style="line-height: 32px; padding: 0 12px;"> -->
     <v-row
+      class="mb-4"
       justify="space-between"
       no-gutters
     >
       <v-col
-        cols="3"
+        cols="auto"
+        justify="start"
+      >
+        <v-tooltip top>
+          <template #activator="{ on, attrs }">
+            <app-btn
+              small
+              v-bind="attrs"
+              class="positioning-toggle-button"
+              :disabled="!klippyReady || printerBusy"
+              v-on="on"
+              @click="setPositioning(positioning == 0 ? 1 : 0)"
+            >
+              <v-icon
+                v-if="positioning == 0"
+                small
+              >
+                $absolutePositioning
+              </v-icon>
+              <v-icon
+                v-if="positioning == 1"
+                small
+              >
+                $relativePositioning
+              </v-icon>
+            </app-btn>
+          </template>
+          <span
+            v-if="positioning == 0"
+          >
+            {{ $t('app.tool.tooltip.absolute_positioning') }}
+          </span>
+          <span
+            v-if="positioning == 1"
+          >
+            {{ $t('app.tool.tooltip.relative_positioning') }}
+          </span>
+        </v-tooltip>
+        <span
+          v-if="positioning == 0"
+          class="secondary--text ml-1"
+        >
+          {{ $t('app.tool.tooltip.absolute_positioning') }}
+        </span>
+        <span
+          v-if="positioning == 1"
+          class="secondary--text ml-1"
+        >
+          {{ $t('app.tool.tooltip.relative_positioning') }}
+        </span>
+      </v-col>
+      <v-col
+        v-if="currentMesh.profile_name != ''"
+        cols="auto"
+        justify="end"
+        class="mt-1"
+      >
+        <v-icon
+          small
+        >
+          $bedMesh
+        </v-icon>
+        <span class="secondary--text">
+          {{ currentMesh.profile_name }}
+        </span>
+      </v-col>
+    </v-row>
+    <v-row
+      no-gutters
+    >
+      <v-col
+        cols="4"
         class="pr-1"
       >
         <v-text-field
@@ -15,7 +87,7 @@
           outlined
           hide-details
           dense
-          class="v-input--width-small"
+          class="v-input--text-right"
           type="number"
           :disabled="!klippyReady || (!xHomed && !xForceMove)"
           :readonly="printerBusy"
@@ -25,7 +97,7 @@
         />
       </v-col>
       <v-col
-        cols="3"
+        cols="4"
         class="pr-1 pl-1"
       >
         <v-text-field
@@ -34,7 +106,7 @@
           outlined
           hide-details
           dense
-          class="v-input--width-small"
+          class="v-input--text-right"
           type="number"
           :disabled="!klippyReady || (!yHomed && !yForceMove)"
           :readonly="printerBusy"
@@ -44,8 +116,8 @@
         />
       </v-col>
       <v-col
-        cols="3"
-        class="pr-1 pl-1"
+        cols="4"
+        class="pr-0 pl-1"
       >
         <v-text-field
           :color="(forceMove) ? 'error' : 'primary'"
@@ -53,7 +125,7 @@
           outlined
           hide-details
           dense
-          class="v-input--width-small"
+          class="v-input--text-right"
           type="number"
           :disabled="!klippyReady || (!zHomed && !zForceMove)"
           :readonly="printerBusy"
@@ -61,48 +133,6 @@
           @change="moveTo('Z', $event)"
           @focus="$event.target.select()"
         />
-      </v-col>
-      <v-col
-        cols="3"
-        class="pl-1"
-      >
-        <v-btn-toggle
-          v-model="positioning"
-          mandatory
-          dense
-          class="elevation-2 d-flex"
-        >
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <app-btn
-                v-bind="attrs"
-                class="positioning-toggle-button"
-                :disabled="!klippyReady || printerBusy"
-                v-on="on"
-              >
-                <v-icon small>
-                  $absolutePositioning
-                </v-icon>
-              </app-btn>
-            </template>
-            <span>{{ $t('app.tool.tooltip.absolute_positioning') }}</span>
-          </v-tooltip>
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <app-btn
-                v-bind="attrs"
-                class="positioning-toggle-button"
-                :disabled="!klippyReady || printerBusy"
-                v-on="on"
-              >
-                <v-icon small>
-                  $relativePositioning
-                </v-icon>
-              </app-btn>
-            </template>
-            <span>{{ $t('app.tool.tooltip.relative_positioning') }}</span>
-          </v-tooltip>
-        </v-btn-toggle>
       </v-col>
     </v-row>
   </div>
@@ -112,6 +142,9 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
+import type {
+  KlipperBedMesh
+} from '@/store/mesh/types'
 
 @Component({})
 export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) {
@@ -155,8 +188,13 @@ export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) 
     return this.usesAbsolutePositioning ? 0 : 1
   }
 
-  set positioning (value: number) {
+  setPositioning (value: number) {
     this.sendGcode(`G9${value}`)
+  }
+
+  // The current mesh, unprocessed.
+  get currentMesh () {
+    return this.$store.state.printer.printer.bed_mesh as KlipperBedMesh
   }
 
   moveTo (axis: string, pos: string) {
@@ -185,6 +223,5 @@ export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) 
 <style type="scss" scoped>
   .positioning-toggle-button {
     min-width: 20px !important;
-    width: 50%;
   }
 </style>
