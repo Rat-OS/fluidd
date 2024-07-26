@@ -65,11 +65,13 @@
         class="mt-1"
       >
         <v-icon
+          color="primary"
           small
+          class="mb-1"
         >
           $bedMesh
         </v-icon>
-        <span class="secondary--text">
+        <span class="primary--text">
           {{ currentMesh.profile_name }}
         </span>
       </v-col>

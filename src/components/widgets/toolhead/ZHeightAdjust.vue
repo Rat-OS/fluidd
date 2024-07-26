@@ -73,7 +73,7 @@
               :key="`zUp-${index}`"
               :loading="hasWait($waits.onZAdjust)"
               small
-              class="_btn-qs flex-grow-1 px-1"
+              class="_btn-z flex-grow-1 px-1"
               @click="sendZAdjustGcode('+', value)"
             >
               <span>&plus;{{ value }}</span>
@@ -100,7 +100,7 @@
             :key="`zDown-${index}`"
             :loading="hasWait($waits.onZAdjust)"
             small
-            class="_btn-qs flex-grow-1 px-1"
+            class="_btn-z flex-grow-1 px-1"
             @click="sendZAdjustGcode('-', value)"
           >
             <span>&minus;{{ value }}</span>
@@ -213,7 +213,6 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
         border-width: thin;
         box-shadow: none;
         height: 28px;
-        opacity: 0.8;
         min-width: auto !important;
     }
 
@@ -232,11 +231,7 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
     }
 }
 
-html.theme--light ._btn-group .v-btn {
-    border-color: rgba(0, 0, 0, 0.12);
-}
-
-._btn-qs {
+._btn-z {
     font-size: 0.8rem !important;
     font-weight: 400;
     max-height: 28px;

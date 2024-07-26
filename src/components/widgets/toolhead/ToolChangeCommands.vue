@@ -75,6 +75,9 @@
           </v-icon>
         </app-btn>
       </app-btn-group>
+      <v-divider
+        class="mt-5"
+      />
     </v-col>
   </v-row>
 </template>
