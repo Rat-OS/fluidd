@@ -1,38 +1,55 @@
 <template>
-  <v-row>
-    <v-col
-      cols="12"
-      class="pa-0 mt-9 ml-0 mr-0 mb-7"
+  <v-form
+    ref="form"
+    v-model="valid"
+    @submit.prevent
+  >
+    <v-row
+      justify="end"
+      class="pa-0 mt-4 mb-3"
     >
-      <app-named-slider
-        :label="$t('app.general.label.pressure_advance')"
-        suffix="s"
-        :value="selectedExtruderStepper?.pressure_advance || 0"
-        overridable
-        :reset-value="selectedExtruderStepper?.config?.pressure_advance || 0"
-        :disabled="!klippyReady"
-        :locked="isMobileViewport"
-        :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
-        :min="0"
-        :max="2"
-        :step="0.0001"
-        @submit="handleSetPressureAdvance"
-      />
-      <app-named-slider
-        :label="$t('app.general.label.smooth_time')"
-        suffix="s"
-        :value="selectedExtruderStepper?.smooth_time || 0"
-        :reset-value="selectedExtruderStepper?.config?.pressure_advance_smooth_time || 0"
-        :disabled="!klippyReady"
-        :locked="isMobileViewport"
-        :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
-        :min="0"
-        :max="0.2"
-        :step="0.001"
-        @submit="handleSetSmoothTime"
-      />
-    </v-col>
-  </v-row>
+      <v-col cols="6">
+        <v-text-field
+          v-model.number="pressureAdvance"
+          :disabled="!klippyReady"
+          :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
+          :locked="isMobileViewport"
+          :rules="[
+            $rules.required,
+            $rules.numberValid,
+            $rules.numberGreaterThanOrEqual(0)
+          ]"
+          type="number"
+          hide-details
+          outlined
+          dense
+          :label="$t('app.general.label.pressure_advance')"
+          suffix="s"
+          @focus="$event.target.select()"
+        />
+      </v-col>
+      <v-col cols="6">
+        <v-text-field
+          v-model.number="smoothTime"
+          :disabled="!klippyReady"
+          :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
+          :locked="isMobileViewport"
+          :rules="[
+            $rules.required,
+            $rules.numberValid,
+            $rules.numberGreaterThanOrEqual(0)
+          ]"
+          type="number"
+          hide-details
+          outlined
+          dense
+          :label="$t('app.general.label.smooth_time')"
+          suffix="s"
+          @focus="$event.target.select()"
+        />
+      </v-col>
+    </v-row>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -47,16 +64,28 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
   @Prop({ type: Object })
   readonly extruderStepper?: ExtruderStepper
 
+  valid = true
+
+  get pressureAdvance () {
+    const pressure_advance = this.selectedExtruderStepper?.pressure_advance || 0
+    return pressure_advance
+  }
+
+  set pressureAdvance (value: number) {
+    this.sendSetPressureAdvance('ADVANCE', value)
+  }
+
+  get smoothTime () {
+    const smooth_time = this.selectedExtruderStepper?.smooth_time || 0
+    return smooth_time
+  }
+
+  set smoothTime (value: number) {
+    this.sendSetPressureAdvance('SMOOTH_TIME', value)
+  }
+
   get selectedExtruderStepper () {
     return this.extruderStepper ?? this.activeExtruder
-  }
-
-  handleSetPressureAdvance (val: number) {
-    this.sendSetPressureAdvance('ADVANCE', val)
-  }
-
-  handleSetSmoothTime (val: number) {
-    this.sendSetPressureAdvance('SMOOTH_TIME', val)
   }
 
   sendSetPressureAdvance (arg: string, val: number) {
