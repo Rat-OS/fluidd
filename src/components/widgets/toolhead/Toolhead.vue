@@ -23,7 +23,6 @@
             <speed-and-flow-adjust />
             <v-divider />
             <pressure-advance-adjust v-if="showPressureAdvance" />
-            <v-divider />
             <extruder-moves v-if="hasExtruder" />
             <extruder-stats />
           </template>

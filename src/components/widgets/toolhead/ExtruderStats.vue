@@ -9,7 +9,7 @@
         <template #actions>
           <v-icon
             small
-            class="my-1 mr-2"
+            class="my-0 mr-2"
           >
             $expand
           </v-icon>

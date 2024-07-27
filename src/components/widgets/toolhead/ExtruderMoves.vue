@@ -6,7 +6,7 @@
   >
     <v-row
       justify="end"
-      class="pa-0 mt-4 mb-0"
+      class="pa-0 mt-2 mb-0"
     >
       <v-col cols="6">
         <v-text-field

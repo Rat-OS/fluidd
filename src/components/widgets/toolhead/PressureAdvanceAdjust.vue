@@ -6,7 +6,7 @@
   >
     <v-row
       justify="end"
-      class="pa-0 mt-6 mb-6"
+      class="pa-0 mt-6 mb-0"
     >
       <v-col
         cols="12"
@@ -17,18 +17,19 @@
             v-model="selectedExtruder"
             :items="extruders"
             :readonly="printerPrinting"
-            :disabled="!klippyReady || printerPrinting"
+            :disabled="!klippyReady || printerPrinting || !hasMultipleExtruders"
             item-value="key"
             item-text="name"
             hide-details
             outlined
             dense
             class="mb-4 v-input--x-dense"
+            @change="activateExtruder"
           >
             <template #selection="{ item }">
               <v-icon
                 class="px-0 ml-0 mr-1"
-                :color="!item.extruder.can_extrude ? 'info' : 'warning'"
+                :color="!item.extruder.can_extrude ? 'info' : 'error'"
               >
                 $fire
               </v-icon>
@@ -36,6 +37,16 @@
                 class="mt-1"
               >
                 {{ item.name }}
+              </span>
+              <v-icon
+                class="px-0 ml-4 mr-1"
+              >
+                $thermometer
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.extruder.temperature.toFixed(2) }}°C
               </span>
               <v-icon
                 class="px-0 ml-4 mr-1"
@@ -51,7 +62,7 @@
             <template #item="{ item }">
               <v-icon
                 class="px-0 ml-0 mr-1"
-                :color="!item.extruder.can_extrude ? 'info' : 'warning'"
+                :color="!item.extruder.can_extrude ? 'info' : 'error'"
               >
                 $fire
               </v-icon>
@@ -59,6 +70,16 @@
                 class="mt-1"
               >
                 {{ item.name }}
+              </span>
+              <v-icon
+                class="px-0 ml-4 mr-1"
+              >
+                $thermometer
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.extruder.temperature.toFixed(2) }}°C
               </span>
               <v-icon
                 class="px-0 ml-4 mr-1"
@@ -72,7 +93,8 @@
               </span>
             </template>
           </v-select>
-          <app-btn
+          <!-- <app-btn
+            v-if="hasMultipleExtruders"
             min-width="10"
             :color="selectedExtruder == currentExtruder ? 'primary' : undefined"
             class="mb-4 ml-1"
@@ -89,7 +111,7 @@
             >
               $powerCycle
             </v-icon>
-          </app-btn>
+          </app-btn> -->
         </div>
       </v-col>
       <v-col
@@ -154,6 +176,7 @@ import type { ExtruderStepper, Extruder, KnownExtruder } from '@/store/printer/t
 
 @Component({})
 export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
+  [x: string]: any
   @Prop({ type: Object })
   readonly extruderStepper?: ExtruderStepper
 
@@ -198,7 +221,7 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     this.st = value
   }
 
-  activateExtruder (extruder: string): void {
+  activateExtruder (extruder: string) {
     this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${extruder}`, this.$waits.onExtruderChange)
   }
 
