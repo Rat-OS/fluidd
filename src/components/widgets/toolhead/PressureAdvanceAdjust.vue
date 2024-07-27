@@ -12,18 +12,85 @@
         cols="12"
         class="py-0"
       >
-        <v-select
-          v-model="selectedExtruder"
-          :items="extruders"
-          :readonly="printerPrinting"
-          :disabled="!klippyReady || printerPrinting"
-          item-value="key"
-          item-text="name"
-          hide-details
-          outlined
-          dense
-          class="mb-4 v-input--x-dense"
-        />
+        <div class="d-flex align-center">
+          <v-select
+            v-model="selectedExtruder"
+            :items="extruders"
+            :readonly="printerPrinting"
+            :disabled="!klippyReady || printerPrinting"
+            item-value="key"
+            item-text="name"
+            hide-details
+            outlined
+            dense
+            class="mb-4 v-input--x-dense"
+          >
+            <template #selection="{ item }">
+              <v-icon
+                class="px-0 ml-0 mr-1"
+                :color="!item.extruder.can_extrude ? 'info' : 'warning'"
+              >
+                $fire
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.name }}
+              </span>
+              <v-icon
+                class="px-0 ml-4 mr-1"
+              >
+                $printer3dNozzle
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.extruder.config.nozzle_diameter }}mm
+              </span>
+            </template>
+            <template #item="{ item }">
+              <v-icon
+                class="px-0 ml-0 mr-1"
+                :color="!item.extruder.can_extrude ? 'info' : 'warning'"
+              >
+                $fire
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.name }}
+              </span>
+              <v-icon
+                class="px-0 ml-4 mr-1"
+              >
+                $printer3dNozzle
+              </v-icon>
+              <span
+                class="mt-1"
+              >
+                {{ item.extruder.config.nozzle_diameter }}mm
+              </span>
+            </template>
+          </v-select>
+          <app-btn
+            min-width="10"
+            :color="selectedExtruder == currentExtruder ? 'primary' : undefined"
+            class="mb-4 ml-1"
+            description="Activate Extruder"
+            @click="activateExtruder(selectedExtruder)"
+          >
+            <v-icon
+              v-if="selectedExtruder == currentExtruder"
+            >
+              $power
+            </v-icon>
+            <v-icon
+              v-else
+            >
+              $powerCycle
+            </v-icon>
+          </app-btn>
+        </div>
       </v-col>
       <v-col
         cols="6"
@@ -32,7 +99,6 @@
         <v-text-field
           v-model.number="pressureAdvance"
           :disabled="!klippyReady"
-          :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
           :locked="isMobileViewport"
           :rules="[
             $rules.required,
@@ -84,7 +150,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
-import type { ExtruderStepper } from '@/store/printer/types'
+import type { ExtruderStepper, Extruder, KnownExtruder } from '@/store/printer/types'
 
 @Component({})
 export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
@@ -94,9 +160,24 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
   valid = true
 
   selectedExtruder = ''
+
   get extruders () {
-    this.selectedExtruder = this.$store.state.printer.printer.toolhead.extruder
-    return this.$store.getters['printer/getExtruders']
+    if (this.selectedExtruder === '') {
+      this.selectedExtruder = this.$store.state.printer.printer.toolhead.extruder
+    }
+    const _extruders: { key: string; name: string; extruder: Extruder }[] = []
+    const keys = this.$store.getters['printer/getExtruders'] as KnownExtruder[]
+    keys.forEach((k) => {
+      const e = this.$store.getters['printer/getExtruderByName'](k.key) as Extruder
+      if (e) {
+        _extruders.push({ key: k.key, name: k.name, extruder: e })
+      }
+    })
+    return _extruders
+  }
+
+  get currentExtruder (): string {
+    return this.$store.state.printer.printer.toolhead?.extruder
   }
 
   get pressureAdvance (): number {
@@ -115,6 +196,10 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
   st = -1
   set smoothTime (value: number) {
     this.st = value
+  }
+
+  activateExtruder (extruder: string): void {
+    this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${extruder}`, this.$waits.onExtruderChange)
   }
 
   setPa (name: string, value: number): void {
