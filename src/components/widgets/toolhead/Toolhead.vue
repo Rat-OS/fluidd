@@ -20,7 +20,7 @@
 
         <v-col class="controls-wrapper">
           <template v-if="klippyReady">
-            <extruder-selection v-if="hasMultipleExtruders" />
+            <!-- <extruder-selection v-if="hasMultipleExtruders" /> -->
             <speed-and-flow-adjust />
             <v-divider />
             <pressure-advance-adjust v-if="showPressureAdvance" />
