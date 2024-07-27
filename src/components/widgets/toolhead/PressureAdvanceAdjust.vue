@@ -26,6 +26,7 @@
           :label="$t('app.general.label.pressure_advance')"
           suffix="s"
           @focus="$event.target.select()"
+          @keyup.enter.exact="handleSetPressureAdvance"
         />
       </v-col>
       <v-col cols="6">
@@ -46,6 +47,7 @@
           :label="$t('app.general.label.smooth_time')"
           suffix="s"
           @focus="$event.target.select()"
+          @keyup.enter.exact="handleSetSmoothTime"
         />
       </v-col>
     </v-row>
@@ -71,8 +73,9 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     return pressure_advance
   }
 
+  pa = this.selectedExtruderStepper?.pressure_advance || 0
   set pressureAdvance (value: number) {
-    this.sendSetPressureAdvance('ADVANCE', value)
+    this.pa = value
   }
 
   get smoothTime () {
@@ -80,12 +83,21 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     return smooth_time
   }
 
+  st = this.selectedExtruderStepper?.smooth_time || 0
   set smoothTime (value: number) {
-    this.sendSetPressureAdvance('SMOOTH_TIME', value)
+    this.st = value
   }
 
   get selectedExtruderStepper () {
     return this.extruderStepper ?? this.activeExtruder
+  }
+
+  handleSetPressureAdvance () {
+    this.sendSetPressureAdvance('ADVANCE', this.pa)
+  }
+
+  handleSetSmoothTime () {
+    this.sendSetPressureAdvance('SMOOTH_TIME', this.st)
   }
 
   sendSetPressureAdvance (arg: string, val: number) {
