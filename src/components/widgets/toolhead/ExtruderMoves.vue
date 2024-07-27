@@ -6,12 +6,9 @@
   >
     <v-row
       justify="end"
-      class="mt-2"
+      class="pa-0 mt-2 mb-0"
     >
-      <v-col
-        cols="6"
-        class="text-right"
-      >
+      <v-col cols="6">
         <v-text-field
           v-model.number="extrudeLength"
           :disabled="!klippyReady || !activeExtruder"
@@ -31,24 +28,6 @@
         />
       </v-col>
       <v-col cols="6">
-        <app-btn
-          :disabled="!klippyReady || !extruderReady || !valid"
-          block
-          @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
-        >
-          {{ $t('app.general.btn.retract') }}
-          <v-icon>$chevronUp</v-icon>
-        </app-btn>
-      </v-col>
-    </v-row>
-    <v-row
-      justify="end"
-      class="mt-2"
-    >
-      <v-col
-        cols="6"
-        class="text-right"
-      >
         <v-text-field
           v-model.number="extrudeSpeed"
           :disabled="!klippyReady || !activeExtruder"
@@ -67,10 +46,66 @@
           @focus="$event.target.select()"
         />
       </v-col>
+    </v-row>
+    <v-row
+      justify="end"
+      class="mt-0 mb-0"
+    >
+      <v-col
+        cols="6"
+        class="py-0 mt-0 mb-0"
+      >
+        <v-item-group class="_btn-group">
+          <v-btn
+            v-for="value in extrudeLengths"
+            :key="value"
+            :disabled="printerIsPrinting"
+            dense
+            class="_btn-e flex-grow-1 px-0"
+            @click="setExtrudeLength({ value })"
+          >
+            {{ value }}
+          </v-btn>
+        </v-item-group>
+      </v-col>
+      <v-col
+        cols="6"
+        class="py-0 mt-0 mb-0"
+      >
+        <v-item-group class="_btn-group">
+          <v-btn
+            v-for="value in extrudeSpeeds"
+            :key="value"
+            :disabled="printerIsPrinting"
+            dense
+            class="_btn-e flex-grow-1 px-0"
+            @click="setExtrudeSpeed({ value })"
+          >
+            {{ value }}
+          </v-btn>
+        </v-item-group>
+      </v-col>
+    </v-row>
+    <v-row
+      justify="end"
+      class="pa-0 mt-0 mb-0"
+    >
       <v-col cols="6">
         <app-btn
           :disabled="!klippyReady || !extruderReady || !valid"
           block
+          small
+          @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
+        >
+          {{ $t('app.general.btn.retract') }}
+          <v-icon>$chevronUp</v-icon>
+        </app-btn>
+      </v-col>
+      <v-col cols="6">
+        <app-btn
+          :disabled="!klippyReady || !extruderReady || !valid"
+          block
+          small
           @click="sendExtrudeGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
         >
           {{ $t('app.general.btn.extrude') }}
@@ -93,6 +128,18 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   readonly form!: VForm
 
   valid = true
+
+  get printerIsPrinting () {
+    return this.printerState === 'printing'
+  }
+
+  get extrudeLengths (): number[] {
+    return [50, 25, 10, 5, 1]
+  }
+
+  get extrudeSpeeds (): number[] {
+    return [10, 5, 2, 1]
+  }
 
   get extrudeSpeed () {
     const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
@@ -141,18 +188,26 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
 
   sendRetractGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
-      const gcode = `M83
-G1 E-${amount} F${rate * 60}`
+      const gcode = `G1 E-${amount} F${rate * 60}`
+      this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
     }
   }
 
   sendExtrudeGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
-      const gcode = `M83
-G1 E${amount} F${rate * 60}`
+      const gcode = `G1 E${amount} F${rate * 60}`
+      this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
     }
+  }
+
+  setExtrudeLength (params: { value: number }): void {
+    this.extrudeLength = params.value
+  }
+
+  setExtrudeSpeed (params: { value: number }): void {
+    this.extrudeSpeed = params.value
   }
 
   mounted () {
@@ -160,3 +215,43 @@ G1 E${amount} F${rate * 60}`
   }
 }
 </script>
+
+<style scoped>
+._btn-group {
+    border-radius: 4px;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+
+    .v-btn {
+        border-radius: 0;
+        border-color: rgba(255, 255, 255, 0.12);
+        border-style: solid;
+        border-width: thin;
+        box-shadow: none;
+        height: 28px;
+        min-width: auto !important;
+    }
+
+    .v-btn:first-child {
+        border-top-left-radius: inherit;
+        border-bottom-left-radius: inherit;
+    }
+
+    .v-btn:last-child {
+        border-top-right-radius: inherit;
+        border-bottom-right-radius: inherit;
+    }
+
+    .v-btn:not(:first-child) {
+        border-left-width: 0;
+    }
+}
+
+._btn-e {
+    font-size: 0.8rem !important;
+    max-height: 24px;
+}
+</style>

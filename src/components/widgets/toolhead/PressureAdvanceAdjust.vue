@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      class="pa-0 mt-9 ml-0 mr-0"
+      class="pa-0 mt-9 ml-0 mr-0 mb-7"
     >
       <app-named-slider
         :label="$t('app.general.label.pressure_advance')"

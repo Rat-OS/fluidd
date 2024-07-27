@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      class="pa-0 ml-0 mr-0 mt-5 mb-6"
+      class="pa-0 ml-0 mr-0 mt-0 mb-6"
     >
       <app-named-slider
         :label="$t('app.general.label.speed')"
