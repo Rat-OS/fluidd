@@ -57,7 +57,7 @@
       >
         <v-item-group class="_btn-group">
           <v-btn
-            v-for="value in extrudeLengths"
+            v-for="value in extrudeLengthsSorted"
             :key="value"
             :disabled="printerIsPrinting"
             dense
@@ -74,7 +74,7 @@
       >
         <v-item-group class="_btn-group">
           <v-btn
-            v-for="value in extrudeSpeeds"
+            v-for="value in extrudeSpeedsSorted"
             :key="value"
             :disabled="printerIsPrinting"
             dense
@@ -139,6 +139,18 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
 
   get extrudeSpeeds () {
     return this.$store.state.config.uiSettings.general.extrudeSpeeds
+  }
+
+  get extrudeLengthsSorted () {
+    return [...this.extrudeLengths].sort((a, b) => {
+      return b - a
+    })
+  }
+
+  get extrudeSpeedsSorted () {
+    return [...this.extrudeSpeeds].sort((a, b) => {
+      return b - a
+    })
   }
 
   get extrudeSpeed () {
