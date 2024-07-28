@@ -133,12 +133,12 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     return this.printerState === 'printing'
   }
 
-  get extrudeLengths (): number[] {
-    return [50, 25, 10, 5, 1]
+  get extrudeLengths () {
+    return this.$store.state.config.uiSettings.general.extrudeLengths
   }
 
-  get extrudeSpeeds (): number[] {
-    return [10, 5, 2, 1]
+  get extrudeSpeeds () {
+    return this.$store.state.config.uiSettings.general.extrudeSpeeds
   }
 
   get extrudeSpeed () {

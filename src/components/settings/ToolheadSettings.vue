@@ -296,6 +296,29 @@
 
       <v-divider />
 
+      <app-setting :title="$t('app.setting.label.extrude_length_values')">
+        <v-combobox
+          ref="extrudeLengthValues"
+          v-model="extrudeLengthValues"
+          filled
+          dense
+          hide-selected
+          hide-details="auto"
+          suffix="mm"
+          multiple
+          small-chips
+          append-icon=""
+          deletable-chips
+          :rules="[
+            $rules.lengthGreaterThanOrEqual(1),
+            $rules.lengthLessThanOrEqual(5),
+            $rules.numberArrayValid
+          ]"
+        />
+      </app-setting>
+
+      <v-divider />
+
       <app-setting :title="$t('app.setting.label.default_extrude_speed')">
         <v-text-field
           :value="defaultExtrudeSpeed"
@@ -310,6 +333,29 @@
           hide-details="auto"
           suffix="mm/s"
           @change="setDefaultExtrudeSpeed"
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting :title="$t('app.setting.label.extrude_speed_values')">
+        <v-combobox
+          ref="extrudeSpeedValues"
+          v-model="extrudeSpeedValues"
+          filled
+          dense
+          hide-selected
+          hide-details="auto"
+          suffix="mm/s"
+          multiple
+          small-chips
+          append-icon=""
+          deletable-chips
+          :rules="[
+            $rules.lengthGreaterThanOrEqual(1),
+            $rules.lengthLessThanOrEqual(5),
+            $rules.numberArrayValid
+          ]"
         />
       </app-setting>
 
@@ -409,6 +455,12 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
   @Ref('zAdjustValues')
   readonly zAdjustValuesElement!: VInput
 
+  @Ref('extrudeLengthValues')
+  readonly extrudeLengthValuesElement!: VInput
+
+  @Ref('extrudeSpeedValues')
+  readonly extrudeSpeedValuesElement!: VInput
+
   get defaultExtrudeSpeed () {
     return this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
   }
@@ -480,6 +532,38 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
 
     this.$store.dispatch('config/saveByPath', {
       path: 'uiSettings.general.zAdjustDistances',
+      value: [...new Set(value.map(Number))].sort((a, b) => a - b),
+      server: true
+    })
+  }
+
+  get extrudeLengthValues () {
+    return this.$store.state.config.uiSettings.general.extrudeLengths
+  }
+
+  set extrudeLengthValues (value: (number | string)[]) {
+    if (!this.extrudeLengthValuesElement.validate(true)) {
+      return
+    }
+
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.extrudeLengths',
+      value: [...new Set(value.map(Number))].sort((a, b) => a - b),
+      server: true
+    })
+  }
+
+  get extrudeSpeedValues () {
+    return this.$store.state.config.uiSettings.general.extrudeSpeeds
+  }
+
+  set extrudeSpeedValues (value: (number | string)[]) {
+    if (!this.extrudeSpeedValuesElement.validate(true)) {
+      return
+    }
+
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.extrudeSpeeds',
       value: [...new Set(value.map(Number))].sort((a, b) => a - b),
       server: true
     })

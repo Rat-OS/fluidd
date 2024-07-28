@@ -39,6 +39,8 @@ export const defaultState = (): ConfigState => {
         toolheadCircleXYHomingEnabled: false,
         useGcodeCoords: false,
         zAdjustDistances: [0.005, 0.01, 0.025, 0.050],
+        extrudeLengths: [50, 25, 10, 5, 1],
+        extrudeSpeeds: [10, 5, 2, 1],
         enableVersionNotifications: true,
         confirmOnEstop: false,
         confirmOnPowerDeviceChange: false,

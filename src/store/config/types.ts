@@ -76,6 +76,8 @@ export interface GeneralConfig {
   toolheadCircleXYHomingEnabled: boolean;
   useGcodeCoords: boolean;
   zAdjustDistances: number[];
+  extrudeLengths: number[];
+  extrudeSpeeds: number[];
   enableVersionNotifications: boolean;
   confirmOnEstop: boolean;
   confirmOnPowerDeviceChange: boolean;
