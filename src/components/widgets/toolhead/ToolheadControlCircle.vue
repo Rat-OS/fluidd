@@ -43,6 +43,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 25.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[3] }}
             </text>
@@ -76,6 +79,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 60.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[2] }}
             </text>
@@ -109,6 +115,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 95.663)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[1] }}
             </text>
@@ -142,6 +151,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 130.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[0] }}
             </text>
@@ -233,6 +245,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 25.664)"
               text-anchor="middle"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[3] }}
             </text>
@@ -288,6 +303,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 60.664)"
               text-anchor="middle"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[2] }}
             </text>
@@ -343,6 +361,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 95.664)"
               text-anchor="middle"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[1] }}
             </text>
@@ -398,6 +419,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 130.664)"
               text-anchor="middle"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[0] }}
             </text>
