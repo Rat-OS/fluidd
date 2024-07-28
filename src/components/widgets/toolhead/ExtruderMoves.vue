@@ -9,8 +9,9 @@
       class="pa-0 mt-2 mb-0"
     >
       <v-col cols="6">
-        <v-text-field
+        <app-number-input
           v-model.number="extrudeLength"
+          :label="$t('app.general.label.extrude_length')"
           :disabled="!klippyReady || !activeExtruder"
           :rules="[
             $rules.required,
@@ -18,18 +19,19 @@
             $rules.numberGreaterThanOrEqual(0.1),
             maxExtrudeLengthRule
           ]"
-          type="number"
-          hide-details
-          outlined
-          dense
-          :label="$t('app.general.label.extrude_length')"
           suffix="mm"
-          @focus="$event.target.select()"
+          :min="1"
+          :max="null"
+          :step="1"
+          :dec="1"
+          :has-spinner="true"
+          :spinner-factor="1"
         />
       </v-col>
       <v-col cols="6">
-        <v-text-field
+        <app-number-input
           v-model.number="extrudeSpeed"
+          :label="$t('app.general.label.extrude_speed')"
           :disabled="!klippyReady || !activeExtruder"
           :rules="[
             $rules.required,
@@ -37,13 +39,13 @@
             $rules.numberGreaterThanOrEqual(0.1),
             maxExtrudeSpeedRule
           ]"
-          type="number"
-          hide-details
-          outlined
-          dense
-          :label="$t('app.general.label.extrude_speed')"
           suffix="mm/s"
-          @focus="$event.target.select()"
+          :min="1"
+          :max="null"
+          :step="1"
+          :dec="1"
+          :has-spinner="true"
+          :spinner-factor="1"
         />
       </v-col>
     </v-row>

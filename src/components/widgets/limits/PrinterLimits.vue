@@ -1,7 +1,10 @@
 <template>
   <!-- Printer Limits -->
   <div>
-    <v-card-text class="mb-1 mt-1">
+    <v-card-text
+      v-if="klippyReady"
+      class="mb-1 mt-1"
+    >
       <v-row>
         <v-col
           cols="12"
@@ -9,40 +12,28 @@
           md="12"
           lg="6"
         >
-          <v-text-field
+          <app-number-input
             v-model.number="velocity"
+            :reset-value="defaultVelocity"
+            :label="$t('app.general.label.velocity')"
             :disabled="!klippyReady"
             :locked="isMobileViewport"
+            :loading="hasWait($waits.onSetVelocity)"
             :rules="[
               $rules.required,
               $rules.numberValid,
               $rules.numberGreaterThanOrEqual(1),
             ]"
-            :reset-value="defaultVelocity"
-            :loading="hasWait($waits.onSetVelocity)"
-            type="number"
-            hide-details
-            outlined
-            dense
-            :label="$t('app.general.label.velocity')"
-            suffix="mm/s"
-            @focus="$event.target.select()"
+            :suffix="'mm/s'"
+            :min="1"
+            :max="null"
+            :step="10"
+            :dec="10"
+            :has-spinner="true"
+            :spinner-factor="1"
             @keyup.enter.exact="setVelocity"
-          >
-            <template
-              #append
-            >
-              <v-icon
-                v-if="!printerPrinting && defaultVelocity !== velocity"
-                :disabled="hasWait($waits.onSetVelocity)"
-                :color="'secondary'"
-                style="transform: translateX(5px) translateY(-2px);;"
-                @click="handleResetVelocity"
-              >
-                $reset
-              </v-icon>
-            </template>
-          </v-text-field>
+            @submit="setVelocity"
+          />
         </v-col>
         <v-col
           cols="12"
@@ -50,40 +41,28 @@
           md="12"
           lg="6"
         >
-          <v-text-field
+          <app-number-input
             v-model.number="squareCornerVelocity"
+            :reset-value="defaultSquareCornerVelocity"
+            :label="$t('app.general.label.sqv')"
             :disabled="!klippyReady"
             :locked="isMobileViewport"
+            :loading="hasWait($waits.onSetSquareCornerVelocity)"
             :rules="[
               $rules.required,
               $rules.numberValid,
               $rules.numberGreaterThanOrEqual(1),
             ]"
-            :reset-value="defaultSquareCornerVelocity"
-            :loading="hasWait($waits.onSetSquareCornerVelocity)"
-            type="number"
-            hide-details
-            outlined
-            dense
-            :label="$t('app.general.label.sqv')"
-            suffix="mm/s"
-            @focus="$event.target.select()"
+            :suffix="'mm/s'"
+            :min="1"
+            :max="null"
+            :step="1"
+            :dec="1"
+            :has-spinner="true"
+            :spinner-factor="1"
             @keyup.enter.exact="setSquareCornerVelocity"
-          >
-            <template
-              #append
-            >
-              <v-icon
-                v-if="!printerPrinting && defaultSquareCornerVelocity !== squareCornerVelocity"
-                :disabled="hasWait($waits.onSetVelocity)"
-                :color="'secondary'"
-                style="transform: translateX(5px) translateY(-2px);;"
-                @click="handleResetScv"
-              >
-                $reset
-              </v-icon>
-            </template>
-          </v-text-field>
+            @submit="setSquareCornerVelocity"
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -93,40 +72,28 @@
           md="12"
           lg="6"
         >
-          <v-text-field
+          <app-number-input
             v-model.number="accel"
+            :reset-value="defaultAccel"
+            :label="$t('app.general.label.acceleration')"
             :disabled="!klippyReady"
             :locked="isMobileViewport"
+            :loading="hasWait($waits.onSetAcceleration)"
             :rules="[
               $rules.required,
               $rules.numberValid,
               $rules.numberGreaterThanOrEqual(1),
             ]"
-            :reset-value="defaultAccel"
-            :loading="hasWait($waits.onSetAcceleration)"
-            type="number"
-            hide-details
-            outlined
-            dense
-            :label="$t('app.general.label.acceleration')"
             suffix="mm/s²"
-            @focus="$event.target.select()"
+            :min="1"
+            :max="null"
+            :step="100"
+            :dec="100"
+            :has-spinner="true"
+            :spinner-factor="1"
             @keyup.enter.exact="setAccel"
-          >
-            <template
-              #append
-            >
-              <v-icon
-                v-if="!printerPrinting && defaultAccel !== accel"
-                :disabled="hasWait($waits.onSetVelocity)"
-                :color="'secondary'"
-                style="transform: translateX(5px) translateY(-2px);;"
-                @click="handleResetAccel"
-              >
-                $reset
-              </v-icon>
-            </template>
-          </v-text-field>
+            @submit="setAccel"
+          />
         </v-col>
         <v-col
           cols="12"
@@ -134,76 +101,53 @@
           md="12"
           lg="6"
         >
-          <v-text-field
+          <app-number-input
             v-if="minimumCruiseRatio != null"
             v-model.number="minimumCruiseRatio"
+            :reset-value="defaultMinimumCruiseRatio"
+            :label="$t('app.general.label.minimum_cruise_ratio')"
             :disabled="!klippyReady"
             :locked="isMobileViewport"
+            :loading="hasWait($waits.onSetMinimumCruiseRatio)"
             :rules="[
               $rules.required,
               $rules.numberValid,
-              $rules.numberGreaterThanOrEqual(0.01),
+              $rules.numberGreaterThanOrEqual(0.1),
               $rules.numberLessThanOrEqual(1)
             ]"
-            :reset-value="defaultMinimumCruiseRatio"
-            :loading="hasWait($waits.onSetMinimumCruiseRatio)"
-            type="number"
-            hide-details
-            outlined
-            dense
-            :label="$t('app.general.label.minimum_cruise_ratio')"
-            @focus="$event.target.select()"
+            suffix="mm/s²"
+            :min="1"
+            :max="null"
+            :step="0.1"
+            :dec="0.1"
+            :has-spinner="true"
+            :spinner-factor="1"
             @keyup.enter.exact="setMinimumCruiseRatio"
-          >
-            <template
-              #append
-            >
-              <v-icon
-                v-if="!printerPrinting && defaultMinimumCruiseRatio !== minimumCruiseRatio"
-                :disabled="hasWait($waits.onSetVelocity)"
-                :color="'secondary'"
-                style="transform: translateX(5px) translateY(-2px);;"
-                @click="handleResetCruiseRatio"
-              >
-                $reset
-              </v-icon>
-            </template>
-          </v-text-field>
-          <v-text-field
+            @submit="setMinimumCruiseRatio"
+          />
+          <app-number-input
             v-else-if="accelToDecel != null"
             v-model.number="accelToDecel"
+            :reset-value="defaultAccelToDecel"
+            :label="$t('app.general.label.minimum_cruise_ratio')"
             :disabled="!klippyReady"
             :locked="isMobileViewport"
+            :loading="hasWait($waits.onSetAccelToDecel)"
             :rules="[
               $rules.required,
               $rules.numberValid,
               $rules.numberGreaterThanOrEqual(1),
             ]"
-            :reset-value="defaultAccelToDecel"
-            :loading="hasWait($waits.onSetAccelToDecel)"
-            type="number"
-            hide-details
-            outlined
-            dense
-            :label="$t('app.general.label.minimum_cruise_ratio')"
             suffix="mm/s²"
-            @focus="$event.target.select()"
+            :min="1"
+            :max="null"
+            :step="10"
+            :dec="10"
+            :has-spinner="true"
+            :spinner-factor="10"
             @keyup.enter.exact="setAccelToDecel"
-          >
-            <template
-              #append
-            >
-              <v-icon
-                v-if="!printerPrinting && defaultAccelToDecel !== accelToDecel"
-                :disabled="hasWait($waits.onSetVelocity)"
-                :color="'secondary'"
-                style="transform: translateX(5px) translateY(-2px);;"
-                @click="handleResetDeccel"
-              >
-                $reset
-              </v-icon>
-            </template>
-          </v-text-field>
+            @submit="setAccelToDecel"
+          />
         </v-col>
       </v-row>
     </v-card-text>

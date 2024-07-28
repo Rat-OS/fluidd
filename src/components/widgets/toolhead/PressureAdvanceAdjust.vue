@@ -99,8 +99,9 @@
         cols="6"
         class="py-0"
       >
-        <v-text-field
+        <app-number-input
           v-model.number="pressureAdvance"
+          :label="$t('app.general.label.pressure_advance')"
           :disabled="!klippyReady"
           :locked="isMobileViewport"
           :rules="[
@@ -108,14 +109,14 @@
             $rules.numberValid,
             $rules.numberGreaterThanOrEqual(0)
           ]"
-          type="number"
           :extruder="selectedExtruder"
-          hide-details
-          outlined
-          dense
-          :label="$t('app.general.label.pressure_advance')"
           suffix="s"
-          @focus="$event.target.select()"
+          :min="1"
+          :max="null"
+          :step="1"
+          :dec="1"
+          :has-spinner="true"
+          :spinner-factor="1"
           @keyup.enter.exact="setPa('ADVANCE', pa)"
         />
       </v-col>
@@ -123,24 +124,25 @@
         cols="6"
         class="py-0"
       >
-        <v-text-field
+        <app-number-input
           v-model.number="smoothTime"
+          :label="$t('app.general.label.smooth_time')"
           :disabled="!klippyReady"
-          :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
           :locked="isMobileViewport"
+          :loading="hasWait(`${$waits.onSetPressureAdvance}${extruderStepper?.name ?? ''}`)"
           :rules="[
             $rules.required,
             $rules.numberValid,
             $rules.numberGreaterThanOrEqual(0)
           ]"
-          type="number"
           :extruder="selectedExtruder"
-          hide-details
-          outlined
-          dense
-          :label="$t('app.general.label.smooth_time')"
           suffix="s"
-          @focus="$event.target.select()"
+          :min="1"
+          :max="null"
+          :step="1"
+          :dec="1"
+          :has-spinner="true"
+          :spinner-factor="1"
           @keyup.enter.exact="setPa('SMOOTH_TIME', st)"
         />
       </v-col>
