@@ -59,7 +59,7 @@
           <v-btn
             v-for="value in extrudeLengthsSorted"
             :key="value"
-            :disabled="printerIsPrinting"
+            :disabled="printerPrinting"
             dense
             class="_btn-e flex-grow-1 px-0"
             @click="setExtrudeLength({ value })"
@@ -76,7 +76,7 @@
           <v-btn
             v-for="value in extrudeSpeedsSorted"
             :key="value"
-            :disabled="printerIsPrinting"
+            :disabled="printerPrinting"
             dense
             class="_btn-e flex-grow-1 px-0"
             @click="setExtrudeSpeed({ value })"
@@ -128,10 +128,6 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   readonly form!: VForm
 
   valid = true
-
-  get printerIsPrinting () {
-    return this.printerState === 'printing'
-  }
 
   get extrudeLengths () {
     return this.$store.state.config.uiSettings.general.extrudeLengths
