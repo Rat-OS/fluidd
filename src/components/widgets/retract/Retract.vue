@@ -1,98 +1,181 @@
 <template>
-  <v-card-text>
-    <v-row class="my-0 mb-4">
-      <v-col
-        cols="12"
-        sm="6"
-        md="12"
-        lg="6"
-        class="py-0"
-      >
-        <app-named-slider
-          :label="$t('app.general.label.retract_length')"
-          suffix="mm"
-          :value="retract_length"
-          :reset-value="defaults.retract_length"
-          :min="0"
-          :max="retract_length_max"
-          :step="0.01"
-          overridable
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait($waits.onSetRetractLength)"
-          @submit="setRetractLength"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="12"
-        lg="6"
-        class="py-0"
-      >
-        <app-named-slider
-          :label="$t('app.general.label.unretract_extra_length')"
-          suffix="mm"
-          :value="unretract_extra_length"
-          :reset-value="defaults.unretract_extra_length"
-          :min="0"
-          :max="unretract_extra_length_max"
-          :step="0.01"
-          overridable
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait($waits.onSetUnretractExtraLength)"
-          @submit="setUnRetractExtraLength"
-        />
-      </v-col>
-    </v-row>
-    <v-row class="my-0 mb-4">
-      <v-col
-        cols="12"
-        sm="6"
-        md="12"
-        lg="6"
-        class="py-0"
-      >
-        <app-named-slider
-          :label="$t('app.general.label.retract_speed')"
-          suffix="mm/s"
-          :value="retract_speed"
-          :reset-value="defaults.retract_speed"
-          :min="0"
-          :step="1"
-          :max="retract_speed_max"
-          overridable
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait($waits.onSetRetractSpeed)"
-          @submit="setRetractSpeed"
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="12"
-        lg="6"
-        class="py-0"
-      >
-        <app-named-slider
-          :label="$t('app.general.label.unretract_speed')"
-          suffix="mm/s"
-          :value="unretract_speed"
-          :reset-value="defaults.unretract_speed"
-          :min="0"
-          :step="1"
-          :max="unretract_speed_max"
-          overridable
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait($waits.onSetUnretractSpeed)"
-          @submit="setUnretractSpeed"
-        />
-      </v-col>
-    </v-row>
-  </v-card-text>
+  <!-- Firmware Retraction -->
+  <div>
+    <v-card-text class="mb-1 mt-1">
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="12"
+          lg="6"
+        >
+          <v-text-field
+            v-model.number="retract_length"
+            :disabled="!klippyReady"
+            :locked="isMobileViewport"
+            :rules="[
+              $rules.required,
+              $rules.numberValid,
+              $rules.numberGreaterThanOrEqual(0),
+              $rules.numberLessThanOrEqual(retract_length_max)
+            ]"
+            :reset-value="defaults.retract_length"
+            :loading="hasWait($waits.onSetRetractLength)"
+            type="number"
+            hide-details
+            outlined
+            dense
+            :label="$t('app.general.label.retract_length')"
+            suffix="mm"
+            @focus="$event.target.select()"
+            @keyup.enter.exact="setRetractLength"
+          >
+            <template
+              #append
+            >
+              <v-icon
+                v-if="!printerPrinting && defaults.retract_length !== retract_length"
+                :disabled="hasWait($waits.onSetVelocity)"
+                :color="'secondary'"
+                style="transform: translateX(5px) translateY(-2px);;"
+                @click="handleResetRetractLength"
+              >
+                $reset
+              </v-icon>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="12"
+          lg="6"
+        >
+          <v-text-field
+            v-model.number="unretract_extra_length"
+            :disabled="!klippyReady"
+            :locked="isMobileViewport"
+            :rules="[
+              $rules.required,
+              $rules.numberValid,
+              $rules.numberGreaterThanOrEqual(0),
+              $rules.numberLessThanOrEqual(unretract_extra_length_max)
+            ]"
+            :reset-value="defaults.unretract_extra_length"
+            :loading="hasWait($waits.onSetUnretractExtraLength)"
+            type="number"
+            hide-details
+            outlined
+            dense
+            :label="$t('app.general.label.unretract_extra_length')"
+            suffix="mm"
+            @focus="$event.target.select()"
+            @keyup.enter.exact="setUnRetractExtraLength"
+          >
+            <template
+              #append
+            >
+              <v-icon
+                v-if="!printerPrinting && defaults.unretract_extra_length !== unretract_extra_length"
+                :disabled="hasWait($waits.onSetVelocity)"
+                :color="'secondary'"
+                style="transform: translateX(5px) translateY(-2px);;"
+                @click="handleResetUnretractLength"
+              >
+                $reset
+              </v-icon>
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="12"
+          lg="6"
+        >
+          <v-text-field
+            v-model.number="retract_speed"
+            :disabled="!klippyReady"
+            :locked="isMobileViewport"
+            :rules="[
+              $rules.required,
+              $rules.numberValid,
+              $rules.numberGreaterThanOrEqual(0),
+              $rules.numberLessThanOrEqual(retract_speed_max)
+            ]"
+            :reset-value="defaults.retract_speed"
+            :loading="hasWait($waits.onSetRetractSpeed)"
+            type="number"
+            hide-details
+            outlined
+            dense
+            :label="$t('app.general.label.retract_speed')"
+            suffix="mm/s"
+            @focus="$event.target.select()"
+            @keyup.enter.exact="setRetractSpeed"
+          >
+            <template
+              #append
+            >
+              <v-icon
+                v-if="!printerPrinting && defaults.retract_speed !== retract_speed"
+                :disabled="hasWait($waits.onSetVelocity)"
+                :color="'secondary'"
+                style="transform: translateX(5px) translateY(-2px);;"
+                @click="handleResetRetractSpeed"
+              >
+                $reset
+              </v-icon>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col
+          cols="12"
+          sm="6"
+          md="12"
+          lg="6"
+        >
+          <v-text-field
+            v-model.number="unretract_speed"
+            :disabled="!klippyReady"
+            :locked="isMobileViewport"
+            :rules="[
+              $rules.required,
+              $rules.numberValid,
+              $rules.numberGreaterThanOrEqual(0),
+              $rules.numberLessThanOrEqual(unretract_speed_max)
+            ]"
+            :reset-value="defaults.unretract_speed"
+            :loading="hasWait($waits.onSetUnretractSpeed)"
+            type="number"
+            hide-details
+            outlined
+            dense
+            :label="$t('app.general.label.unretract_speed')"
+            suffix="mm/s"
+            @focus="$event.target.select()"
+            @keyup.enter.exact="setUnretractSpeed"
+          >
+            <template
+              #append
+            >
+              <v-icon
+                v-if="!printerPrinting && defaults.unretract_speed !== unretract_speed"
+                :disabled="hasWait($waits.onSetVelocity)"
+                :color="'secondary'"
+                style="transform: translateX(5px) translateY(-2px);;"
+                @click="handleResetUnretractSpeed"
+              >
+                $reset
+              </v-icon>
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </div>
 </template>
 
 <script lang="ts">
@@ -106,6 +189,11 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return this.$store.state.printer.printer.firmware_retraction.retract_length
   }
 
+  rl = -1
+  set retract_length (value: number) {
+    this.rl = value
+  }
+
   get retract_length_max () {
     if (this.defaults.retract_length <= 0) return 15
     return Math.round(this.defaults.retract_length * 2 * 100) / 100
@@ -113,6 +201,11 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
 
   get retract_speed () {
     return this.$store.state.printer.printer.firmware_retraction.retract_speed
+  }
+
+  rs = -1
+  set retract_speed (value: number) {
+    this.rs = value
   }
 
   get retract_speed_max () {
@@ -124,6 +217,11 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return this.$store.state.printer.printer.firmware_retraction.unretract_speed
   }
 
+  urs = -1
+  set unretract_speed (value: number) {
+    this.urs = value
+  }
+
   get unretract_speed_max () {
     if (this.defaults.unretract_speed <= 0) return 100
     return Math.round(this.defaults.unretract_speed * 2)
@@ -131,6 +229,11 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
 
   get unretract_extra_length () {
     return this.$store.state.printer.printer.firmware_retraction.unretract_extra_length
+  }
+
+  uel = -1
+  set unretract_extra_length (value: number) {
+    this.uel = value
   }
 
   get unretract_extra_length_max () {
@@ -142,20 +245,48 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return this.$store.getters['printer/getPrinterSettings']('firmware_retraction') || {}
   }
 
-  setRetractLength (val: number) {
-    this.sendGcode(`SET_RETRACTION RETRACT_LENGTH=${val}`, this.$waits.onSetRetractLength)
+  handleResetRetractLength () {
+    if (this.defaults.retract_length !== undefined) {
+      this.retract_length = this.defaults.retract_length
+      this.setRetractLength()
+    }
   }
 
-  setRetractSpeed (val: number) {
-    this.sendGcode(`SET_RETRACTION RETRACT_SPEED=${val}`, this.$waits.onSetRetractSpeed)
+  handleResetUnretractLength () {
+    if (this.defaults.unretract_extra_length !== undefined) {
+      this.unretract_extra_length = this.defaults.unretract_extra_length
+      this.setUnRetractExtraLength()
+    }
   }
 
-  setUnretractSpeed (val: number) {
-    this.sendGcode(`SET_RETRACTION UNRETRACT_SPEED=${val}`, this.$waits.onSetUnretractSpeed)
+  handleResetRetractSpeed () {
+    if (this.defaults.retract_speed !== undefined) {
+      this.retract_speed = this.defaults.retract_speed
+      this.setRetractSpeed()
+    }
   }
 
-  setUnRetractExtraLength (val: number) {
-    this.sendGcode(`SET_RETRACTION UNRETRACT_EXTRA_LENGTH=${val}`, this.$waits.onSetUnretractExtraLength)
+  handleResetUnretractSpeed () {
+    if (this.defaults.unretract_speed !== undefined) {
+      this.unretract_speed = this.defaults.unretract_speed
+      this.setUnretractSpeed()
+    }
+  }
+
+  setRetractLength () {
+    this.sendGcode(`SET_RETRACTION RETRACT_LENGTH=${this.rl}`, this.$waits.onSetRetractLength)
+  }
+
+  setRetractSpeed () {
+    this.sendGcode(`SET_RETRACTION RETRACT_SPEED=${this.rs}`, this.$waits.onSetRetractSpeed)
+  }
+
+  setUnretractSpeed () {
+    this.sendGcode(`SET_RETRACTION UNRETRACT_SPEED=${this.urs}`, this.$waits.onSetUnretractSpeed)
+  }
+
+  setUnRetractExtraLength () {
+    this.sendGcode(`SET_RETRACTION UNRETRACT_EXTRA_LENGTH=${this.uel}`, this.$waits.onSetUnretractExtraLength)
   }
 }
 </script>

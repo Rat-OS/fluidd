@@ -1,5 +1,5 @@
 <template>
-  <!-- Speed and Flow Adjust -->
+  <!-- Printer Limits -->
   <div>
     <v-card-text class="mb-1 mt-1">
       <v-row>
@@ -86,7 +86,6 @@
           </v-text-field>
         </v-col>
       </v-row>
-
       <v-row>
         <v-col
           cols="12"
@@ -110,7 +109,7 @@
             outlined
             dense
             :label="$t('app.general.label.acceleration')"
-            suffix="mm/s"
+            suffix="mm/s²"
             @focus="$event.target.select()"
             @keyup.enter.exact="setAccel"
           >
