@@ -35,6 +35,21 @@
             $lockReset
           </v-icon>
         </v-btn>
+        <v-btn
+          v-if="!locked && !internalLocked && icon"
+          icon
+          small
+          :disabled="disabled"
+          style="margin-top: -4px;"
+        >
+          <v-icon
+            small
+            :color="(isFan || isPin) && sliderValue > 0 ? 'primary' : undefined"
+            :class="{ 'spin': isFan && sliderValue > 0 }"
+          >
+            {{ icon }}
+          </v-icon>
+        </v-btn>
         <span
           class="text-body-1"
           :class="{ 'text--disabled': disabled }"
@@ -174,6 +189,18 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
   @Prop({ type: Boolean })
   readonly fullWidth?: boolean
 
+  @Prop({ type: String })
+  readonly icon?: string
+
+  @Prop({ type: Boolean, default: false })
+  readonly isFan?: boolean
+
+  @Prop({ type: Boolean, default: false })
+  readonly isPin?: boolean
+
+  @Prop({ type: Number, default: 0 })
+  readonly fanSpeed!: number
+
   @Ref('form')
   readonly form!: VForm
 
@@ -261,7 +288,6 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
   handleReset () {
     if (this.resetValue !== undefined) {
       this.$emit('change', this.resetValue)
-
       this.submitValue(this.resetValue)
     }
   }

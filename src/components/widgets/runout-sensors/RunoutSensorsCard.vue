@@ -20,14 +20,34 @@
       </app-btn>
     </template>
 
-    <v-container class="px-0 py-2">
+    <v-container class="pa-0 ml-0 px-0 py-2">
       <v-row
         v-for="item in sensors"
         :key="item.name"
       >
-        <v-col class="pb-0">
+        <v-col class="pa-0 ml-0 pb-0">
           <v-subheader>
-            <span>{{ item.name }}</span>
+            <v-btn
+              icon
+              small
+              style="margin-top: -3px;"
+              class="mr-0"
+            >
+              <v-icon
+                v-if="item.filament_detected"
+                small
+              >
+                $printer3dNozzle
+              </v-icon>
+              <v-icon
+                v-if="!item.filament_detected"
+                small
+                color="'error'"
+              >
+                $printer3dNozzleAlert
+              </v-icon>
+            </v-btn>
+            <span>{{ item.prettyName }}</span>
             <v-spacer />
             <v-icon
               :color="(item.filament_detected) ? 'success' : 'warning'"

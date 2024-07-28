@@ -139,6 +139,7 @@ export interface Sensor {
 
 export interface RunoutSensor {
   name: string;
+  prettyName: string;
   enabled: boolean;
   filament_detected: boolean;
 }

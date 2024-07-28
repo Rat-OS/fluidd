@@ -5,13 +5,15 @@
       suffix="%"
       :value="value"
       :reset-value="0"
-      :label="(rpm) ? `${fan.prettyName} <small>${rpm}</small>` : fan.prettyName"
+      :label="(rpm) ? `${fan.prettyName} ${rpm}` : fan.prettyName"
       :rules="[
         customRules.minFan
       ]"
       :disabled="!klippyReady"
       :locked="isMobileViewport"
       :loading="hasWait(`${$waits.onSetFanSpeed}${fan.name}`)"
+      :is-fan="true"
+      :icon="'$fan'"
       @submit="handleChange"
     />
 
@@ -21,6 +23,19 @@
       justify-space-between
       :class="{ 'text--disabled': !klippyReady }"
     >
+      <v-btn
+        icon
+        small
+        style="margin-top: -4px;"
+      >
+        <v-icon
+          small
+          :color="rpm || value > 0 ? 'primary' : undefined"
+          :class="{ 'spin': rpm || value > 0 }"
+        >
+          $fan
+        </v-icon>
+      </v-btn>
       <div class="text-body-1">
         {{ fan.prettyName }}
       </div>

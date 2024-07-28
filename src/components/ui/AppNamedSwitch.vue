@@ -3,6 +3,17 @@
     justify-space-between
     align-center
   >
+    <v-btn
+      icon
+      small
+      style="margin-top: -4px;"
+    >
+      <v-icon
+        small
+      >
+        {{ icon }}
+      </v-icon>
+    </v-btn>
     <div
       class="text-body-1"
       :class="{ 'text--disabled': disabled }"
@@ -42,5 +53,8 @@ export default class AppNamedSwitch extends Vue {
 
   @Prop({ })
   readonly falseValue?: unknown
+
+  @Prop({ type: String })
+  readonly icon?: string
 }
 </script>

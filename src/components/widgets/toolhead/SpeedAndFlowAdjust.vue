@@ -15,6 +15,7 @@
         :locked="isMobileViewport"
         :min="1"
         :max="200"
+        :icon="'$sensors'"
         @submit="handleSetSpeed"
       />
       <app-named-slider
@@ -29,6 +30,7 @@
         :min="1"
         :max="200"
         class="mt-3"
+        :icon="'$printer3dNozzle'"
         @submit="handleSetFlow"
       />
     </v-col>

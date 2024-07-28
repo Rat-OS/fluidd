@@ -161,6 +161,7 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   handleReset () {
     if (this.resetValue !== undefined) {
       this.inputValue = this.resetValue
+      this.$emit('change', this.resetValue)
       this.$emit('submit', this.resetValue)
     }
   }

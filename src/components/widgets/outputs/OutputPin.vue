@@ -11,6 +11,8 @@
       :disabled="!klippyReady"
       :locked="isMobileViewport"
       :loading="hasWait(`${$waits.onSetOutputPin}${pin.name}`)"
+      :is-pin="true"
+      :icon="'$commit'"
       @submit="handleChange"
     />
 
@@ -20,6 +22,7 @@
       :label="pin.prettyName"
       :value="pin.value > 0"
       :loading="hasWait(`${$waits.onSetOutputPin}${pin.name}`)"
+      :icon="'$commit'"
       @input="handleChange"
     />
   </div>

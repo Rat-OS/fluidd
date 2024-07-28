@@ -8,6 +8,25 @@
       cols="5"
       class="text-body-1 py-0"
     >
+      <v-btn
+        icon
+        small
+        style="margin-top: -4px;"
+      >
+        <v-icon
+          v-if="isOn"
+          color="primary"
+          small
+        >
+          $ledOn
+        </v-icon>
+        <v-icon
+          v-else
+          small
+        >
+          $ledOff
+        </v-icon>
+      </v-btn>
       {{ led.prettyName }}
     </v-col>
     <v-col class="ml-auto py-0 text-right">
@@ -83,6 +102,16 @@ export default class OutputLed extends Mixins(StateMixin) {
       b,
       w
     }
+  }
+
+  get isOn () {
+    return (
+      (this.color.r ?? 0) +
+        (this.color.g ?? 0) +
+        (this.color.b ?? 0) +
+        (this.color.w ?? 0) >
+      0
+    )
   }
 
   get primaryColor (): string {

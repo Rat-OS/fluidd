@@ -35,7 +35,7 @@
             <v-divider
               v-if="i < all.controllableFans.length - 1"
               :key="`divider-controllableFans${i}`"
-              class="my-2"
+              class="my-2 mb-4"
             />
           </template>
         </v-expansion-panel-content>
