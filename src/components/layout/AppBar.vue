@@ -28,6 +28,21 @@
       </app-btn>
 
       <v-toolbar-title class="printer-title text--secondary">
+        <a
+          :href="'./configure'"
+          target="_blank"
+        >
+          <img
+            alt="WorkFlow"
+            loading="lazy"
+            width="160"
+            height="40"
+            decoding="async"
+            :src="ratOsImageUrl"
+            class="mr-0 ml-0"
+            style="color:transparent; transform: translateX(-2px) translateY(6px);"
+          >
+        </a>
         <router-link
           to="/"
           v-html="instanceName"
@@ -222,6 +237,10 @@ export default class AppBar extends Mixins(StateMixin, ServicesMixin, FilesMixin
 
   get instances () {
     return this.$store.state.config.instances
+  }
+
+  get ratOsImageUrl () {
+    return window.location.href.replace('#/', '') + './configure/_next/static/media/logo-white.6051cbc7.svg'
   }
 
   get instanceName () {
