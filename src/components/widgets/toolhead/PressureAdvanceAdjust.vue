@@ -6,7 +6,7 @@
   >
     <v-row
       justify="end"
-      class="pa-0 mt-6 mb-0"
+      class="pa-0 mt-2 mb-0"
     >
       <v-col
         cols="12"
@@ -93,25 +93,6 @@
               </span>
             </template>
           </v-select>
-          <!-- <app-btn
-            v-if="hasMultipleExtruders"
-            min-width="10"
-            :color="selectedExtruder == currentExtruder ? 'primary' : undefined"
-            class="mb-4 ml-1"
-            description="Activate Extruder"
-            @click="activateExtruder(selectedExtruder)"
-          >
-            <v-icon
-              v-if="selectedExtruder == currentExtruder"
-            >
-              $power
-            </v-icon>
-            <v-icon
-              v-else
-            >
-              $powerCycle
-            </v-icon>
-          </app-btn> -->
         </div>
       </v-col>
       <v-col

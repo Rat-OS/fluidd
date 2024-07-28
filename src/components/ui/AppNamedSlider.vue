@@ -4,74 +4,89 @@
     :class="{'full-width-slider': fullWidth}"
     @submit.prevent
   >
-    <v-row no-gutters>
+    <v-row
+      no-gutters
+      justify="space-between"
+    >
       <!-- Label -->
       <v-col
-        cols="12"
-        sm="5"
-        align-self="center"
-        class="text-body-1 py-0"
-        :class="{ 'text--disabled': disabled }"
-        v-html="label"
-      />
+        cols="auto"
+        justify="start"
+        class="py-0 pt-1"
+      >
+        <v-btn
+          v-if="locked && isMobileViewport"
+          icon
+          small
+          :disabled="disabled"
+          style="margin-top: -4px;"
+          @click="internalLocked = !internalLocked"
+        >
+          <v-icon
+            v-if="internalLocked"
+            small
+          >
+            $pencil
+          </v-icon>
+          <v-icon
+            v-else
+            small
+          >
+            $lockReset
+          </v-icon>
+        </v-btn>
+        <span
+          class="text-body-1"
+          :class="{ 'text--disabled': disabled }"
+        >
+          {{ label }}
+        </span>
+      </v-col>
 
       <!-- Current value -->
-      <v-col class="py-0">
-        <v-text-field
-          v-model="currentValue"
-          :prefix="prefix"
-          :suffix="suffix"
-          :rules="textRules"
-          :disabled="disabled || loading || internalLocked"
-          :step="step"
-          class="v-input--text-right"
-          type="number"
-          dense
-          single-line
-          outlined
-          hide-details
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @keyup.enter.exact="handleSubmit(+currentValue)"
+      <v-col
+        cols="auto"
+        justify="end"
+        class="py-0 mb-1"
+        align-self="end"
+      >
+        <v-responsive
+          class="ma-0 pa-0"
+          :width="100"
         >
-          <template #prepend>
-            <v-btn
-              v-if="locked && isMobileViewport"
-              icon
-              small
-              :disabled="disabled"
-              style="margin-top: -4px;"
-              @click="internalLocked = !internalLocked"
+          <v-text-field
+            v-model="currentValue"
+            :prefix="prefix"
+            :suffix="suffix"
+            :rules="textRules"
+            :disabled="disabled || loading || internalLocked"
+            :step="step"
+            class="v-input--text-right v-input--x-dense d-flex"
+            type="number"
+            single-line
+            outlined
+            hide-details
+            append-inner-icon="$lockReset"
+            @click:append-inner="handleReset"
+            @focus="handleFocus"
+            @blur="handleBlur"
+            @keyup.enter.exact="handleSubmit(+currentValue)"
+          >
+            <template
+              v-if="resetValue !== undefined && resetValue.toString() !== currentValue"
+              #append
             >
               <v-icon
-                v-if="internalLocked"
-                small
+                :disabled="disabled || loading || internalLocked"
+                :color="'secondary'"
+                style="transform: translateX(5px) translateY(-2px);;"
+                @click="handleReset"
               >
-                $pencil
-              </v-icon>
-              <v-icon
-                v-else
-                small
-              >
-                $lockReset
-              </v-icon>
-            </v-btn>
-
-            <app-btn
-              v-if="resetValue !== undefined"
-              :disabled="disabled || loading"
-              style="margin-top: -4px;"
-              color=""
-              icon
-              small
-              @click="handleReset"
-            >
-              <v-icon small>
                 $reset
               </v-icon>
-            </app-btn>
-          </template>
-        </v-text-field>
+            </template>
+          </v-text-field>
+        </v-responsive>
       </v-col>
     </v-row>
 
@@ -86,7 +101,26 @@
       @start="handleStart"
       @end="handleEnd"
       @change="handleChange"
-    />
+    >
+      <template #prepend>
+        <v-icon
+          :disabled="internalLocked || sliderValue <= min"
+          style="transform: translateY(2px);"
+          @click="minus"
+        >
+          $minus
+        </v-icon>
+      </template>
+      <template #append>
+        <v-icon
+          :disabled="internalLocked || (sliderValue >= max && !step)"
+          style="transform: translateY(2px);"
+          @click="plus"
+        >
+          $plus
+        </v-icon>
+      </template>
+    </v-slider>
   </v-form>
 </template>
 
@@ -265,7 +299,6 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
 
   handleChange (value: number) {
     this.$emit('change', value)
-
     this.submitValue(value)
   }
 
@@ -274,6 +307,16 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
     this.sliderValue = this.inputValue
     this.internalLocked = this.locked
     this.internalMax = this.max
+  }
+
+  minus (): void {
+    this.sliderValue = this.sliderValue > this.min ? Math.round(this.sliderValue - this.step) : this.min
+    this.handleChange(this.sliderValue)
+  }
+
+  plus (): void {
+    this.sliderValue = this.sliderValue < this.max || this.step ? Math.round(this.sliderValue + this.step) : this.max
+    this.handleChange(this.sliderValue)
   }
 }
 </script>

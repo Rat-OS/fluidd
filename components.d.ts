@@ -112,6 +112,7 @@ declare module 'vue' {
     VProgressLinear: typeof import('vuetify/lib')['VProgressLinear']
     VRadio: typeof import('vuetify/lib')['VRadio']
     VRadioGroup: typeof import('vuetify/lib')['VRadioGroup']
+    VResponsive: typeof import('vuetify/lib')['VResponsive']
     VRow: typeof import('vuetify/lib')['VRow']
     VSelect: typeof import('vuetify/lib')['VSelect']
     VSheet: typeof import('vuetify/lib')['VSheet']

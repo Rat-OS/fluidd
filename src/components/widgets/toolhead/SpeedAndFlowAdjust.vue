@@ -2,7 +2,7 @@
   <v-row>
     <v-col
       cols="12"
-      class="px-2 pa-0 mt-4 mb-5"
+      class="px-2 pa-0 mt-5 mb-5"
     >
       <app-named-slider
         :label="$t('app.general.label.speed')"
@@ -28,6 +28,7 @@
         :locked="isMobileViewport"
         :min="1"
         :max="200"
+        class="mt-3"
         @submit="handleSetFlow"
       />
     </v-col>
