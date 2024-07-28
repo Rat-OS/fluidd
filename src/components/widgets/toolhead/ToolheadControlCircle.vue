@@ -168,6 +168,9 @@
               v-else
               class="cc-btn primary"
               :class="motorsOffClasses"
+              :style="{
+                fill: xHomed || yHomed || zHomed ? 'black' : 'white'
+              }"
               @click="sendGcode('M84')"
             >
               <circle
@@ -440,7 +443,9 @@
             <a
               class="cc-btn large"
               :class="xHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: xHomed ? 'white' : 'black'
+              }"
               @click="sendGcode('G28 X', $waits.onHomeX)"
             >
               <path
@@ -455,7 +460,9 @@
             <a
               class="cc-btn large"
               :class="yHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: yHomed ? 'white' : 'black'
+              }"
               @click="sendGcode('G28 Y', $waits.onHomeX)"
             >
               <path
@@ -473,7 +480,9 @@
             <a
               class="cc-btn large"
               :class="zHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: zHomed ? 'white' : 'black'
+              }"
               @click="sendGcode('G28 Z', $waits.onHomeZ)"
             >
               <path
@@ -492,7 +501,9 @@
               v-if="enableXYHoming"
               class="cc-btn large"
               :class="xyHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: xyHomed ? 'white' : 'black'
+              }"
               @click="sendGcode('G28 X Y', $waits.onHomeXY)"
             >
               <path
@@ -508,7 +519,9 @@
               v-else
               class="cc-btn large"
               :class="xyzHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: allHomed ? 'white' : 'black'
+              }"
               @click="homeAll"
             >
               <path
@@ -878,6 +891,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
           'var(--v-primary-darken2)',
           'var(--v-primary-darken1)');
       }
+
     }
 
     .cc-section:hover .cc-lbl {
