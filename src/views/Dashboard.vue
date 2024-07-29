@@ -99,8 +99,10 @@ export default class Dashboard extends Mixins(StateMixin) {
     window.removeEventListener('resize', this.updateMenuCollapsed)
   }
 
+  maxColumnCount = 6
+
   get columnCount () {
-    if (this.inLayout) return 4
+    if (this.inLayout) return this.maxColumnCount
 
     return this.containers.reduce((count, container) => +this.hasCards(container) + count, 0)
   }
@@ -178,7 +180,7 @@ export default class Dashboard extends Mixins(StateMixin) {
   onLayoutChange () {
     const containers: Array<LayoutConfig[]> = []
 
-    for (let index = 1; index <= 4; index++) {
+    for (let index = 1; index <= this.maxColumnCount; index++) {
       const container = this.layout[`container${index}`]
 
       if (container?.length > 0) {
@@ -186,11 +188,11 @@ export default class Dashboard extends Mixins(StateMixin) {
       }
     }
 
-    while (containers.length < 4) {
+    while (containers.length < this.maxColumnCount) {
       containers.push([])
     }
 
-    this.containers = containers.slice(0, 4)
+    this.containers = containers.slice(0, this.maxColumnCount)
   }
 
   updateMenuCollapsed () {
@@ -204,7 +206,9 @@ export default class Dashboard extends Mixins(StateMixin) {
         container1: this.containers[0],
         container2: this.containers[1],
         container3: this.containers[2],
-        container4: this.containers[3]
+        container4: this.containers[3],
+        container5: this.containers[4],
+        container6: this.containers[5]
       }
     })
   }

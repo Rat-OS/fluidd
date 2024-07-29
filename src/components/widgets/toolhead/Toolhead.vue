@@ -23,13 +23,12 @@
             <pressure-advance-adjust v-if="showPressureAdvance" />
             <extruder-stats />
             <extruder-moves v-if="hasExtruder" />
+            <extruder-steppers />
             <speed-and-flow-adjust />
           </template>
         </v-col>
       </v-row>
     </v-card-text>
-
-    <extruder-steppers />
   </div>
 </template>
 

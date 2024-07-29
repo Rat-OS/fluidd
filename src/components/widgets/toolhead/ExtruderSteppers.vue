@@ -1,5 +1,6 @@
 <template>
   <v-expansion-panels
+    v-if="extruderSteppers.length > 0"
     accordion
     multiple
     flat
