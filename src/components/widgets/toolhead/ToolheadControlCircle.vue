@@ -433,6 +433,9 @@
               v-if="!enableXYHoming"
               class="cc-btn"
               :class="centerToolheadClasses"
+              :style="{
+                fill: allHomed ? $vuetify.theme.dark ? 'black' : 'white' : 'black'
+              }"
               @click="sendMoveCenterGcode()"
             >
               <circle
