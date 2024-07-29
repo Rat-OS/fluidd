@@ -139,14 +139,15 @@
           :rules="[
             $rules.required,
             $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(0)
+            $rules.numberGreaterThanOrEqual(0),
+            $rules.numberLessThanOrEqual(0.2)
           ]"
           :extruder="selectedExtruder"
           suffix="s"
-          :min="1"
-          :max="null"
-          :step="1"
-          :dec="1"
+          :min="0"
+          :max="0.2"
+          :step="0.01"
+          :dec="0.01"
           :has-spinner="true"
           :spinner-factor="1"
           @keyup.enter.exact="setPa('SMOOTH_TIME', st)"
