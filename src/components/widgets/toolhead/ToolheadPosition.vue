@@ -54,7 +54,6 @@
         </span>
       </v-col>
       <v-col
-        v-if="currentMesh.profile_name != ''"
         cols="auto"
         justify="end"
       >
@@ -72,9 +71,16 @@
           </v-icon>
         </v-btn>
         <span
+          v-if="currentMesh.profile_name != ''"
           class="primary--text ml-0"
         >
           {{ currentMesh.profile_name }}
+        </span>
+        <span
+          v-if="currentMesh.profile_name == ''"
+          class="secondary--text ml-0"
+        >
+          no Mesh
         </span>
       </v-col>
     </v-row>
