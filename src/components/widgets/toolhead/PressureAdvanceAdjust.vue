@@ -6,13 +6,13 @@
   >
     <v-row
       justify="end"
-      class="pa-0 mt-2 mb-0"
+      class="pa-0 mt-1 mb-3"
     >
       <v-col
         cols="12"
         class="py-0"
       >
-        <div class="d-flex align-center">
+        <div class="d-flex align-center px-0 ml-0 pa-0">
           <v-select
             v-model="selectedExtruder"
             :items="extruders"
@@ -21,40 +21,45 @@
             item-value="key"
             item-text="name"
             hide-details
-            outlined
+            solo
+            flat
             dense
-            class="mb-4 v-input--x-dense"
+            class="mb-1 no-border no-padding"
+            style="border-bottom: none; box-shadow: none; font-size: 14px; transform: translateY(-2px)"
             @change="activateExtruder"
           >
             <template #selection="{ item }">
               <v-icon
+                small
                 class="px-0 ml-0 mr-1"
                 :color="!item.extruder.can_extrude ? 'info' : 'error'"
               >
                 $fire
               </v-icon>
               <span
-                class="mt-1"
+                class="primary--text mt-1"
               >
                 {{ item.name }}
               </span>
               <v-icon
+                small
                 class="px-0 ml-4 mr-1"
               >
                 $thermometer
               </v-icon>
               <span
-                class="mt-1"
+                class="primary--text mt-1"
               >
                 {{ item.extruder.temperature.toFixed(2) }}°C
               </span>
               <v-icon
+                small
                 class="px-0 ml-4 mr-1"
               >
                 $printer3dNozzle
               </v-icon>
               <span
-                class="mt-1"
+                class="primary--text mt-1"
               >
                 {{ item.extruder.config.nozzle_diameter }}mm
               </span>
@@ -117,6 +122,7 @@
           :dec="1"
           :has-spinner="true"
           :spinner-factor="1"
+          style="transform: translateY(1px)"
           @keyup.enter.exact="setPa('ADVANCE', pa)"
         />
       </v-col>
@@ -213,3 +219,15 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
   }
 }
 </script>
+
+<style scoped>
+.no-padding :deep(.v-input__slot) {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.no-underline .v-select__selections {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+</style>

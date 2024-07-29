@@ -5,24 +5,41 @@
     flat
   >
     <v-expansion-panel>
-      <v-expansion-panel-header>
+      <v-expansion-panel-header
+        class="pl-0 pr-0 pb-0"
+      >
         <template #actions>
           <v-icon
             small
-            class="my-0 mr-2"
+            class="pa-0 ma-0"
           >
             $expand
           </v-icon>
         </template>
-        <template #default="{ open }">
-          <v-row no-gutters>
+        <template #default>
+          <v-row
+            no-gutters
+          >
             <v-col
-              class="text--secondary text-center"
-              :class="{ 'text--disabled': !klippyReady }"
+              class="pa-0 ma-0"
             >
-              <v-fade-transition>
-                <span v-if="!open">~ {{ estimatedExtrudedLength }} mm @ {{ estimatedVolumetricFlow }} mm³/s, {{ estimatedMaxSpeed }} mm/s</span>
-              </v-fade-transition>
+              <v-icon
+                small
+                primary
+                class="px-0 ml-0 mr-1"
+              >
+                $printer3dNozzle
+              </v-icon>
+              <span
+                class="secondary--text ml-0"
+              >
+                Flowrate:
+              </span>
+              <span
+                class="primary--text ml-0"
+              >
+                {{ estimatedVolumetricFlow }} mm³/s
+              </span>
             </v-col>
           </v-row>
         </template>

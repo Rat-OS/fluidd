@@ -9,7 +9,7 @@
           xmlns="http://www.w3.org/2000/svg"
           width="100%"
           height="100%"
-          viewBox="0 0 426.5 347"
+          viewBox="0 0 414 347"
           class="app-circle-control"
           :class="{
             [$vuetify.theme.dark ? 'theme--dark': 'theme--light']: true,
@@ -448,7 +448,9 @@
               v-else
               class="cc-btn"
               :class="xyzHomeClasses"
-              style="fill: black"
+              :style="{
+                fill: allHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="homeAll"
             >
               <circle
@@ -468,7 +470,7 @@
               class="cc-btn large"
               :class="xHomeClasses"
               :style="{
-                fill: xHomed ? 'white' : 'black'
+                fill: xHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
               }"
               @click="sendGcode('G28 X', $waits.onHomeX)"
             >
@@ -485,7 +487,7 @@
               class="cc-btn large"
               :class="yHomeClasses"
               :style="{
-                fill: yHomed ? 'white' : 'black'
+                fill: yHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
               }"
               @click="sendGcode('G28 Y', $waits.onHomeX)"
             >
@@ -505,7 +507,7 @@
               class="cc-btn large"
               :class="zHomeClasses"
               :style="{
-                fill: zHomed ? 'white' : 'black'
+                fill: zHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
               }"
               @click="sendGcode('G28 Z', $waits.onHomeZ)"
             >
@@ -526,7 +528,7 @@
               class="cc-btn large"
               :class="xyHomeClasses"
               :style="{
-                fill: xyHomed ? 'white' : 'black'
+                fill: xyHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
               }"
               @click="sendGcode('G28 X Y', $waits.onHomeXY)"
             >
@@ -544,7 +546,7 @@
               class="cc-btn large"
               :class="xyzHomeClasses"
               :style="{
-                fill: allHomed ? 'white' : 'black'
+                fill: allHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
               }"
               @click="homeAll"
             >
@@ -861,7 +863,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   .app-circle-control {
     font-size: 16px;
-    max-height: 480px;
+    max-height: 400px;
     min-height: 275px;
     user-select: none;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2)) drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.12));

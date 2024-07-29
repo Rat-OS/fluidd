@@ -18,11 +18,11 @@
           </template>
         </v-col>
 
-        <v-col class="controls-wrapper">
+        <v-col class="py-0 mt-0 controls-wrapper">
           <template v-if="klippyReady">
             <pressure-advance-adjust v-if="showPressureAdvance" />
-            <extruder-moves v-if="hasExtruder" />
             <extruder-stats />
+            <extruder-moves v-if="hasExtruder" />
             <speed-and-flow-adjust />
           </template>
         </v-col>

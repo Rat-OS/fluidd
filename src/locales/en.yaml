@@ -755,13 +755,13 @@ app:
       spool_join: Spool Join
       park_toolhead: Park
     tooltip:
-      absolute_positioning: Absolute Positioning
+      absolute_positioning: Absolute
       extruder_disabled: extruder disabled, below min_extrude_temp (%{min}<small>°C</small>)
       home_xy: Home XY
       home_z: Home Z
       manual_probe: Manual Probe
       motors_off: Motors Off
-      relative_positioning: Relative Positioning
+      relative_positioning: Relative
       select_tool: Select tool %{tool}
       tools: Tools
     label:

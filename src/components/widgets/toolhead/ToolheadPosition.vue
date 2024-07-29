@@ -2,58 +2,53 @@
   <div class="mb-3">
     <!-- <div style="line-height: 32px; padding: 0 12px;"> -->
     <v-row
-      class="mb-4"
+      class="mb-3"
       justify="space-between"
       no-gutters
     >
       <v-col
         cols="auto"
         justify="start"
+        class="ml-0"
       >
-        <v-tooltip top>
-          <template #activator="{ on, attrs }">
-            <app-btn
-              small
-              v-bind="attrs"
-              class="positioning-toggle-button"
-              :disabled="!klippyReady || printerBusy"
-              v-on="on"
-              @click="setPositioning(positioning == 0 ? 1 : 0)"
-            >
-              <v-icon
-                v-if="positioning == 0"
-                small
-              >
-                $absolutePositioning
-              </v-icon>
-              <v-icon
-                v-if="positioning == 1"
-                small
-              >
-                $relativePositioning
-              </v-icon>
-            </app-btn>
-          </template>
-          <span
+        <v-btn
+          small
+          icon
+          :disabled="!klippyReady || printerBusy"
+          @click="setPositioning(positioning == 0 ? 1 : 0)"
+        >
+          <v-icon
             v-if="positioning == 0"
+            small
+            primary
+            style="transform: translateY(-1px);"
           >
-            {{ $t('app.tool.tooltip.absolute_positioning') }}
-          </span>
-          <span
+            $absolutePositioning
+          </v-icon>
+          <v-icon
             v-if="positioning == 1"
+            small
+            primary
+            style="transform: translateY(-1px);"
           >
-            {{ $t('app.tool.tooltip.relative_positioning') }}
-          </span>
-        </v-tooltip>
+            $relativePositioning
+          </v-icon>
+        </v-btn>
+        <span
+          class="secondary--text ml-0"
+        >
+          Pos:
+        </span>
         <span
           v-if="positioning == 0"
-          class="secondary--text ml-1"
+          class="primary--text ml-0"
+          primary
         >
           {{ $t('app.tool.tooltip.absolute_positioning') }}
         </span>
         <span
           v-if="positioning == 1"
-          class="secondary--text ml-1"
+          class="primary--text ml-0"
         >
           {{ $t('app.tool.tooltip.relative_positioning') }}
         </span>
@@ -62,16 +57,23 @@
         v-if="currentMesh.profile_name != ''"
         cols="auto"
         justify="end"
-        class="mt-1"
       >
-        <v-icon
-          color="primary"
+        <v-btn
           small
-          class="mb-1"
+          icon
+          :disabled="!klippyReady || printerBusy"
         >
-          $bedMesh
-        </v-icon>
-        <span class="primary--text">
+          <v-icon
+            small
+            primary
+            style="transform: translateY(-1px)"
+          >
+            $bedMesh
+          </v-icon>
+        </v-btn>
+        <span
+          class="primary--text ml-0"
+        >
           {{ currentMesh.profile_name }}
         </span>
       </v-col>
@@ -221,9 +223,3 @@ export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) 
   }
 }
 </script>
-
-<style type="scss" scoped>
-  .positioning-toggle-button {
-    min-width: 20px !important;
-  }
-</style>
