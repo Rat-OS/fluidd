@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="toolChangeCommands.length > 0">
+  <v-row v-if="toolChangeCommands.length > 1">
     <v-col>
       <app-btn-group
         class="app-toolchanger-control d-flex"
