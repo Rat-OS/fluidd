@@ -86,7 +86,7 @@
         class="pr-1"
       >
         <v-text-field
-          :color="(forceMove) ? 'error' : 'primary'"
+          :color="(forceMove && !xHasMultipleSteppers) ? 'error' : 'primary'"
           :label="`X [ ${livePosition[0].toFixed(2)} ]`"
           outlined
           hide-details
@@ -105,7 +105,7 @@
         class="pr-1 pl-1"
       >
         <v-text-field
-          :color="(forceMove) ? 'error' : 'primary'"
+          :color="(forceMove && !yHasMultipleSteppers) ? 'error' : 'primary'"
           :label="`Y [ ${livePosition[1].toFixed(2)} ]`"
           outlined
           hide-details
@@ -124,7 +124,7 @@
         class="pr-0 pl-1"
       >
         <v-text-field
-          :color="(forceMove) ? 'error' : 'primary'"
+          :color="(forceMove && !zHasMultipleSteppers) ? 'error' : 'primary'"
           :label="`Z [ ${livePosition[2].toFixed(2)} ]`"
           outlined
           hide-details
