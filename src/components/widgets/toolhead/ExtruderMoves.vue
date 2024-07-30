@@ -128,49 +128,15 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   readonly form!: VForm
 
   valid = true
-
-  get extrudeLengths () {
-    return this.$store.state.config.uiSettings.general.extrudeLengths
-  }
-
-  get extrudeSpeeds () {
-    return this.$store.state.config.uiSettings.general.extrudeSpeeds
-  }
-
-  get extrudeLengthsSorted () {
-    return [...this.extrudeLengths].sort((a, b) => {
-      return b - a
-    })
-  }
-
-  get extrudeSpeedsSorted () {
-    return [...this.extrudeSpeeds].sort((a, b) => {
-      return b - a
-    })
-  }
-
-  get extrudeSpeed () {
-    const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
-
-    return extrudeSpeed === -1
-      ? this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
-      : extrudeSpeed
-  }
-
-  set extrudeSpeed (value: number) {
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.toolhead.extrudeSpeed',
-      value,
-      server: false
-    })
-  }
-
+  // ----------------------------
+  // Extrude Length
+  // ----------------------------
   get extrudeLength () {
     const extrudeLength = this.$store.state.config.uiSettings.toolhead.extrudeLength
-
-    return extrudeLength === -1
+    const value = extrudeLength === -1
       ? this.$store.state.config.uiSettings.general.defaultExtrudeLength
       : extrudeLength
+    return value
   }
 
   set extrudeLength (value: number) {
@@ -181,6 +147,56 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     })
   }
 
+  setExtrudeLength (params: { value: number }): void {
+    this.extrudeLength = params.value
+  }
+
+  get extrudeLengths () {
+    return this.$store.state.config.uiSettings.general.extrudeLengths
+  }
+
+  get extrudeLengthsSorted () {
+    return [...this.extrudeLengths].sort((a, b) => {
+      return b - a
+    })
+  }
+
+  // ----------------------------
+  // Extrude Speed
+  // ----------------------------
+  get extrudeSpeed () {
+    const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
+    const value = extrudeSpeed === -1
+      ? this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
+      : extrudeSpeed
+    return value
+  }
+
+  set extrudeSpeed (value: number) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.toolhead.extrudeSpeed',
+      value,
+      server: false
+    })
+  }
+
+  setExtrudeSpeed (params: { value: number }): void {
+    this.extrudeSpeed = params.value
+  }
+
+  get extrudeSpeeds () {
+    return this.$store.state.config.uiSettings.general.extrudeSpeeds
+  }
+
+  get extrudeSpeedsSorted () {
+    return [...this.extrudeSpeeds].sort((a, b) => {
+      return b - a
+    })
+  }
+
+  // ----------------------------
+  // Common
+  // ----------------------------
   @Watch('activeExtruder')
   activeExtruderChanged () {
     this.form.validate()
@@ -208,14 +224,6 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
       this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
     }
-  }
-
-  setExtrudeLength (params: { value: number }): void {
-    this.extrudeLength = params.value
-  }
-
-  setExtrudeSpeed (params: { value: number }): void {
-    this.extrudeSpeed = params.value
   }
 
   mounted () {

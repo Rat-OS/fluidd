@@ -1,68 +1,60 @@
 <template>
-  <v-form
-    ref="form"
-    v-model="valid"
-    @submit.prevent
+  <v-row
+    justify="end"
+    class="pa-0 mt-4 mb-3"
+    style="transform: translateY(-1px);"
   >
-    <v-row
-      justify="end"
-      class="pa-0 mt-4 mb-3"
-      style="transform: translateY(-1px);;"
+    <v-col
+      cols="6"
+      class="py-0"
     >
-      <v-col
-        cols="6"
-        class="py-0"
-      >
-        <app-number-input
-          v-model.number="pressureAdvance"
-          :label="$t('app.general.label.pressure_advance')"
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait(`${$waits.onSetPressureAdvance}${currentExtruder ?? ''}`)"
-          :rules="[
-            $rules.required,
-            $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(0)
-          ]"
-          :extruder="selectedExtruder"
-          suffix="s"
-          :min="0"
-          :max="null"
-          :step="0.01"
-          :dec="2"
-          :has-spinner="true"
-          style="transform: translateY(1px)"
-          @submit="setPa('ADVANCE', pa)"
-        />
-      </v-col>
-      <v-col
-        cols="6"
-        class="py-0"
-      >
-        <app-number-input
-          v-model.number="smoothTime"
-          :label="$t('app.general.label.smooth_time')"
-          :disabled="!klippyReady"
-          :locked="isMobileViewport"
-          :loading="hasWait(`${$waits.onSetPressureAdvance}${currentExtruder ?? ''}`)"
-          :rules="[
-            $rules.required,
-            $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(0),
-            $rules.numberLessThanOrEqual(0.2)
-          ]"
-          :extruder="selectedExtruder"
-          suffix="s"
-          :min="0"
-          :max="0.2"
-          :step="0.01"
-          :dec="2"
-          :has-spinner="true"
-          @submit="setPa('SMOOTH_TIME', st)"
-        />
-      </v-col>
-    </v-row>
-  </v-form>
+      <app-number-input
+        v-model.number="pressureAdvance"
+        :label="$t('app.general.label.pressure_advance')"
+        :disabled="!klippyReady"
+        :locked="isMobileViewport"
+        :loading="hasWait(`${$waits.onSetPressureAdvance}${currentExtruder ?? ''}`)"
+        :rules="[
+          $rules.required,
+          $rules.numberValid,
+          $rules.numberGreaterThanOrEqual(0)
+        ]"
+        suffix="s"
+        :min="0"
+        :max="null"
+        :step="0.01"
+        :dec="2"
+        :has-spinner="true"
+        style="transform: translateY(1px)"
+        @submit="setPressureAdvance()"
+      />
+    </v-col>
+    <v-col
+      cols="6"
+      class="py-0"
+    >
+      <app-number-input
+        v-model.number="smoothTime"
+        :label="$t('app.general.label.smooth_time')"
+        :disabled="!klippyReady"
+        :locked="isMobileViewport"
+        :loading="hasWait(`${$waits.onSetPressureAdvance}${currentExtruder ?? ''}`)"
+        :rules="[
+          $rules.required,
+          $rules.numberValid,
+          $rules.numberGreaterThanOrEqual(0),
+          $rules.numberLessThanOrEqual(0.2)
+        ]"
+        suffix="s"
+        :min="0"
+        :max="0.2"
+        :step="0.01"
+        :dec="2"
+        :has-spinner="true"
+        @submit="setSmoothTime()"
+      />
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -73,34 +65,59 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
-  [x: string]: any
-
-  valid = true
-
-  get currentExtruder (): string {
-    return this.$store.state.printer.printer.toolhead?.extruder
-  }
+  // ----------------------------
+  // Pressure Advance
+  // ----------------------------
+  pressureAdvance_value = -1
+  current_pressureAdvance_value = -1
 
   get pressureAdvance (): number {
-    return this.$store.state.printer.printer?.[this.currentExtruder]?.pressure_advance ?? 0
+    const value = this.$store.state.printer.printer?.[this.currentExtruder]?.pressure_advance ?? 0
+    this.pressureAdvance_value = value
+    this.current_pressureAdvance_value = value
+    return value
   }
 
-  pa = -1
   set pressureAdvance (value: number) {
-    this.pa = value
+    this.pressureAdvance_value = value
   }
+
+  setPressureAdvance (): void {
+    if (this.pressureAdvance_value !== this.current_pressureAdvance_value) {
+      this.current_pressureAdvance_value = this.pressureAdvance_value
+      this.sendGcode(`SET_PRESSURE_ADVANCE ADVANCE=${this.pressureAdvance_value} EXTRUDER=${this.currentExtruder}`, `${this.$waits.onSetPressureAdvance}${this.currentExtruder}`)
+    }
+  }
+
+  // ----------------------------
+  // Smooth Time
+  // ----------------------------
+  smoothTime_value = -1
+  current_smoothTime_value = -1
 
   get smoothTime (): number {
-    return this.$store.state.printer.printer?.[this.currentExtruder]?.smooth_time ?? 0.04
+    const value = this.$store.state.printer.printer?.[this.currentExtruder]?.smooth_time ?? 0.04
+    this.smoothTime_value = value
+    this.current_smoothTime_value = value
+    return value
   }
 
-  st = -1
   set smoothTime (value: number) {
-    this.st = value
+    this.smoothTime_value = value
   }
 
-  setPa (name: string, value: number): void {
-    this.sendGcode(`SET_PRESSURE_ADVANCE ${name}=${value} EXTRUDER=${this.currentExtruder}`, `${this.$waits.onSetPressureAdvance}${this.currentExtruder}`)
+  setSmoothTime (): void {
+    if (this.smoothTime_value !== this.current_smoothTime_value) {
+      this.current_smoothTime_value = this.smoothTime_value
+      this.sendGcode(`SET_PRESSURE_ADVANCE SMOOTH_TIME=${this.smoothTime_value} EXTRUDER=${this.currentExtruder}`, `${this.$waits.onSetPressureAdvance}${this.currentExtruder}`)
+    }
+  }
+
+  // ----------------------------
+  // Common
+  // ----------------------------
+  get currentExtruder (): string {
+    return this.$store.state.printer.printer.toolhead?.extruder
   }
 }
 </script>
