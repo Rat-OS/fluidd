@@ -28,7 +28,6 @@
             :step="0.1"
             :dec="2"
             :has-spinner="true"
-            @keyup.enter.exact="setRetractLength"
             @submit="setRetractLength"
           />
         </v-col>
@@ -57,7 +56,6 @@
             :step="0.1"
             :dec="2"
             :has-spinner="true"
-            @keyup.enter.exact="setUnRetractExtraLength"
             @submit="setUnRetractExtraLength"
           />
         </v-col>
@@ -79,7 +77,7 @@
             :rules="[
               $rules.required,
               $rules.numberValid,
-              $rules.numberGreaterThanOrEqual(1),
+              $rules.numberGreaterThanOrEqual(0),
               $rules.numberLessThanOrEqual(retract_speed_max)
             ]"
             suffix="mm/s"
@@ -88,7 +86,6 @@
             :step="5"
             :dec="0"
             :has-spinner="true"
-            @keyup.enter.exact="setRetractSpeed"
             @submit="setRetractSpeed"
           />
         </v-col>
@@ -117,7 +114,6 @@
             :step="5"
             :dec="0"
             :has-spinner="true"
-            @keyup.enter.exact="setUnretractSpeed"
             @submit="setUnretractSpeed"
           />
         </v-col>

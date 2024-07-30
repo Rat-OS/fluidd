@@ -1,64 +1,58 @@
 <template>
-  <v-form
-    ref="form"
-    @submit.prevent="submit"
+  <v-text-field
+    v-model="inputValue"
+    dense
+    outlined
+    hide-details
+    hide-spin-buttons
+    type="number"
+    :label="label"
+    :suffix="suffix"
+    :prefix="prefix"
+    :disabled="disabled"
+    :rules="rules"
+    :step="step"
+    :min="min"
+    :max="max"
+    :dec="dec"
+    :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
+    @blur="onBlur"
+    @focus="onFocus"
+    @keyup.enter.exact="onEnter($event)"
+    @click:append="onReset()"
   >
-    <v-text-field
-      v-model="inputValue"
-      :label="label"
-      :suffix="suffix"
-      :prefix="prefix"
-      :disabled="disabled"
-      :loading="loading"
-      :rules="rules"
-      :step="step"
-      :min="min"
-      :max="max"
-      :dec="dec"
-      :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
-      type="number"
-      hide-spin-buttons
-      hide-details
-      outlined
-      dense
-      @blur="onBlur"
-      @focus="$event.target.select()"
-      @keyup.enter.exact="onEnter($event)"
-      @click:append="onReset()"
+    <template
+      v-if="hasSpinner"
+      #append-outer
     >
-      <template
-        v-if="hasSpinner"
-        #append-outer
-      >
-        <div class="_spin_button_group">
-          <v-btn
-            :tabindex="-1"
-            :disabled="(inputValue >= max && max !== null) || disabled"
-            class="ml-0 mt-n3"
-            icon
-            plain
-            small
-            style="transform: translatex(-2px) translateY(2px);"
-            @click="incrementValue()"
-          >
-            <v-icon>$chevronUp</v-icon>
-          </v-btn>
-          <v-btn
-            :tabindex="-1"
-            :disabled="inputValue <= min || disabled"
-            class="ml-0 mb-n3"
-            icon
-            plain
-            small
-            style="transform: translatex(-2px) translateY(-5px);"
-            @click="decrementValue()"
-          >
-            <v-icon>$chevronDown</v-icon>
-          </v-btn>
-        </div>
-      </template>
-    </v-text-field>
-  </v-form>
+      <div class="_spin_button_group">
+        <v-btn
+          :tabindex="-1"
+          :disabled="(inputValue >= max && max !== null) || disabled"
+          class="ml-0 mt-n3"
+          icon
+          plain
+          small
+          style="transform: translatex(-2px) translateY(2px);"
+          @click="incrementValue()"
+        >
+          <v-icon>$chevronUp</v-icon>
+        </v-btn>
+        <v-btn
+          :tabindex="-1"
+          :disabled="inputValue <= min || disabled"
+          class="ml-0 mb-n3"
+          icon
+          plain
+          small
+          style="transform: translatex(-2px) translateY(-5px);"
+          @click="decrementValue()"
+        >
+          <v-icon>$chevronDown</v-icon>
+        </v-btn>
+      </div>
+    </template>
+  </v-text-field>
 </template>
 
 <script lang="ts">
@@ -86,9 +80,6 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   @Prop({ type: Boolean })
   readonly disabled?: boolean
 
-  @Prop({ type: Boolean })
-  readonly loading?: boolean
-
   @Prop({ type: String })
   readonly prefix!: string
 
@@ -113,14 +104,29 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   @Prop({ type: Boolean })
   readonly hasSpinner?: boolean
 
+  hasFocus = false
+  created () {
+    this.hasFocus = false
+  }
+
   onEnter (event: { target: { blur: () => void } }) {
     this.submit()
     event.target.blur()
   }
 
+  onFocus (event: FocusEvent) {
+    this.hasFocus = true
+    if (event.target instanceof HTMLInputElement) {
+      event.target.select()
+    }
+  }
+
   onBlur (event: FocusEvent) {
-    // this.submit()
-    this.$emit('blur', event)
+    if (this.hasFocus) {
+      this.submit()
+      this.$emit('blur', event)
+      this.hasFocus = false
+    }
   }
 
   onReset () {

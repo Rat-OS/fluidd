@@ -32,7 +32,6 @@
           :dec="2"
           :has-spinner="true"
           style="transform: translateY(1px)"
-          @keyup.enter.exact="setPa('ADVANCE', pa)"
           @submit="setPa('ADVANCE', pa)"
         />
       </v-col>
@@ -59,7 +58,6 @@
           :step="0.01"
           :dec="2"
           :has-spinner="true"
-          @keyup.enter.exact="setPa('SMOOTH_TIME', st)"
           @submit="setPa('SMOOTH_TIME', st)"
         />
       </v-col>
