@@ -1,59 +1,64 @@
 <template>
-  <v-text-field
-    v-model="inputValue"
-    :label="label"
-    :suffix="suffix"
-    :prefix="prefix"
-    :disabled="disabled"
-    :loading="loading"
-    :rules="rules"
-    :step="step"
-    :min="min"
-    :max="max"
-    :dec="dec"
-    :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
-    type="number"
-    hide-spin-buttons
-    hide-details
-    outlined
-    dense
-    @focus="$event.target.select()"
-    @keyup.enter.exact="onEnter($event)"
-    @click:append="onReset()"
-    @blur="onBlur($event)"
+  <v-form
+    ref="form"
+    @submit.prevent="submit"
   >
-    <template
-      v-if="hasSpinner"
-      #append-outer
+    <v-text-field
+      v-model="inputValue"
+      :label="label"
+      :suffix="suffix"
+      :prefix="prefix"
+      :disabled="disabled"
+      :loading="loading"
+      :rules="rules"
+      :step="step"
+      :min="min"
+      :max="max"
+      :dec="dec"
+      :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
+      type="number"
+      hide-spin-buttons
+      hide-details
+      outlined
+      dense
+      @blur="onBlur"
+      @focus="$event.target.select()"
+      @keyup.enter.exact="onEnter($event)"
+      @click:append="onReset()"
     >
-      <div class="_spin_button_group">
-        <v-btn
-          :tabindex="-1"
-          :disabled="(inputValue >= max && max !== null) || disabled"
-          class="ml-0 mt-n3"
-          icon
-          plain
-          small
-          style="transform: translatex(-2px) translateY(2px);"
-          @click="incrementValue()"
-        >
-          <v-icon>$chevronUp</v-icon>
-        </v-btn>
-        <v-btn
-          :tabindex="-1"
-          :disabled="inputValue <= min || disabled"
-          class="ml-0 mb-n3"
-          icon
-          plain
-          small
-          style="transform: translatex(-2px) translateY(-5px);"
-          @click="decrementValue()"
-        >
-          <v-icon>$chevronDown</v-icon>
-        </v-btn>
-      </div>
-    </template>
-  </v-text-field>
+      <template
+        v-if="hasSpinner"
+        #append-outer
+      >
+        <div class="_spin_button_group">
+          <v-btn
+            :tabindex="-1"
+            :disabled="(inputValue >= max && max !== null) || disabled"
+            class="ml-0 mt-n3"
+            icon
+            plain
+            small
+            style="transform: translatex(-2px) translateY(2px);"
+            @click="incrementValue()"
+          >
+            <v-icon>$chevronUp</v-icon>
+          </v-btn>
+          <v-btn
+            :tabindex="-1"
+            :disabled="inputValue <= min || disabled"
+            class="ml-0 mb-n3"
+            icon
+            plain
+            small
+            style="transform: translatex(-2px) translateY(-5px);"
+            @click="decrementValue()"
+          >
+            <v-icon>$chevronDown</v-icon>
+          </v-btn>
+        </div>
+      </template>
+    </v-text-field>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -63,10 +68,8 @@ import type { InputValidationRules } from 'vuetify'
 
 @Component({})
 export default class AppNumberInput extends Mixins(StateMixin) {
-  @VModel({ })
+  @VModel({ type: Number, required: true })
     inputValue!: number
-
-  value!: number
 
   @Prop({ type: String })
   readonly type?: string
@@ -116,7 +119,7 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   }
 
   onBlur (event: FocusEvent) {
-    this.submit()
+    // this.submit()
     this.$emit('blur', event)
   }
 

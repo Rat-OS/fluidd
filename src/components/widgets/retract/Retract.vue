@@ -79,7 +79,7 @@
             :rules="[
               $rules.required,
               $rules.numberValid,
-              $rules.numberGreaterThanOrEqual(0),
+              $rules.numberGreaterThanOrEqual(1),
               $rules.numberLessThanOrEqual(retract_speed_max)
             ]"
             suffix="mm/s"
