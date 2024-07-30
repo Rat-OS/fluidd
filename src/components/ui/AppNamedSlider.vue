@@ -19,6 +19,7 @@
           icon
           small
           :disabled="disabled"
+          :tabindex="-1"
           style="margin-top: -4px;"
           @click="internalLocked = !internalLocked"
         >
@@ -39,6 +40,7 @@
           v-if="!locked && !internalLocked && icon"
           icon
           small
+          :tabindex="-1"
           :disabled="disabled"
           style="margin-top: -4px;"
         >

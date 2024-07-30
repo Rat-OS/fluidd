@@ -24,6 +24,7 @@
       :class="{ 'text--disabled': !klippyReady }"
     >
       <v-btn
+        :tabindex="-1"
         icon
         small
         style="margin-top: -4px;"

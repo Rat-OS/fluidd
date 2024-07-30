@@ -9,6 +9,7 @@
       class="text-body-1 py-0"
     >
       <v-btn
+        :tabindex="-1"
         icon
         small
         style="margin-top: -4px;"

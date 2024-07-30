@@ -27,6 +27,7 @@
     >
       <div class="_spin_button_group">
         <v-btn
+          :tabindex="-1"
           :disabled="(inputValue >= max && max !== null) || disabled"
           class="ml-0 mt-n3"
           icon
@@ -38,6 +39,7 @@
           <v-icon>$chevronUp</v-icon>
         </v-btn>
         <v-btn
+          :tabindex="-1"
           :disabled="inputValue <= min || disabled"
           class="ml-0 mb-n3"
           icon
