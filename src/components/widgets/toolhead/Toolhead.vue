@@ -40,7 +40,7 @@ import ToolheadMixin from '@/mixins/toolhead'
 import ToolheadControlCross from './ToolheadControlCross.vue'
 import ToolheadControlBars from './ToolheadControlBars.vue'
 import ToolheadControlCircle from './ToolheadControlCircle.vue'
-import ExtruderControl from './ExtruderControl.vue'
+import ExtruderSelection from './ExtruderSelection.vue'
 import ExtruderMoves from './ExtruderMoves.vue'
 import ToolheadPosition from './ToolheadPosition.vue'
 import ZHeightAdjust from './ZHeightAdjust.vue'
@@ -58,7 +58,7 @@ import type { ToolheadControlStyle } from '@/store/config/types'
     ToolheadControlBars,
     ToolheadControlCircle,
     ExtruderMoves,
-    ExtruderControl,
+    ExtruderSelection,
     ToolheadPosition,
     ZHeightAdjust,
     SpeedAndFlowAdjust,

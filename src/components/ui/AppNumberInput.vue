@@ -120,9 +120,6 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   @Prop({ type: Boolean })
   readonly hasSpinner?: boolean
 
-  @Prop({ type: Number })
-  readonly spinnerFactor!: number
-
   created (): void {
     this.value = this.inputValue
   }
@@ -139,9 +136,9 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   }
 
   incrementValue (): void {
-    if (this.inputValue + this.step * this.spinnerFactor < this.max! || this.max === null) {
+    if (this.inputValue + this.step < this.max! || this.max === null) {
       this.inputValue = (
-        Math.round((this.inputValue + this.step * this.spinnerFactor) * 10 ** this.dec) /
+        Math.round((this.inputValue + this.step) * 10 ** this.dec) /
         10 ** this.dec
       )
     } else this.inputValue = this.max
@@ -149,9 +146,9 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   }
 
   decrementValue (): void {
-    if (this.inputValue - this.step * this.spinnerFactor > this.min) {
+    if (this.inputValue - this.step > this.min) {
       this.inputValue = (
-        Math.round((this.inputValue - this.step * this.spinnerFactor) * 10 ** this.dec) /
+        Math.round((this.inputValue - this.step) * 10 ** this.dec) /
         10 ** this.dec
       )
     } else this.inputValue = this.min

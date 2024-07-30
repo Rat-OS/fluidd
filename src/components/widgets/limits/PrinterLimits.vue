@@ -28,9 +28,8 @@
             :min="1"
             :max="null"
             :step="10"
-            :dec="10"
+            :dec="0"
             :has-spinner="true"
-            :spinner-factor="1"
             @keyup.enter.exact="setVelocity"
             @submit="setVelocity"
           />
@@ -57,9 +56,8 @@
             :min="1"
             :max="null"
             :step="1"
-            :dec="1"
+            :dec="2"
             :has-spinner="true"
-            :spinner-factor="1"
             @keyup.enter.exact="setSquareCornerVelocity"
             @submit="setSquareCornerVelocity"
           />
@@ -88,9 +86,8 @@
             :min="1"
             :max="null"
             :step="100"
-            :dec="100"
+            :dec="0"
             :has-spinner="true"
-            :spinner-factor="1"
             @keyup.enter.exact="setAccel"
             @submit="setAccel"
           />
@@ -116,12 +113,11 @@
               $rules.numberLessThanOrEqual(1)
             ]"
             suffix="mm/s²"
-            :min="1"
+            :min="0"
             :max="null"
             :step="0.1"
-            :dec="0.1"
+            :dec="2"
             :has-spinner="true"
-            :spinner-factor="1"
             @keyup.enter.exact="setMinimumCruiseRatio"
             @submit="setMinimumCruiseRatio"
           />
@@ -142,9 +138,8 @@
             :min="1"
             :max="null"
             :step="10"
-            :dec="10"
+            :dec="0"
             :has-spinner="true"
-            :spinner-factor="10"
             @keyup.enter.exact="setAccelToDecel"
             @submit="setAccelToDecel"
           />

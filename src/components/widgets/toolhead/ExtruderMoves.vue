@@ -25,7 +25,6 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
-          :spinner-factor="1"
         />
       </v-col>
       <v-col cols="6">
@@ -45,7 +44,6 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
-          :spinner-factor="1"
         />
       </v-col>
     </v-row>
