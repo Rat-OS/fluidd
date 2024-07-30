@@ -1,5 +1,5 @@
 <template>
-  <app-text-field
+  <v-text-field
     v-model="inputValue"
     :label="label"
     :suffix="suffix"
@@ -11,29 +11,16 @@
     :min="min"
     :max="max"
     :dec="dec"
+    :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
     type="number"
     hide-spin-buttons
     hide-details
     outlined
     dense
-    class="d-flex align-top mr-0"
-    @blur="value = inputValue"
     @focus="$event.target.select()"
     @keyup.enter.exact="onEnter($event)"
+    @click:append="onReset()"
   >
-    <template
-      v-if="resetValue"
-      #append
-    >
-      <v-icon
-        v-if="resetValue !== inputValue"
-        :color="'secondary'"
-        style="transform: translateX(5px) translateY(-2px);;"
-        @click="handleReset()"
-      >
-        $reset
-      </v-icon>
-    </template>
     <template
       v-if="hasSpinner"
       #append-outer
@@ -63,11 +50,11 @@
         </v-btn>
       </div>
     </template>
-  </app-text-field>
+  </v-text-field>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, VModel, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Prop, VModel } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import type { InputValidationRules } from 'vuetify'
 
@@ -120,19 +107,20 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   @Prop({ type: Boolean })
   readonly hasSpinner?: boolean
 
-  created (): void {
-    this.value = this.inputValue
-  }
-
-  @Watch('target')
-  updateTarget (): void {
-    this.value = this.inputValue
-  }
-
   onEnter (event: { target: { blur: () => void } }) {
-    this.value = this.inputValue
-    this.$emit('submit', this.inputValue)
+    this.submit()
     event.target.blur()
+  }
+
+  onReset () {
+    if (this.resetValue !== undefined) {
+      this.inputValue = this.resetValue
+      this.submit()
+    }
+  }
+
+  submit () {
+    this.$emit('submit', this.inputValue)
   }
 
   incrementValue (): void {
@@ -142,7 +130,7 @@ export default class AppNumberInput extends Mixins(StateMixin) {
         10 ** this.dec
       )
     } else this.inputValue = this.max
-    this.$emit('submit', this.inputValue)
+    this.submit()
   }
 
   decrementValue (): void {
@@ -152,15 +140,7 @@ export default class AppNumberInput extends Mixins(StateMixin) {
         10 ** this.dec
       )
     } else this.inputValue = this.min
-    this.$emit('submit', this.inputValue)
-  }
-
-  handleReset () {
-    if (this.resetValue !== undefined) {
-      this.inputValue = this.resetValue
-      this.$emit('change', this.resetValue)
-      this.$emit('submit', this.resetValue)
-    }
+    this.submit()
   }
 }
 </script>
@@ -171,5 +151,23 @@ export default class AppNumberInput extends Mixins(StateMixin) {
     margin-top: -5px;
     margin-left: -5px;
     margin-bottom: -5px;
+}
+
+.v-text-field>>> .v-text-field__suffix {
+  opacity: 0.5;
+}
+
+.v-text-field>>> .v-label--active {
+  opacity: 0.5;
+  top: 8px;
+}
+
+.v-text-field>>> .v-input__append-inner {
+  opacity: 0.5;
+  padding: 0px;
+}
+
+.v-text-field>>> .v-input__icon--append {
+  transform: translateX(4px) translateY(-2px);
 }
 </style>
