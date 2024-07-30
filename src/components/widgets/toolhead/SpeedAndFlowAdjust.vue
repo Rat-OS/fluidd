@@ -15,7 +15,7 @@
         :locked="isMobileViewport"
         :min="1"
         :max="200"
-        :icon="'$sensors'"
+        :icon="'$motion'"
         @submit="handleSetSpeed"
       />
       <app-named-slider

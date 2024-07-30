@@ -20,6 +20,7 @@
     @focus="$event.target.select()"
     @keyup.enter.exact="onEnter($event)"
     @click:append="onReset()"
+    @blur="onBlur($event)"
   >
     <template
       v-if="hasSpinner"
@@ -112,6 +113,11 @@ export default class AppNumberInput extends Mixins(StateMixin) {
   onEnter (event: { target: { blur: () => void } }) {
     this.submit()
     event.target.blur()
+  }
+
+  onBlur (event: FocusEvent) {
+    this.submit()
+    this.$emit('blur', event)
   }
 
   onReset () {
