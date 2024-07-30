@@ -285,7 +285,6 @@ import ToolheadMixin from '@/mixins/toolhead'
 import type {
   MeshState,
   KlipperBedMesh,
-  MatrixType,
   BedMeshProfileListEntry
 } from '@/store/mesh/types'
 

@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-expansion-panels
+      v-model="outputsCollapsed"
       accordion
       multiple
     >
@@ -183,6 +184,18 @@ export default class Outputs extends Mixins(StateMixin) {
       pins,
       leds
     }
+  }
+
+  get outputsCollapsed () {
+    return this.$store.state.config.uiSettings.general.outputsCollasped
+  }
+
+  set outputsCollapsed (value: (number | string)[]) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.outputsCollasped',
+      value: [...new Set(value.map(Number))].sort((a, b) => a - b),
+      server: true
+    })
   }
 }
 </script>

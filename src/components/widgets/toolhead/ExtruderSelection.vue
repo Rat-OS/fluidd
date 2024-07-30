@@ -5,7 +5,7 @@
     @submit.prevent
   >
     <v-expansion-panels
-      v-model="isCollapsed"
+      v-model="epanel"
       accordion
       multiple
       flat
@@ -166,7 +166,7 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
   [x: string]: any
 
   valid = true
-  isCollapsed = []
+  epanel = []
 
   selectedExtruder = ''
 
@@ -186,7 +186,7 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
   }
 
   selectExtruder (item: any) {
-    this.isCollapsed = []
+    this.epanel = []
     this.selectedExtruder = item.key
     this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${item.key}`, this.$waits.onExtruderChange)
   }

@@ -80,6 +80,7 @@ export interface GeneralConfig {
   extrudeLengths: number[];
   extrudeSpeeds: number[];
   enableVersionNotifications: boolean;
+  outputsCollapsed: number[];
   confirmOnEstop: boolean;
   confirmOnPowerDeviceChange: boolean;
   confirmOnSaveConfigAndRestart: boolean;
