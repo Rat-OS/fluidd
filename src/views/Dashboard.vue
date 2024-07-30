@@ -99,7 +99,7 @@ export default class Dashboard extends Mixins(StateMixin) {
     window.removeEventListener('resize', this.updateMenuCollapsed)
   }
 
-  maxColumnCount = 6
+  maxColumnCount = 4
 
   get columnCount () {
     if (this.inLayout) return this.maxColumnCount
@@ -206,9 +206,7 @@ export default class Dashboard extends Mixins(StateMixin) {
         container1: this.containers[0],
         container2: this.containers[1],
         container3: this.containers[2],
-        container4: this.containers[3],
-        container5: this.containers[4],
-        container6: this.containers[5]
+        container4: this.containers[3]
       }
     })
   }

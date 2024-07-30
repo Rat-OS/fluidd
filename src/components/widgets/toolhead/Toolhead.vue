@@ -20,6 +20,7 @@
 
         <v-col class="py-0 mt-0 controls-wrapper">
           <template v-if="klippyReady">
+            <extruder-selection />
             <pressure-advance-adjust v-if="showPressureAdvance" />
             <extruder-stats />
             <extruder-moves v-if="hasExtruder" />
@@ -39,6 +40,7 @@ import ToolheadMixin from '@/mixins/toolhead'
 import ToolheadControlCross from './ToolheadControlCross.vue'
 import ToolheadControlBars from './ToolheadControlBars.vue'
 import ToolheadControlCircle from './ToolheadControlCircle.vue'
+import ExtruderControl from './ExtruderControl.vue'
 import ExtruderMoves from './ExtruderMoves.vue'
 import ToolheadPosition from './ToolheadPosition.vue'
 import ZHeightAdjust from './ZHeightAdjust.vue'
@@ -56,6 +58,7 @@ import type { ToolheadControlStyle } from '@/store/config/types'
     ToolheadControlBars,
     ToolheadControlCircle,
     ExtruderMoves,
+    ExtruderControl,
     ToolheadPosition,
     ZHeightAdjust,
     SpeedAndFlowAdjust,
