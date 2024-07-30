@@ -129,13 +129,28 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class Retract extends Mixins(StateMixin, BrowserMixin) {
-  get retract_length () {
-    return this.$store.state.printer.printer.firmware_retraction.retract_length
+  // ----------------------------
+  // Defaults
+  // ----------------------------
+  get defaults () {
+    return this.$store.getters['printer/getPrinterSettings']('firmware_retraction') || {}
   }
 
-  rl = -1
+  // ----------------------------
+  // Retract Length
+  // ----------------------------
+  retract_length_value = -1
+  current_retract_length_value = -1
+
+  get retract_length () {
+    const value = this.$store.state.printer.printer.firmware_retraction.retract_length
+    this.retract_length_value = value
+    this.current_retract_length_value = value
+    return value
+  }
+
   set retract_length (value: number) {
-    this.rl = value
+    this.retract_length_value = value
   }
 
   get retract_length_max () {
@@ -143,13 +158,28 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return Math.round(this.defaults.retract_length * 2 * 100) / 100
   }
 
-  get retract_speed () {
-    return this.$store.state.printer.printer.firmware_retraction.retract_speed
+  setRetractLength () {
+    if (this.retract_length_value !== this.current_retract_length_value) {
+      this.current_retract_length_value = this.retract_length_value
+      this.sendGcode(`SET_RETRACTION RETRACT_LENGTH=${this.retract_length_value}`, this.$waits.onSetRetractLength)
+    }
   }
 
-  rs = -1
+  // ----------------------------
+  // Retract Speed
+  // ----------------------------
+  retract_speed_value = -1
+  current_retract_speed_value = -1
+
+  get retract_speed () {
+    const value = this.$store.state.printer.printer.firmware_retraction.retract_speed
+    this.retract_speed_value = value
+    this.current_retract_speed_value = value
+    return value
+  }
+
   set retract_speed (value: number) {
-    this.rs = value
+    this.retract_speed_value = value
   }
 
   get retract_speed_max () {
@@ -157,27 +187,28 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return Math.round(this.defaults.retract_speed * 2)
   }
 
-  get unretract_speed () {
-    return this.$store.state.printer.printer.firmware_retraction.unretract_speed
+  setRetractSpeed () {
+    if (this.retract_speed_value !== this.current_retract_speed_value) {
+      this.current_retract_speed_value = this.retract_speed_value
+      this.sendGcode(`SET_RETRACTION RETRACT_SPEED=${this.retract_speed_value}`, this.$waits.onSetRetractSpeed)
+    }
   }
 
-  urs = -1
-  set unretract_speed (value: number) {
-    this.urs = value
-  }
-
-  get unretract_speed_max () {
-    if (this.defaults.unretract_speed <= 0) return 100
-    return Math.round(this.defaults.unretract_speed * 2)
-  }
+  // ----------------------------
+  // Unretract Length
+  // ----------------------------
+  unretract_extra_length_value = -1
+  current_unretract_extra_length_value = -1
 
   get unretract_extra_length () {
-    return this.$store.state.printer.printer.firmware_retraction.unretract_extra_length
+    const value = this.$store.state.printer.printer.firmware_retraction.unretract_extra_length
+    this.unretract_extra_length_value = value
+    this.current_unretract_extra_length_value = value
+    return value
   }
 
-  uel = -1
   set unretract_extra_length (value: number) {
-    this.uel = value
+    this.unretract_extra_length_value = value
   }
 
   get unretract_extra_length_max () {
@@ -185,52 +216,40 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     return Math.round(this.defaults.unretract_extra_length * 2 * 100) / 100
   }
 
-  get defaults () {
-    return this.$store.getters['printer/getPrinterSettings']('firmware_retraction') || {}
-  }
-
-  handleResetRetractLength () {
-    if (this.defaults.retract_length !== undefined) {
-      this.retract_length = this.defaults.retract_length
-      this.setRetractLength()
+  setUnRetractExtraLength () {
+    if (this.unretract_extra_length_value !== this.current_unretract_extra_length_value) {
+      this.current_unretract_extra_length_value = this.unretract_extra_length_value
+      this.sendGcode(`SET_RETRACTION UNRETRACT_EXTRA_LENGTH=${this.unretract_extra_length_value}`, this.$waits.onSetUnretractExtraLength)
     }
   }
 
-  handleResetUnretractLength () {
-    if (this.defaults.unretract_extra_length !== undefined) {
-      this.unretract_extra_length = this.defaults.unretract_extra_length
-      this.setUnRetractExtraLength()
-    }
+  // ----------------------------
+  // Unretract Speed
+  // ----------------------------
+  unretract_speed_value = -1
+  current_unretract_speed_value = -1
+
+  get unretract_speed () {
+    const value = this.$store.state.printer.printer.firmware_retraction.unretract_speed
+    this.unretract_speed_value = value
+    this.current_unretract_speed_value = value
+    return value
   }
 
-  handleResetRetractSpeed () {
-    if (this.defaults.retract_speed !== undefined) {
-      this.retract_speed = this.defaults.retract_speed
-      this.setRetractSpeed()
-    }
+  set unretract_speed (value: number) {
+    this.unretract_speed_value = value
   }
 
-  handleResetUnretractSpeed () {
-    if (this.defaults.unretract_speed !== undefined) {
-      this.unretract_speed = this.defaults.unretract_speed
-      this.setUnretractSpeed()
-    }
-  }
-
-  setRetractLength () {
-    this.sendGcode(`SET_RETRACTION RETRACT_LENGTH=${this.rl}`, this.$waits.onSetRetractLength)
-  }
-
-  setRetractSpeed () {
-    this.sendGcode(`SET_RETRACTION RETRACT_SPEED=${this.rs}`, this.$waits.onSetRetractSpeed)
+  get unretract_speed_max () {
+    if (this.defaults.unretract_speed <= 0) return 100
+    return Math.round(this.defaults.unretract_speed * 2)
   }
 
   setUnretractSpeed () {
-    this.sendGcode(`SET_RETRACTION UNRETRACT_SPEED=${this.urs}`, this.$waits.onSetUnretractSpeed)
-  }
-
-  setUnRetractExtraLength () {
-    this.sendGcode(`SET_RETRACTION UNRETRACT_EXTRA_LENGTH=${this.uel}`, this.$waits.onSetUnretractExtraLength)
+    if (this.unretract_speed_value !== this.current_unretract_speed_value) {
+      this.current_unretract_speed_value = this.unretract_speed_value
+      this.sendGcode(`SET_RETRACTION UNRETRACT_SPEED=${this.unretract_speed_value}`, this.$waits.onSetUnretractSpeed)
+    }
   }
 }
 </script>

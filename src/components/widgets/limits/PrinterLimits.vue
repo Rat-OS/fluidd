@@ -151,120 +151,145 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
-  _velocity = -1
-  _current_velocity = -1
+  // ----------------------------
+  // Velocity
+  // ----------------------------
+  velocity_value = -1
+  current_velocity_value = -1
+
   get defaultVelocity (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.max_velocity') as number
   }
 
   get velocity (): number {
-    this._velocity = this.$store.state.printer.printer.toolhead.max_velocity as number
-    this._current_velocity = this.$store.state.printer.printer.toolhead.max_velocity as number
-    return this.$store.state.printer.printer.toolhead.max_velocity as number
+    const value = this.$store.state.printer.printer.toolhead.max_velocity as number
+    this.velocity_value = value
+    this.current_velocity_value = value
+    return value
   }
 
   set velocity (value: number) {
-    this._velocity = value
+    this.velocity_value = value
   }
 
-  _accel = -1
-  _current_accel = -1
+  setVelocity () {
+    if (this.velocity_value !== this.current_velocity_value) {
+      this.current_velocity_value = this.velocity_value
+      this.sendGcode(`SET_VELOCITY_LIMIT VELOCITY=${this.velocity_value}`, this.$waits.onSetVelocity)
+    }
+  }
+
+  // ----------------------------
+  // Acceleration
+  // ----------------------------
+  accel_value = -1
+  current_accel_value = -1
+
   get defaultAccel (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.max_accel')
   }
 
   get accel (): number {
-    this._accel = this.$store.state.printer.printer.toolhead.max_accel as number
-    this._current_accel = this.$store.state.printer.printer.toolhead.max_accel as number
-    return this.$store.state.printer.printer.toolhead.max_accel as number
+    const value = this.$store.state.printer.printer.toolhead.max_accel as number
+    this.accel_value = value
+    this.current_accel_value = value
+    return value
   }
 
   set accel (value: number) {
-    this._accel = value
+    this.accel_value = value
   }
 
-  _decel = -1
-  _current_decel = -1
+  setAccel () {
+    if (this.accel_value !== this.current_accel_value) {
+      this.current_accel_value = this.accel_value
+      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL=${this.accel_value}`, this.$waits.onSetAcceleration)
+    }
+  }
+
+  // ----------------------------
+  // Acceleration To Deceleration
+  // ----------------------------
+  accelToDecel_value = -1
+  current_accelToDecel_value = -1
+
   get defaultAccelToDecel (): number {
     const defaultAccelToDecel = this.$store.getters['printer/getPrinterSettings']('printer.max_accel_to_decel') as number | undefined
     return defaultAccelToDecel ?? this.defaultAccel / 2
   }
 
   get accelToDecel (): number {
-    this._decel = this.$store.state.printer.printer.toolhead.max_accel_to_decel as number
-    this._current_decel = this.$store.state.printer.printer.toolhead.max_accel_to_decel as number
-    return this.$store.state.printer.printer.toolhead.max_accel_to_decel as number
+    const value = this.$store.state.printer.printer.toolhead.max_accel_to_decel as number
+    this.accelToDecel_value = value
+    this.current_accelToDecel_value = value
+    return value
   }
 
   set accelToDecel (value: number) {
-    this._decel = value
+    this.accelToDecel_value = value
   }
 
-  _cruise = -1
-  _current_cruise = -1
+  setAccelToDecel () {
+    if (this.accelToDecel_value !== this.current_accelToDecel_value) {
+      this.current_accelToDecel_value = this.accelToDecel_value
+      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL_TO_DECEL=${this.accelToDecel_value}`, this.$waits.onSetAccelToDecel)
+    }
+  }
+
+  // ----------------------------
+  // Minimum Cruise Ratio
+  // ----------------------------
+  minimumCruiseRatio_value = -1
+  current_minimumCruiseRatio_value = -1
+
   get defaultMinimumCruiseRatio (): number {
     const defaultMinimumCruiseRatio = this.$store.getters['printer/getPrinterSettings']('printer.minimum_cruise_ratio') as number | undefined
     return defaultMinimumCruiseRatio ?? 0.5
   }
 
   get minimumCruiseRatio (): number {
-    this._cruise = this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number
-    this._current_cruise = this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number
-    return this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number
+    const value = this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number
+    this.minimumCruiseRatio_value = value
+    this.current_minimumCruiseRatio_value = value
+    return value
   }
 
   set minimumCruiseRatio (value: number) {
-    this._cruise = value
+    this.minimumCruiseRatio_value = value
   }
 
-  _scv = -1
-  _current_scv = -1
+  setMinimumCruiseRatio () {
+    if (this.minimumCruiseRatio_value !== this.current_minimumCruiseRatio_value) {
+      this.current_minimumCruiseRatio_value = this.minimumCruiseRatio_value
+      this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${this.minimumCruiseRatio_value}`, this.$waits.onSetMinimumCruiseRatio)
+    }
+  }
+
+  // ----------------------------
+  // Square Corner Velocity
+  // ----------------------------
+  squareCornerVelocity_value = -1
+  current_squareCornerVelocity_value = -1
+
   get defaultSquareCornerVelocity (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.square_corner_velocity') as number || 5
   }
 
   get squareCornerVelocity () {
-    this._scv = this.$store.state.printer.printer.toolhead.square_corner_velocity as number
-    this._current_scv = this.$store.state.printer.printer.toolhead.square_corner_velocity as number
-    return this.$store.state.printer.printer.toolhead.square_corner_velocity as number
+    const value = this.$store.state.printer.printer.toolhead.square_corner_velocity as number
+    this.squareCornerVelocity_value = value
+    this.current_squareCornerVelocity_value = value
+    return value
   }
 
   set squareCornerVelocity (value: number) {
-    this._scv = value
-  }
-
-  setVelocity () {
-    if (this._velocity !== this._current_velocity) {
-      this._current_velocity = this._velocity
-      this.sendGcode(`SET_VELOCITY_LIMIT VELOCITY=${this._velocity}`, this.$waits.onSetVelocity)
-    }
-  }
-
-  setAccel () {
-    if (this._accel !== this._current_accel) {
-      this._current_accel = this._accel
-      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL=${this._accel}`, this.$waits.onSetAcceleration)
-    }
-  }
-
-  setAccelToDecel () {
-    if (this._decel !== this._current_decel) {
-      this._current_decel = this._decel
-      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL_TO_DECEL=${this._decel}`, this.$waits.onSetAccelToDecel)
-    }
-  }
-
-  setMinimumCruiseRatio () {
-    if (this._cruise !== this._current_cruise) {
-      this._current_cruise = this._cruise
-      this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${this._cruise}`, this.$waits.onSetMinimumCruiseRatio)
-    }
+    this.squareCornerVelocity_value = value
   }
 
   setSquareCornerVelocity () {
-    if (this._scv !== this._current_scv) {
-      this._current_scv = this._scv
-      this.sendGcode(`SET_VELOCITY_LIMIT SQUARE_CORNER_VELOCITY=${this._scv}`, this.$waits.onSetSquareCornerVelocity)
+    if (this.squareCornerVelocity_value !== this.current_squareCornerVelocity_value) {
+      this.current_squareCornerVelocity_value = this.squareCornerVelocity_value
+      this.sendGcode(`SET_VELOCITY_LIMIT SQUARE_CORNER_VELOCITY=${this.squareCornerVelocity_value}`, this.$waits.onSetSquareCornerVelocity)
     }
   }
 }
