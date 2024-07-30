@@ -1,5 +1,6 @@
 import type { AppTablePartialHeader } from '@/types/tableheaders'
 import type { FileFilterType } from '../files/types'
+import type { MatrixType } from '../mesh/types';
 
 export interface ConfigState {
   [key: string]: any;
@@ -106,6 +107,9 @@ export interface GeneralConfig {
   enableDiagnostics: boolean;
   thumbnailSize: number;
   colorPickerValueRange: ColorPickerValueRange;
+  useMeshWireframe: boolean;
+  useMeshFlatSurface: boolean;
+  meshMatrix: MatrixType;
 }
 
 export type ToolheadControlStyle = 'cross' | 'bars' | 'circle'

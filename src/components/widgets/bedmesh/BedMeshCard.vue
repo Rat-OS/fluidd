@@ -428,7 +428,16 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
   }
 
   get matrix () {
-    return this.$store.state.mesh.matrix
+    return this.$store.state.config.uiSettings.general.meshMatrix ?? this.$store.state.mesh.matrix
+  }
+
+  set matrix (value: string) {
+    this.$store.dispatch('mesh/onMatrix', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.meshMatrix',
+      value,
+      server: true
+    })
   }
 
   get scale () {
@@ -440,11 +449,29 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
   }
 
   get wireframe () {
-    return this.$store.state.mesh.wireframe
+    return this.$store.state.config.uiSettings.general.useMeshWireframe ?? this.$store.state.mesh.wireframe
+  }
+
+  set wireframe (value: boolean) {
+    this.$store.dispatch('mesh/onWireframe', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useMeshWireframe',
+      value,
+      server: true
+    })
   }
 
   get flatSurface () {
-    return this.$store.state.mesh.flatSurface
+    return this.$store.state.config.uiSettings.general.useMeshFlatSurface ?? this.$store.state.mesh.flatSurface
+  }
+
+  set flatSurface (value: boolean) {
+    this.$store.dispatch('mesh/onFlatSurface', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useMeshFlatSurface',
+      value,
+      server: true
+    })
   }
 
   // The current processed mesh data, if any.
@@ -481,18 +508,6 @@ export default class BedMeshCard extends Mixins(StateMixin, ToolheadMixin, Brows
     if (result) {
       this.sendGcode(`BED_MESH_PROFILE LOAD="${name}"`)
     }
-  }
-
-  set wireframe (val: boolean) {
-    this.$store.dispatch('mesh/onWireframe', val)
-  }
-
-  set flatSurface (val: boolean) {
-    this.$store.dispatch('mesh/onFlatSurface', val)
-  }
-
-  set matrix (val: MatrixType) {
-    this.$store.dispatch('mesh/onMatrix', val)
   }
 
   async clearMesh () {

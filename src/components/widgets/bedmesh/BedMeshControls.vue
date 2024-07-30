@@ -307,11 +307,16 @@ export default class BedMesh extends Mixins(StateMixin, ToolheadMixin) {
   }
 
   get matrix () {
-    return this.mesh.matrix
+    return this.$store.state.config.uiSettings.general.meshMatrix ?? this.$store.state.mesh.matrix
   }
 
-  set matrix (val: MatrixType) {
-    this.$store.dispatch('mesh/onMatrix', val)
+  set matrix (value: string) {
+    this.$store.dispatch('mesh/onMatrix', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.meshMatrix',
+      value,
+      server: true
+    })
   }
 
   get mapScale () {
@@ -331,19 +336,29 @@ export default class BedMesh extends Mixins(StateMixin, ToolheadMixin) {
   }
 
   get wireframe () {
-    return this.mesh.wireframe
+    return this.$store.state.config.uiSettings.general.useMeshWireframe ?? this.$store.state.mesh.wireframe
   }
 
-  set wireframe (val: boolean) {
-    this.$store.dispatch('mesh/onWireframe', val)
+  set wireframe (value: boolean) {
+    this.$store.dispatch('mesh/onWireframe', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useMeshWireframe',
+      value,
+      server: true
+    })
   }
 
   get flatSurface () {
-    return this.mesh.flatSurface
+    return this.$store.state.config.uiSettings.general.useMeshFlatSurface ?? this.$store.state.mesh.flatSurface
   }
 
-  set flatSurface (val: boolean) {
-    this.$store.dispatch('mesh/onFlatSurface', val)
+  set flatSurface (value: boolean) {
+    this.$store.dispatch('mesh/onFlatSurface', value)
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useMeshFlatSurface',
+      value,
+      server: true
+    })
   }
 
   get mesh () {
