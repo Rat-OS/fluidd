@@ -30,49 +30,11 @@
                 no-gutters
                 justify="start"
               >
-                <v-col>
-                  <v-icon
-                    small
-                    primary
-                    :color="!item.extruder.can_extrude ? 'info' : 'error'"
-                    class="mb-1"
-                  >
-                    $fire
-                  </v-icon>
-                  <span
-                    class="primary--text mr-3"
-                    style="font-size: 14px"
-                  >
-                    {{ item.name }}
-                    <!-- {{ item.name }}{{ item.extruder.motion_queue != item.key ? item.extruder.motion_queue : '' }} -->
-                  </span>
-                  <v-icon
-                    small
-                    primary
-                    class="mb-1"
-                  >
-                    $thermometer
-                  </v-icon>
-                  <span
-                    class="primary--text mr-3"
-                    style="font-size: 14px"
-                  >
-                    {{ item.extruder.temperature.toFixed(2) }}°C
-                  </span>
-                  <v-icon
-                    small
-                    primary
-                    class="mb-1"
-                  >
-                    $printer3dNozzle
-                  </v-icon>
-                  <span
-                    class="primary--text"
-                    style="font-size: 14px"
-                  >
-                    {{ item.extruder.config.nozzle_diameter }}mm
-                  </span>
-                </v-col>
+                <ExtruderSelectionItem
+                  :key="item.key"
+                  :item="item"
+                  :text-class="'primary--text mr-3'"
+                />
               </v-row>
             </template>
           </template>
@@ -101,48 +63,11 @@
                     <v-row
                       no-gutters
                     >
-                      <v-col>
-                        <v-icon
-                          small
-                          primary
-                          :color="!item.extruder.can_extrude ? 'info' : 'error'"
-                          class="mb-1"
-                        >
-                          $fire
-                        </v-icon>
-                        <span
-                          class="secondary--text mr-3"
-                          style="font-size: 14px"
-                        >
-                          {{ item.name }}
-                        </span>
-                        <v-icon
-                          small
-                          primary
-                          class="mb-1"
-                        >
-                          $thermometer
-                        </v-icon>
-                        <span
-                          class="secondary--text mr-3"
-                          style="font-size: 14px"
-                        >
-                          {{ item.extruder.temperature.toFixed(2) }}°C
-                        </span>
-                        <v-icon
-                          small
-                          primary
-                          class="mb-1"
-                        >
-                          $printer3dNozzle
-                        </v-icon>
-                        <span
-                          class="secondary--text"
-                          style="font-size: 14px"
-                        >
-                          {{ item.extruder.config.nozzle_diameter }}mm
-                        </span>
-                      </v-col>
+                      <ExtruderSelectionItem
+                        :key="item.key"
+                        :item="item"
+                        :text-class="'secondary--text mr-3'"
+                      />
                     </v-row>
                   </v-list-item-content>
                 </v-list-item>
@@ -160,9 +85,14 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
+import ExtruderSelectionItem from '@/components/widgets/toolhead/ExtruderSelectionItem.vue'
 import type { Extruder, KnownExtruder } from '@/store/printer/types'
 
-@Component({})
+@Component({
+  components: {
+    ExtruderSelectionItem
+  }
+})
 export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
   [x: string]: any
 
