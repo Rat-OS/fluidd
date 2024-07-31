@@ -181,7 +181,7 @@
               class="cc-btn primary"
               :class="motorsOffClasses"
               :style="{
-                fill: xHomed || yHomed || zHomed ? 'black' : 'white'
+                fill: xHomed || yHomed || zHomed || hasSteppersEnabled ? 'black' : 'white'
               }"
               @click="sendGcode('M84')"
             >
