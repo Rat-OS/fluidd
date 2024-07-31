@@ -283,7 +283,6 @@ import BrowserMixin from '@/mixins/browser'
 import type {
   AppMeshes,
   KlipperBedMesh,
-  MatrixType,
   BedMeshProfileListEntry
 } from '@/store/mesh/types'
 

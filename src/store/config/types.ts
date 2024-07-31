@@ -1,6 +1,6 @@
 import type { AppTablePartialHeader } from '@/types/tableheaders'
 import type { FileFilterType } from '../files/types'
-import type { MatrixType } from '../mesh/types';
+import type { MatrixType } from '../mesh/types'
 
 export interface ConfigState {
   [key: string]: any;

@@ -112,12 +112,16 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
     try {
       const toolhead_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t0
       const toolhead_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t1
-      return true
+      if (toolhead_filament_sensor_t0 !== undefined && toolhead_filament_sensor_t1 !== undefined) {
+        return true
+      }
     } catch { }
     try {
       const feeder_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t0
       const feeder_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t1
-      return true
+      if (feeder_filament_sensor_t0 !== undefined && feeder_filament_sensor_t1 !== undefined) {
+        return true
+      }
     } catch { }
     return false
   }
