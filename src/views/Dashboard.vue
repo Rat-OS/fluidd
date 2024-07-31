@@ -60,6 +60,7 @@ import JobQueueCard from '@/components/widgets/job-queue/JobQueueCard.vue'
 import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
+import { throttle } from 'lodash'
 
 type colModelType = {
   cols?: number,
@@ -92,7 +93,8 @@ export default class Dashboard extends Mixins(StateMixin) {
   mounted () {
     this.onLayoutChange()
 
-    window.addEventListener('resize', this.updateMenuCollapsed)
+    // window.addEventListener('resize', this.updateMenuCollapsed)
+    window.addEventListener('resize', throttle(this.updateMenuCollapsed, 500))
 
     this.updateMenuCollapsed()
   }
@@ -105,7 +107,8 @@ export default class Dashboard extends Mixins(StateMixin) {
     else if (this.$el.clientWidth >= 1000 && this.$el.clientWidth < 2000) cols = 6
     else if (this.$el.clientWidth >= 2000 && this.$el.clientWidth < 3000) cols = 3
     else cols = 2
-    this.currColSpan.cols = Math.max(cols, 12 / this.columnCount)
+    const nCols = Math.max(cols, 12 / this.columnCount)
+    if (this.currColSpan.cols !== nCols) this.currColSpan.cols = nCols
     this.menuCollapsed = (this.$el.clientWidth / this.columnCount) < 560
   }
 
