@@ -43,7 +43,8 @@
                     class="primary--text mr-3"
                     style="font-size: 14px"
                   >
-                    {{ item.name }}{{ item.extruder.motion_queue != item.key ? item.extruder.motion_queue : '' }}
+                    {{ item.name }}
+                    <!-- {{ item.name }}{{ item.extruder.motion_queue != item.key ? item.extruder.motion_queue : '' }} -->
                   </span>
                   <v-icon
                     small
@@ -189,16 +190,20 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
   // ----------------------------
   // Selected Extruder
   // ----------------------------
+  cachedActiveAxtruder = ''
+
   @Watch('activeExtruder')
   activeExtruderChanged () {
-    this.selectedExtruder = this.state.printer.toolhead.extruder || 'extruder'
-    // if (!this.hasWait(this.$waits.onExtrude)) {
-    //   this.selectedExtruder = this.state.printer.toolhead.extruder || 'extruder'
-    // }
+    const activeExtruder = this.$store.state.printer.printer.toolhead.extruder
+    if (this.cachedActiveAxtruder !== activeExtruder) {
+      this.cachedActiveAxtruder = activeExtruder
+      this.selectedExtruder = activeExtruder
+      this.setSelectedExtruder(activeExtruder)
+    }
   }
 
   get selectedExtruder () {
-    return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
+    return this.$store.state.config.uiSettings.general.selectedExtruder
   }
 
   set selectedExtruder (value: string) {
@@ -212,7 +217,6 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
   setSelectExtruder (item: any) {
     this.epanel = []
     this.selectedExtruder = item.key
-    // this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${item.key}`, this.$waits.onExtruderChange)
   }
 }
 </script>
