@@ -4,10 +4,8 @@
       <v-col
         v-if="inLayout || hasCards(container)"
         :key="`container${containerIndex}`"
-        cols="12"
-        md="6"
-        :lg="columnSpan"
-        :class="{ 'drag': inLayout }"
+        v-model="currColSpan"
+        :cols="currColSpan.cols"
       >
         <app-draggable
           v-model="containers[containerIndex]"
@@ -63,6 +61,10 @@ import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
 
+type colModelType = {
+  cols?: number,
+}
+
 @Component({
   components: {
     PrinterStatusCard,
@@ -95,6 +97,18 @@ export default class Dashboard extends Mixins(StateMixin) {
     this.updateMenuCollapsed()
   }
 
+  currColSpan: colModelType = { cols: 12 }
+
+  updateMenuCollapsed () {
+    let cols = 12
+    if (this.$el.clientWidth < 1000) cols = 12
+    else if (this.$el.clientWidth >= 1000 && this.$el.clientWidth < 2000) cols = 6
+    else if (this.$el.clientWidth >= 2000 && this.$el.clientWidth < 3000) cols = 3
+    else cols = 2
+    this.currColSpan.cols = Math.max(cols, 12 / this.columnCount)
+    this.menuCollapsed = (this.$el.clientWidth / this.columnCount) < 560
+  }
+
   unmounted () {
     window.removeEventListener('resize', this.updateMenuCollapsed)
   }
@@ -103,7 +117,6 @@ export default class Dashboard extends Mixins(StateMixin) {
 
   get columnCount () {
     if (this.inLayout) return this.maxColumnCount
-
     return this.containers.reduce((count, container) => +this.hasCards(container) + count, 0)
   }
 
@@ -112,10 +125,6 @@ export default class Dashboard extends Mixins(StateMixin) {
     this.$store.commit('config/setContainerColumnCount', value)
 
     this.updateMenuCollapsed()
-  }
-
-  get columnSpan () {
-    return 12 / this.columnCount
   }
 
   get hasCameras (): boolean {
@@ -193,10 +202,6 @@ export default class Dashboard extends Mixins(StateMixin) {
     }
 
     this.containers = containers.slice(0, this.maxColumnCount)
-  }
-
-  updateMenuCollapsed () {
-    this.menuCollapsed = (this.$el.clientWidth / this.columnCount) < 560
   }
 
   handleUpdateLayout () {
