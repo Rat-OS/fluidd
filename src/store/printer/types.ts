@@ -20,6 +20,7 @@ export interface Extruder {
   min_extrude_temp: number;
   pressure_advance?: number;
   smooth_time?: number;
+  motion_queue?: string | null;
 }
 
 export interface ExtruderConfig {

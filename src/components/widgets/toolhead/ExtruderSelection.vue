@@ -43,7 +43,7 @@
                     class="primary--text mr-3"
                     style="font-size: 14px"
                   >
-                    {{ item.name }}
+                    {{ item.name }}{{ item.extruder.motion_queue != item.key ? item.extruder.motion_queue : '' }}
                   </span>
                   <v-icon
                     small
