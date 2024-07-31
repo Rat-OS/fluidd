@@ -111,6 +111,7 @@ export interface GeneralConfig {
   useMeshWireframe: boolean;
   useMeshFlatSurface: boolean;
   meshMatrix: MatrixType;
+  selectedExtruder: string;
 }
 
 export type ToolheadControlStyle = 'cross' | 'bars' | 'circle'

@@ -12,7 +12,7 @@
         <app-number-input
           v-model.number="extrudeLength"
           :label="$t('app.general.label.extrude_length')"
-          :disabled="!klippyReady || !activeExtruder"
+          :disabled="!klippyReady || selectedExtruder == '' || selectedExtruder == undefined"
           :rules="[
             $rules.required,
             $rules.numberValid,
@@ -31,7 +31,7 @@
         <app-number-input
           v-model.number="extrudeSpeed"
           :label="$t('app.general.label.extrude_speed')"
-          :disabled="!klippyReady || !activeExtruder"
+          :disabled="!klippyReady || selectedExtruder == '' || selectedExtruder == undefined"
           :rules="[
             $rules.required,
             $rules.numberValid,
@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Ref, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Ref } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import type { VForm } from '@/types'
@@ -195,13 +195,15 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   }
 
   // ----------------------------
-  // Common
+  // Selected Extruder
   // ----------------------------
-  @Watch('activeExtruder')
-  activeExtruderChanged () {
-    this.form.validate()
+  get selectedExtruder () {
+    return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
   }
 
+  // ----------------------------
+  // Common
+  // ----------------------------
   maxExtrudeLengthRule (value: number) {
     return this.$rules.numberLessThanOrEqual(this.maxExtrudeLength)(value)
   }
@@ -212,17 +214,31 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
 
   sendRetractGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
+      const activeExtruder = this.$store.state.printer.printer.toolhead.extruder || 'extruder'
+      if (activeExtruder !== this.selectedExtruder) {
+        this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${this.selectedExtruder}`, wait)
+      }
       const gcode = `G1 E-${amount} F${rate * 60}`
       this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
+      if (activeExtruder !== this.selectedExtruder) {
+        this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${activeExtruder}`, wait)
+      }
     }
   }
 
   sendExtrudeGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
+      const activeExtruder = this.$store.state.printer.printer.toolhead.extruder || 'extruder'
+      if (activeExtruder !== this.selectedExtruder) {
+        this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${this.selectedExtruder}`, wait)
+      }
       const gcode = `G1 E${amount} F${rate * 60}`
       this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
+      if (activeExtruder !== this.selectedExtruder) {
+        this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${activeExtruder}`, wait)
+      }
     }
   }
 

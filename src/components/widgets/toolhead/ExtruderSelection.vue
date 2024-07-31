@@ -94,7 +94,7 @@
                   :exact="false"
                   link
                   class="pa-0"
-                  @click="selectExtruder(item)"
+                  @click="setSelectExtruder(item)"
                 >
                   <v-list-item-content class="my-0">
                     <v-row
@@ -155,7 +155,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
@@ -165,15 +165,16 @@ import type { Extruder, KnownExtruder } from '@/store/printer/types'
 export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
   [x: string]: any
 
+  // ----------------------------
+  // Models
+  // ----------------------------
   valid = true
   epanel = []
 
-  selectedExtruder = ''
-
+  // ----------------------------
+  // Extruder
+  // ----------------------------
   get extruders () {
-    if (this.selectedExtruder === '') {
-      this.selectedExtruder = this.$store.state.printer.printer.toolhead?.extruder
-    }
     const _extruders: { key: string; name: string; extruder: Extruder }[] = []
     const keys = this.$store.getters['printer/getExtruders'] as KnownExtruder[]
     keys.forEach((k) => {
@@ -185,14 +186,33 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
     return _extruders
   }
 
-  selectExtruder (item: any) {
-    this.epanel = []
-    this.selectedExtruder = item.key
-    this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${item.key}`, this.$waits.onExtruderChange)
+  // ----------------------------
+  // Selected Extruder
+  // ----------------------------
+  @Watch('activeExtruder')
+  activeExtruderChanged () {
+    this.selectedExtruder = this.state.printer.toolhead.extruder || 'extruder'
+    // if (!this.hasWait(this.$waits.onExtrude)) {
+    //   this.selectedExtruder = this.state.printer.toolhead.extruder || 'extruder'
+    // }
   }
 
-  activateExtruder (extruder: string) {
-    this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${extruder}`, this.$waits.onExtruderChange)
+  get selectedExtruder () {
+    return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
+  }
+
+  set selectedExtruder (value: string) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.selectedExtruder',
+      value,
+      server: true
+    })
+  }
+
+  setSelectExtruder (item: any) {
+    this.epanel = []
+    this.selectedExtruder = item.key
+    // this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${item.key}`, this.$waits.onExtruderChange)
   }
 }
 </script>

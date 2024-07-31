@@ -45,6 +45,7 @@ export const defaultState = (): ConfigState => {
         useMeshWireframe: true,
         useMeshFlatSurface: false,
         meshMatrix: 'mesh_matrix',
+        selectedExtruder: '',
         enableVersionNotifications: true,
         confirmOnEstop: false,
         confirmOnPowerDeviceChange: false,

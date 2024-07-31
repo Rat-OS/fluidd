@@ -1,11 +1,13 @@
 <template>
-  <v-row :dense="$vuetify.breakpoint.smAndDown">
+  <v-row
+    ref="dashboard"
+    :dense="$vuetify.breakpoint.smAndDown"
+  >
     <template v-for="(container, containerIndex) in containers">
       <v-col
         v-if="inLayout || hasCards(container)"
         :key="`container${containerIndex}`"
-        v-model="currColSpan"
-        :cols="currColSpan.cols"
+        :cols="currColSpan"
       >
         <app-draggable
           v-model="containers[containerIndex]"
@@ -41,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch, Ref } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import PrinterStatusCard from '@/components/widgets/status/PrinterStatusCard.vue'
 import JobsCard from '@/components/widgets/jobs/JobsCard.vue'
@@ -61,10 +63,6 @@ import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
 import { throttle } from 'lodash'
-
-type colModelType = {
-  cols?: number,
-}
 
 @Component({
   components: {
@@ -87,6 +85,9 @@ type colModelType = {
   }
 })
 export default class Dashboard extends Mixins(StateMixin) {
+  @Ref('dashboard')
+  readonly dashboardElement!: HTMLElement
+
   menuCollapsed = false
   containers: Array<LayoutConfig[]> = []
 
@@ -100,17 +101,17 @@ export default class Dashboard extends Mixins(StateMixin) {
   }
 
   maxColumnCount = 6
-  currColSpan: colModelType = { cols: 12 }
+  currColSpan = 12
 
   updateMenuCollapsed () {
     let cols = 12
-    if (this.$el.clientWidth < 900) cols = 12
-    else if (this.$el.clientWidth >= 900 && this.$el.clientWidth < 1800) cols = 6
-    else if (this.$el.clientWidth >= 1800 && this.$el.clientWidth < 2800) cols = 3
+    if (window.innerWidth < 900) cols = 12
+    else if (window.innerWidth >= 900 && window.innerWidth < 1800) cols = 6
+    else if (window.innerWidth >= 1800 && window.innerWidth < 2800) cols = 3
     else cols = 2
     const nCols = Math.max(cols, 12 / this.columnCount)
-    if (this.currColSpan.cols !== nCols) this.currColSpan.cols = nCols
-    this.menuCollapsed = (this.$el.clientWidth / this.columnCount) < 560
+    if (this.currColSpan !== nCols) this.currColSpan = nCols
+    this.menuCollapsed = (window.innerWidth / this.columnCount) < 560
   }
 
   unmounted () {
