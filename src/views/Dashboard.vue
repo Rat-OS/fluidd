@@ -99,6 +99,7 @@ export default class Dashboard extends Mixins(StateMixin) {
     this.updateMenuCollapsed()
   }
 
+  maxColumnCount = 6
   currColSpan: colModelType = { cols: 12 }
 
   updateMenuCollapsed () {
@@ -115,8 +116,6 @@ export default class Dashboard extends Mixins(StateMixin) {
   unmounted () {
     window.removeEventListener('resize', this.updateMenuCollapsed)
   }
-
-  maxColumnCount = 6
 
   get columnCount () {
     if (this.inLayout) return this.maxColumnCount
