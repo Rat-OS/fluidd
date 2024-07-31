@@ -103,9 +103,9 @@ export default class Dashboard extends Mixins(StateMixin) {
 
   updateMenuCollapsed () {
     let cols = 12
-    if (this.$el.clientWidth < 1000) cols = 12
-    else if (this.$el.clientWidth >= 1000 && this.$el.clientWidth < 2000) cols = 6
-    else if (this.$el.clientWidth >= 2000 && this.$el.clientWidth < 3000) cols = 3
+    if (this.$el.clientWidth < 900) cols = 12
+    else if (this.$el.clientWidth >= 900 && this.$el.clientWidth < 1800) cols = 6
+    else if (this.$el.clientWidth >= 1800 && this.$el.clientWidth < 2800) cols = 3
     else cols = 2
     const nCols = Math.max(cols, 12 / this.columnCount)
     if (this.currColSpan.cols !== nCols) this.currColSpan.cols = nCols
