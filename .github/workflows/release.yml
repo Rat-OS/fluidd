@@ -94,39 +94,39 @@ jobs:
         with:
           release_id: ${{ steps.create_release.outputs.id }}
 
-  publish-web:
-    name: Deploy to Host
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # publish-web:
+  #   name: Deploy to Host
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Download fluidd.zip
-        uses: actions/download-artifact@v4
-        with:
-          name: fluidd-${{ github.sha }}.zip
-          path: ./dist
+  #     - name: Download fluidd.zip
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: fluidd-${{ github.sha }}.zip
+  #         path: ./dist
 
-      - name: Prepare Deploy
-        run: |
-          cp ./server/config.json ./dist/config.json
+  #     - name: Prepare Deploy
+  #       run: |
+  #         cp ./server/config.json ./dist/config.json
 
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
+  #     - uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-region: us-east-1
+  #         role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE }}
 
-      - name: Deploy to Host
-        uses: reggionick/s3-deploy@v4
-        with:
-          folder: dist
-          bucket: ${{ secrets.S3_BUCKET_NAME }}
-          bucket-region: us-east-1
-          dist-id: ${{ secrets.CF_DISTRIBUTION_ID }}
-          delete-removed: true
-          no-cache: true
-          private: true
+  #     - name: Deploy to Host
+  #       uses: reggionick/s3-deploy@v4
+  #       with:
+  #         folder: dist
+  #         bucket: ${{ secrets.S3_BUCKET_NAME }}
+  #         bucket-region: us-east-1
+  #         dist-id: ${{ secrets.CF_DISTRIBUTION_ID }}
+  #         delete-removed: true
+  #         no-cache: true
+  #         private: true
