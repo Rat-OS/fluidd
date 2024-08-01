@@ -240,11 +240,11 @@ export default class AppBar extends Mixins(StateMixin, ServicesMixin, FilesMixin
   }
 
   get ratOsImageUrl () {
-    return window.location.href.replace('#/', '').replace(/:\d+/, '') + './configure/_next/static/media/logo-white.6051cbc7.svg'
+    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure/_next/static/media/logo-white.6051cbc7.svg'
   }
 
   get ratOsConfiguratorUrl () {
-    return window.location.href.replace('#/', '').replace(/:\d+/, '') + './configure'
+    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure'
   }
 
   get instanceName () {
