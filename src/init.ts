@@ -222,7 +222,7 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
     configLoaded = true
   }
 
-  if no moonraker config has been loaded check for a default template inside .fluidd-theme folder
+  // if no moonraker config has been loaded check for a default template inside .fluidd-theme folder
   configLoaded = false
   if (!configLoaded) {
     try {
