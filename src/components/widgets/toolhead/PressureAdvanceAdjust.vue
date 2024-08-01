@@ -66,20 +66,27 @@ import type { ExtruderStepper } from '@/store/printer/types'
 
 @Component({})
 export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
-  @Prop({ type: Object, required: true })
-    extruderStepper!: ExtruderStepper
+  @Prop({ type: Object })
+    extruderStepper?: ExtruderStepper
 
-  /**
-   * Pressure Advance
-  */
+  // ----------------------------
+  // Pressure Advance
+  // ----------------------------
   pressureAdvance_value = -1
   current_pressureAdvance_value = -1
 
   get pressureAdvance (): number {
-    const value = this.$store.state.printer.printer?.[this.currentExtruder]?.pressure_advance ?? 0
-    this.pressureAdvance_value = value
-    this.current_pressureAdvance_value = value
-    return value
+    if (this.extruderStepper) {
+      const value = this.extruderStepper?.pressure_advance ?? 0
+      this.pressureAdvance_value = value
+      this.current_pressureAdvance_value = value
+      return value
+    } else {
+      const value = this.$store.state.printer.printer?.[this.currentExtruder]?.pressure_advance ?? 0
+      this.pressureAdvance_value = value
+      this.current_pressureAdvance_value = value
+      return value
+    }
   }
 
   set pressureAdvance (value: number) {
@@ -93,17 +100,24 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     }
   }
 
-  /**
-   * Smooth Time
-  */
+  // ----------------------------
+  // Smooth Time
+  // ----------------------------
   smoothTime_value = -1
   current_smoothTime_value = -1
 
   get smoothTime (): number {
-    const value = this.$store.state.printer.printer?.[this.currentExtruder]?.smooth_time ?? 0.04
-    this.smoothTime_value = value
-    this.current_smoothTime_value = value
-    return value
+    if (this.extruderStepper) {
+      const value = this.extruderStepper?.smooth_time ?? 0.04
+      this.smoothTime_value = value
+      this.current_smoothTime_value = value
+      return value
+    } else {
+      const value = this.$store.state.printer.printer?.[this.currentExtruder]?.smooth_time ?? 0.04
+      this.smoothTime_value = value
+      this.current_smoothTime_value = value
+      return value
+    }
   }
 
   set smoothTime (value: number) {
@@ -117,18 +131,19 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     }
   }
 
-  /**
-   * Common
-  */
-  // get selectedExtruderStepper () {
-  //   return this.extruderStepper ?? this.activeExtruder
-  // }
-
+  // ----------------------------
+  // Common
+  // ----------------------------
   get currentExtruder (): string {
-    if (this.extruderStepper !== undefined) {
-      return this.extruderStepper.name
+    if (this.extruderStepper) {
+      const { name } = this.extruderStepper
+      return name
     } else {
-      return this.$store.state.printer.printer.toolhead?.extruder
+      if (this.hasMultipleExtruders) {
+        return this.$store.state.config.uiSettings.general.selectedExtruder
+      } else {
+        return this.$store.state.printer.printer.toolhead?.extruder
+      }
     }
   }
 }
