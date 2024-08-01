@@ -17,7 +17,7 @@
           <template #actions>
             <v-icon
               small
-              class="pa-0 ma- mr-1"
+              class="pa-0 ma-0 mr-1"
             >
               $expand
             </v-icon>

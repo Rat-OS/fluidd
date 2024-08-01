@@ -11,7 +11,7 @@
         <template #actions>
           <v-icon
             small
-            class="pa-0 ma-0"
+            class="pa-0 ma-0 mr-1"
           >
             $expand
           </v-icon>
@@ -19,26 +19,40 @@
         <template #default>
           <v-row
             no-gutters
+            justify="start"
           >
-            <v-col
-              class="pa-0 ma-0"
-            >
+            <v-col>
               <v-icon
                 small
                 primary
-                class="px-0 ml-0 mr-1"
+                class="mb-1"
+                style="transform: translateY(1px);"
               >
                 $printer3dNozzle
               </v-icon>
               <span
-                class="secondary--text ml-0"
+                class="secondary--text mr-0"
+                style="font-size: 14px"
               >
                 Flowrate:
               </span>
               <span
-                class="primary--text ml-0"
+                class="primary--text mr-3"
+                style="font-size: 14px"
               >
                 {{ estimatedVolumetricFlow }} mm³/s
+              </span>
+              <span
+                class="secondary--text mr-0"
+                style="font-size: 14px"
+              >
+                Length:
+              </span>
+              <span
+                class="primary--text mr-3"
+                style="font-size: 14px"
+              >
+                ~{{ estimatedExtrudedLength }} mm
               </span>
             </v-col>
           </v-row>
@@ -46,7 +60,7 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <div
-          class="text-center"
+          class="text-center pa-0 mt-3 mb-0"
           :class="{ 'text--disabled': !klippyReady }"
         >
           <p
@@ -129,3 +143,23 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   }
 }
 </script>
+
+<style scoped>
+.no-padding :deep(.v-input__slot) {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.v-expansion-panel-header>>> .v-expansion-panel-header--active {
+  padding: 0 !important;
+}
+
+.v-expansion-panel-content>>> .v-expansion-panel-content__wrap {
+  padding: 0 !important;
+}
+
+.no-underline .v-select__selections {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+</style>
