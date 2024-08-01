@@ -151,9 +151,9 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
-  // ----------------------------
-  // Velocity
-  // ----------------------------
+  /**
+   * Velocity
+   */
   velocity_value = -1
   current_velocity_value = -1
 
@@ -179,9 +179,9 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Acceleration
-  // ----------------------------
+  /**
+   * Acceleration
+   */
   accel_value = -1
   current_accel_value = -1
 
@@ -207,9 +207,9 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Acceleration To Deceleration
-  // ----------------------------
+  /**
+   * Acceleration To Deceleration
+   */
   accelToDecel_value = -1
   current_accelToDecel_value = -1
 
@@ -236,9 +236,9 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Minimum Cruise Ratio
-  // ----------------------------
+  /**
+   * Minimum Cruise Ratio
+   */
   minimumCruiseRatio_value = -1
   current_minimumCruiseRatio_value = -1
 
@@ -265,9 +265,9 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Square Corner Velocity
-  // ----------------------------
+  /**
+   * Square Corner Velocity
+   */
   squareCornerVelocity_value = -1
   current_squareCornerVelocity_value = -1
 

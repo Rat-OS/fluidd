@@ -95,7 +95,8 @@
           :disabled="!klippyReady || !extruderReady || !valid"
           block
           small
-          @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
+          :loading="hasWait($waits.onRetract)"
+          @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onRetract)"
         >
           {{ $t('app.general.btn.retract') }}
           <v-icon>$chevronUp</v-icon>
@@ -106,6 +107,7 @@
           :disabled="!klippyReady || !extruderReady || !valid"
           block
           small
+          :loading="hasWait($waits.onExtrude)"
           @click="sendExtrudeGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
         >
           {{ $t('app.general.btn.extrude') }}
@@ -128,9 +130,9 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   readonly form!: VForm
 
   valid = true
-  // ----------------------------
-  // Extrude Length
-  // ----------------------------
+  /**
+   * Extrude Length
+   */
   get extrudeLength () {
     const extrudeLength = this.$store.state.config.uiSettings.toolhead.extrudeLength
     const value = extrudeLength === -1
@@ -161,9 +163,9 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     })
   }
 
-  // ----------------------------
-  // Extrude Speed
-  // ----------------------------
+  /**
+   * Extrude Speed
+   */
   get extrudeSpeed () {
     const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
     const value = extrudeSpeed === -1
@@ -194,16 +196,16 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     })
   }
 
-  // ----------------------------
-  // Selected Extruder
-  // ----------------------------
+  /**
+   * Selected Extruder
+   */
   get selectedExtruder () {
     return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
   }
 
-  // ----------------------------
-  // Common
-  // ----------------------------
+  /**
+   * Common
+   */
   maxExtrudeLengthRule (value: number) {
     return this.$rules.numberLessThanOrEqual(this.maxExtrudeLength)(value)
   }

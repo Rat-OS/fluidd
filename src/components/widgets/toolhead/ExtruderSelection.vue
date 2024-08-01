@@ -30,7 +30,7 @@
                 no-gutters
                 justify="start"
               >
-                <ExtruderSelectionItem
+                <extruder-item
                   :key="item.key"
                   :item="item"
                   :text-class="'primary--text mr-3'"
@@ -63,7 +63,7 @@
                     <v-row
                       no-gutters
                     >
-                      <ExtruderSelectionItem
+                      <extruder-item
                         :key="item.key"
                         :item="item"
                         :text-class="'secondary--text mr-3'"
@@ -85,26 +85,26 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
-import ExtruderSelectionItem from '@/components/widgets/toolhead/ExtruderSelectionItem.vue'
+import ExtruderItem from '@/components/widgets/toolhead/ExtruderItem.vue'
 import type { Extruder, KnownExtruder } from '@/store/printer/types'
 
 @Component({
   components: {
-    ExtruderSelectionItem
+    ExtruderItem
   }
 })
 export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
   [x: string]: any
 
-  // ----------------------------
-  // Models
-  // ----------------------------
+  /**
+   * Models
+   */
   valid = true
   epanel = []
 
-  // ----------------------------
-  // Extruder
-  // ----------------------------
+  /**
+   * Extruder
+   */
   get extruders () {
     const _extruders: { key: string; name: string; extruder: Extruder }[] = []
     const keys = this.$store.getters['printer/getExtruders'] as KnownExtruder[]
@@ -117,9 +117,9 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
     return _extruders
   }
 
-  // ----------------------------
-  // Selected Extruder
-  // ----------------------------
+  /**
+   * Selected Extruder
+   */
   cachedActiveAxtruder = ''
 
   @Watch('activeExtruder')

@@ -58,16 +58,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
+import type { ExtruderStepper } from '@/store/printer/types'
 
 @Component({})
 export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
-  // ----------------------------
-  // Pressure Advance
-  // ----------------------------
+  @Prop({ type: Object, required: true })
+    extruderStepper!: ExtruderStepper
+
+  /**
+   * Pressure Advance
+  */
   pressureAdvance_value = -1
   current_pressureAdvance_value = -1
 
@@ -89,9 +93,9 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     }
   }
 
-  // ----------------------------
-  // Smooth Time
-  // ----------------------------
+  /**
+   * Smooth Time
+  */
   smoothTime_value = -1
   current_smoothTime_value = -1
 
@@ -113,11 +117,19 @@ export default class PressureAdvanceAdjust extends Mixins(StateMixin, ToolheadMi
     }
   }
 
-  // ----------------------------
-  // Common
-  // ----------------------------
+  /**
+   * Common
+  */
+  // get selectedExtruderStepper () {
+  //   return this.extruderStepper ?? this.activeExtruder
+  // }
+
   get currentExtruder (): string {
-    return this.$store.state.printer.printer.toolhead?.extruder
+    if (this.extruderStepper !== undefined) {
+      return this.extruderStepper.name
+    } else {
+      return this.$store.state.printer.printer.toolhead?.extruder
+    }
   }
 }
 </script>

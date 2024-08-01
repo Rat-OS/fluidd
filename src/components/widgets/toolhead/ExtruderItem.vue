@@ -57,7 +57,7 @@ import BrowserMixin from '@/mixins/browser'
 import type { Extruder } from '@/store/printer/types'
 
 @Component({})
-export default class ExtruderSelectionItem extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
+export default class ExtruderItem extends Mixins(StateMixin, ToolheadMixin, BrowserMixin) {
   [x: string]: any
   @Prop({ type: Object, required: true })
     item!: { key: string; name: string; extruder: Extruder }

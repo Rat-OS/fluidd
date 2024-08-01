@@ -24,7 +24,7 @@
             <pressure-advance-adjust v-if="showPressureAdvance" />
             <extruder-stats />
             <extruder-moves v-if="hasExtruder" />
-            <extruder-steppers />
+            <extruder-stepper-selection />
             <speed-and-flow-adjust />
           </template>
         </v-col>
@@ -47,7 +47,7 @@ import ZHeightAdjust from './ZHeightAdjust.vue'
 import SpeedAndFlowAdjust from './SpeedAndFlowAdjust.vue'
 import PressureAdvanceAdjust from './PressureAdvanceAdjust.vue'
 import ExtruderStats from './ExtruderStats.vue'
-import ExtruderSteppers from './ExtruderSteppers.vue'
+import ExtruderStepperSelection from './ExtruderStepperSelection.vue'
 import ToolChangeCommands from './ToolChangeCommands.vue'
 import ToolHeadIdexControl from './ToolHeadIdexControl.vue'
 import type { ToolheadControlStyle } from '@/store/config/types'
@@ -64,7 +64,7 @@ import type { ToolheadControlStyle } from '@/store/config/types'
     SpeedAndFlowAdjust,
     PressureAdvanceAdjust,
     ExtruderStats,
-    ExtruderSteppers,
+    ExtruderStepperSelection,
     ToolChangeCommands,
     ToolHeadIdexControl
   }

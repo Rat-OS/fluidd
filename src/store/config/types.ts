@@ -112,6 +112,7 @@ export interface GeneralConfig {
   useMeshFlatSurface: boolean;
   meshMatrix: MatrixType;
   selectedExtruder: string;
+  selectedExtruderStepper: string;
 }
 
 export type ToolheadControlStyle = 'cross' | 'bars' | 'circle'

@@ -129,16 +129,16 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class Retract extends Mixins(StateMixin, BrowserMixin) {
-  // ----------------------------
-  // Defaults
-  // ----------------------------
+  /**
+   * Defaults
+   */
   get defaults () {
     return this.$store.getters['printer/getPrinterSettings']('firmware_retraction') || {}
   }
 
-  // ----------------------------
-  // Retract Length
-  // ----------------------------
+  /**
+   * Retract Length
+   */
   retract_length_value = -1
   current_retract_length_value = -1
 
@@ -165,9 +165,9 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Retract Speed
-  // ----------------------------
+  /**
+   * Retract Speed
+   */
   retract_speed_value = -1
   current_retract_speed_value = -1
 
@@ -194,9 +194,9 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Unretract Length
-  // ----------------------------
+  /**
+   * Unretract Length
+   */
   unretract_extra_length_value = -1
   current_unretract_extra_length_value = -1
 
@@ -223,9 +223,9 @@ export default class Retract extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
-  // ----------------------------
-  // Unretract Speed
-  // ----------------------------
+  /**
+   * Unretract Speed
+   */
   unretract_speed_value = -1
   current_unretract_speed_value = -1
 

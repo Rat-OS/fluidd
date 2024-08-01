@@ -19,8 +19,9 @@
               :color="macro.active ? allHomed ? 'primary' : 'secondary' : undefined"
               :disabled="!klippyReady || printerPrinting"
               class="px-0 flex-grow-1"
+              :loading="hasWait(`${$waits.onToolChange}${macro.name}`)"
               v-on="on"
-              @click="sendGcode(macro.name)"
+              @click="sendGcode(macro.name, `${$waits.onToolChange}${macro.name}`)"
             >
               <v-icon
                 v-if="macro.spoolId && getSpoolById(macro.spoolId)"
@@ -115,6 +116,7 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
       if (toolhead_filament_sensor_t0 !== undefined && toolhead_filament_sensor_t1 !== undefined) {
         return true
       }
+      return true
     } catch { }
     try {
       const feeder_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t0
@@ -122,6 +124,7 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
       if (feeder_filament_sensor_t0 !== undefined && feeder_filament_sensor_t1 !== undefined) {
         return true
       }
+      return true
     } catch { }
     return false
   }

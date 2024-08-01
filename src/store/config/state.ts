@@ -46,6 +46,7 @@ export const defaultState = (): ConfigState => {
         useMeshFlatSurface: false,
         meshMatrix: 'mesh_matrix',
         selectedExtruder: '',
+        selectedExtruderStepper: '',
         enableVersionNotifications: true,
         confirmOnEstop: false,
         confirmOnPowerDeviceChange: false,

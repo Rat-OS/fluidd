@@ -12,7 +12,8 @@
           class="px-0 flex-grow-1"
           :disabled="!klippyReady || printerPrinting || !allHomed"
           :color="idexMode != 'copy' && idexMode != 'mirror' ? 'primary' : undefined"
-          @click="sendGcode('IDEX_SINGLE')"
+          :loading="hasWait(`${$waits.onIdexMode}${'IDEX_SINGLE'}`)"
+          @click="sendGcode('IDEX_SINGLE', `${$waits.onIdexMode}${'IDEX_SINGLE'}`)"
         >
           {{ $t('app.tool.idex.single_mode') }}
         </app-btn>
@@ -22,7 +23,8 @@
           :disabled="!klippyReady || printerPrinting || !allHomed"
           :color="idexMode == 'copy' ? 'primary' : undefined"
           dense
-          @click="sendGcode('IDEX_COPY')"
+          :loading="hasWait(`${$waits.onIdexMode}${'IDEX_COPY'}`)"
+          @click="sendGcode('IDEX_COPY', `${$waits.onIdexMode}${'IDEX_COPY'}`)"
         >
           {{ $t('app.tool.idex.copy_mode') }}
         </app-btn>
@@ -32,7 +34,8 @@
           :disabled="!klippyReady || printerPrinting || !allHomed"
           :color="idexMode == 'mirror' ? 'primary' : undefined"
           dense
-          @click="sendGcode('IDEX_MIRROR')"
+          :loading="hasWait(`${$waits.onIdexMode}${'IDEX_MIRROR'}`)"
+          @click="sendGcode('IDEX_MIRROR', `${$waits.onIdexMode}${'IDEX_MIRROR'}`)"
         >
           {{ $t('app.tool.idex.mirror_mode') }}
         </app-btn>
@@ -42,7 +45,8 @@
           class="px-0 flex-grow-1"
           :disabled="!klippyReady || printerPrinting || !allHomed || idexMode == 'copy' || idexMode == 'mirror'"
           dense
-          @click="sendGcode('IDEX_PARK')"
+          :loading="hasWait(`${$waits.onIdexMode}${'IDEX_PARK'}`)"
+          @click="sendGcode('IDEX_PARK', `${$waits.onIdexMode}${'IDEX_PARK'}`)"
         >
           {{ $t('app.tool.idex.park_toolhead') }}
         </app-btn>

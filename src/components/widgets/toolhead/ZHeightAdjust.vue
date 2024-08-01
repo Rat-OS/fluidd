@@ -38,6 +38,7 @@
           </v-btn>
           <v-btn
             v-if="!(!klippyReady || printerPrinting || zHomingOrigin === 0) && (hasZOffsetApplyEndstop !== hasZOffsetApplyProbe)"
+            :loading="hasWait($waits.onZApply)"
             color="primary"
             text
             small
@@ -71,7 +72,7 @@
             <v-btn
               v-for="(value, index) in zAdjustValues"
               :key="`zUp-${index}`"
-              :loading="hasWait($waits.onZAdjust)"
+              :loading="hasWait(`${$waits.onZAdjust}${'+' + value}`)"
               small
               class="_btn-z flex-grow-1 px-1"
               @click="sendZAdjustGcode('+', value)"
@@ -98,7 +99,7 @@
           <v-btn
             v-for="(value, index) in zAdjustValues"
             :key="`zDown-${index}`"
-            :loading="hasWait($waits.onZAdjust)"
+            :loading="hasWait(`${$waits.onZAdjust}${'-' + value}`)"
             small
             class="_btn-z flex-grow-1 px-1"
             @click="sendZAdjustGcode('-', value)"
@@ -173,7 +174,7 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
   sendZAdjustGcode (direction: '+' | '-', zValue: any) {
     const zHomed = this.$store.getters['printer/getHomedAxes']('z')
     const gcode = `SET_GCODE_OFFSET Z_ADJUST=${direction}${zValue} MOVE=${+zHomed}`
-    this.sendGcode(gcode, this.$waits.onZAdjust)
+    this.sendGcode(gcode, `${this.$waits.onZAdjust}${direction + zValue}`)
   }
 
   /**
@@ -187,11 +188,11 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
 
   handleZOffsetApply () {
     if (this.hasZOffsetApplyProbe && !this.hasZOffsetApplyEndstop) {
-      this.sendGcode('Z_OFFSET_APPLY_PROBE')
+      this.sendGcode('Z_OFFSET_APPLY_PROBE', this.$waits.onZApply)
     }
 
     if (this.hasZOffsetApplyEndstop && !this.hasZOffsetApplyProbe) {
-      this.sendGcode('Z_OFFSET_APPLY_ENDSTOP')
+      this.sendGcode('Z_OFFSET_APPLY_ENDSTOP', this.$waits.onZApply)
     }
   }
 }

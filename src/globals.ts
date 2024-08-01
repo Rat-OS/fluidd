@@ -444,6 +444,8 @@ export const Waits = Object.freeze({
   onServiceStop: 'onServiceStop',
   onServiceStart: 'onServiceStart',
   onDevicePowerToggle: 'onDevicePowerToggle',
+  onToolChange: 'onToolChange',
+  onIdexMode: 'onIdexMode',
   onHomeAll: 'onHomeAll',
   onHomeXY: 'onHomeXY',
   onHomeX: 'onHomeX',
