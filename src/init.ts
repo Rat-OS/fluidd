@@ -222,20 +222,31 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
     configLoaded = true
   }
 
+  // apiConfig could have empty strings, meaning we have no valid connection.
+  await store.dispatch('init', { apiConfig, hostConfig, apiConnected })
+
+  // Ensure users start on the dash.
+  if (router.currentRoute.path !== '/' && store.state.auth.authenticated) router.push('/')
+
   // if no moonraker config has been loaded check for a default template inside .fluidd-theme folder
   configLoaded = false
   if (!configLoaded) {
     try {
       const defaultTemplateFile = store.getters['config/getCustomThemeFile']('default', ['.json'])
+      // const defaultTemplateFile = 'http://vc4.local:8081/server/files/config/.fluidd-theme/default.json'
       if (defaultTemplateFile?.length > 0) {
         const responseDefault = await fetch(defaultTemplateFile)
         let defaults: any = {}
         if (responseDefault) {
           defaults = await responseDefault.json()
           if (defaults.error?.code !== 404) {
+            console.error('6')
             const backupData = JSON.parse(defaults)
+            console.error('7')
             if (isFluiddContent<Record<string, unknown>>('settings-backup', backupData)) {
+              console.error('8')
               for (const key in backupData.data) {
+                console.error('9')
                 await httpClientActions.serverDatabaseItemPost('fluidd', key, backupData.data[key])
               }
             }
@@ -243,16 +254,9 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
         }
       }
     } catch (e) {
-      console.error('Error loading default settings')
-      consola.debug('Error loading default settings', e)
+      console.error('Error loading default settings: ' + e)
     }
   }
-
-  // apiConfig could have empty strings, meaning we have no valid connection.
-  await store.dispatch('init', { apiConfig, hostConfig, apiConnected })
-
-  // Ensure users start on the dash.
-  if (router.currentRoute.path !== '/' && store.state.auth.authenticated) router.push('/')
 
   return { apiConfig, hostConfig, apiConnected, apiAuthenticated }
 }
