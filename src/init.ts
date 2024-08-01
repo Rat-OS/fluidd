@@ -229,7 +229,7 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
   if (router.currentRoute.path !== '/' && store.state.auth.authenticated) router.push('/')
 
   // if no moonraker config has been loaded check for a default template inside .fluidd-theme folder
-  configLoaded = false
+  // configLoaded = false
   if (!configLoaded) {
     try {
       const defaultTemplateFile = store.getters['config/getCustomThemeFile']('default', ['.json'])
