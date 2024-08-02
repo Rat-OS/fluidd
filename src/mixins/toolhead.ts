@@ -16,18 +16,67 @@ export default class ToolheadMixin extends Vue {
     return this.$store.getters['printer/getActiveExtruder'] as Extruder | undefined
   }
 
-  get extruderReady (): boolean {
-    const activeExtruder = this.activeExtruder
+  get selectedExtruder () {
+    return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
+  }
 
-    return (
-      activeExtruder?.can_extrude ??
-      (
-        activeExtruder !== undefined &&
-        activeExtruder.temperature >= 0 &&
-        activeExtruder.min_extrude_temp >= 0 &&
-        activeExtruder.temperature >= activeExtruder.min_extrude_temp
+  get idexT0Extruder (): Extruder | undefined {
+    return this.$store.getters['printer/getExtruderByName']('extruder') as Extruder
+  }
+
+  get idexT1Extruder (): Extruder | undefined {
+    return this.$store.getters['printer/getExtruderByName']('extruder1') as Extruder
+  }
+
+  get activeExtruderReady (): boolean {
+    if (this.idexCopy || this.idexMirror) {
+      const idexT0Extruder = this.idexT0Extruder
+      const idexT1Extruder = this.idexT1Extruder
+      const idexT0ExtruderReady = (idexT0Extruder?.can_extrude ??
+        (
+          idexT0Extruder !== undefined &&
+          idexT0Extruder.temperature >= 0 &&
+          idexT0Extruder.min_extrude_temp >= 0 &&
+          idexT0Extruder.temperature >= idexT0Extruder.min_extrude_temp
+        )
       )
-    )
+      const idexT1ExtruderReady = (idexT1Extruder?.can_extrude ??
+        (
+          idexT1Extruder !== undefined &&
+          idexT1Extruder.temperature >= 0 &&
+          idexT1Extruder.min_extrude_temp >= 0 &&
+          idexT1Extruder.temperature >= idexT1Extruder.min_extrude_temp
+        )
+      )
+      return idexT1ExtruderReady && idexT0ExtruderReady
+    } else {
+      const activeExtruder = this.activeExtruder
+      const activeExtruderReady = (activeExtruder?.can_extrude ??
+        (
+          activeExtruder !== undefined &&
+          activeExtruder.temperature >= 0 &&
+          activeExtruder.min_extrude_temp >= 0 &&
+          activeExtruder.temperature >= activeExtruder.min_extrude_temp
+        )
+      )
+      return activeExtruderReady
+    }
+  }
+
+  get selectedExtruderReady (): boolean {
+    if (this.idexCopy || this.idexMirror) {
+      return this.activeExtruderReady
+    } else {
+      const selectedExtruder = this.$store.getters['printer/getExtruderByName'](this.selectedExtruder) as Extruder
+      return (selectedExtruder?.can_extrude ??
+        (
+          selectedExtruder !== undefined &&
+          selectedExtruder.temperature >= 0 &&
+          selectedExtruder.min_extrude_temp >= 0 &&
+          selectedExtruder.temperature >= selectedExtruder.min_extrude_temp
+        )
+      )
+    }
   }
 
   get filamentDiameter (): number {
@@ -92,5 +141,21 @@ export default class ToolheadMixin extends Vue {
 
   get hasScrewsTiltAdjustResults (): boolean {
     return this.$store.getters['printer/getHasScrewsTiltAdjustResults'] as boolean
+  }
+
+  get isIdex (): boolean {
+    return 'dual_carriage' in this.$store.state.printer.printer
+  }
+
+  get idexMode (): string {
+    return this.$store.state.printer.printer.dual_carriage?.carriage_1?.toString().toLowerCase()
+  }
+
+  get idexCopy (): boolean {
+    return this.isIdex && this.idexMode === 'copy'
+  }
+
+  get idexMirror (): boolean {
+    return this.isIdex && this.idexMode === 'mirror'
   }
 }

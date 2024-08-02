@@ -49,7 +49,7 @@
           v-if="toolheadRemapAllowed"
           min-width="10"
           :color="toolheadRemapActive ? allHomed ? 'primary' : 'secondary' : undefined"
-          :disabled="!klippyReady || printerPrinting || (isIdex && (idexMode == 'copy' || idexMode == 'mirror'))"
+          :disabled="!klippyReady || printerPrinting || (isIdex && (idexCopy || idexMirror))"
           class="px-2"
           description="Toolhead remapping"
           @click="setToolRemap()"
@@ -64,7 +64,7 @@
           v-if="spoolJoinAllowed"
           min-width="10"
           :color="spoolJoinActive ? allHomed ? 'primary' : 'secondary' : undefined"
-          :disabled="!klippyReady || printerPrinting || (isIdex && (idexMode == 'copy' || idexMode == 'mirror'))"
+          :disabled="!klippyReady || printerPrinting || (isIdex && (idexCopy || idexMirror))"
           class="px-2"
           description="Spool joining"
           @click="setSpoolJoin()"
@@ -101,14 +101,6 @@ type ToolChangeCommand = {
 
 @Component({})
 export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin) {
-  get isIdex (): boolean {
-    return 'dual_carriage' in this.$store.state.printer.printer
-  }
-
-  get idexMode (): string {
-    return this.$store.state.printer.printer.dual_carriage?.carriage_1?.toString().toLowerCase()
-  }
-
   get hasIdexFilamentSensors (): boolean {
     try {
       const toolhead_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t0

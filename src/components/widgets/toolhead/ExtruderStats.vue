@@ -30,11 +30,27 @@
               >
                 $printer3dNozzle
               </v-icon>
+              <v-icon
+                v-if="isIdex && (idexCopy || idexMirror)"
+                small
+                primary
+                class="mb-1"
+                style="transform: translateY(1px);"
+              >
+                $printer3dNozzle
+              </v-icon>
+              <span
+                v-if="isIdex && (idexCopy || idexMirror)"
+                class="primary--text mr-3"
+                style="font-size: 14px"
+              >
+                IDEX
+              </span>
               <span
                 class="secondary--text mr-0"
                 style="font-size: 14px"
               >
-                Flowrate:
+                Flow:
               </span>
               <span
                 class="primary--text mr-3"

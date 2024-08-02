@@ -92,7 +92,7 @@
     >
       <v-col cols="6">
         <app-btn
-          :disabled="!klippyReady || !extruderReady || !valid"
+          :disabled="!klippyReady || !selectedExtruderReady || !valid"
           block
           small
           :loading="hasWait($waits.onRetract)"
@@ -104,7 +104,7 @@
       </v-col>
       <v-col cols="6">
         <app-btn
-          :disabled="!klippyReady || !extruderReady || !valid"
+          :disabled="!klippyReady || !selectedExtruderReady || !valid"
           block
           small
           :loading="hasWait($waits.onExtrude)"
@@ -113,6 +113,27 @@
           {{ $t('app.general.btn.extrude') }}
           <v-icon>$chevronDown</v-icon>
         </app-btn>
+      </v-col>
+    </v-row>
+    <v-row
+      v-if="!activeExtruderReady && (idexCopy || idexMirror)"
+      justify="center"
+      class="pa-0 mt-0 mb-0"
+    >
+      <v-col
+        cols="12"
+        class="pa-0"
+      >
+        <div
+          class="text-center pa-0 mt-0 mb-0"
+          :class="'text--disabled'"
+        >
+          <p
+            class="mb-0"
+            style="font-size: 14px"
+            v-html="'One or both extruder below extrusion temp!'"
+          />
+        </div>
       </v-col>
     </v-row>
   </v-form>
@@ -197,13 +218,6 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   }
 
   /**
-   * Selected Extruder
-   */
-  get selectedExtruder () {
-    return this.$store.state.config.uiSettings.general.selectedExtruder ?? this.$store.state.printer.printer.toolhead?.extruder
-  }
-
-  /**
    * Common
    */
   maxExtrudeLengthRule (value: number) {
@@ -217,13 +231,13 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   sendRetractGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
       const activeExtruder = this.$store.state.printer.printer.toolhead.extruder || 'extruder'
-      if (activeExtruder !== this.selectedExtruder) {
+      if (!(this.isIdex && (this.idexCopy || this.idexMirror)) && activeExtruder !== this.selectedExtruder) {
         this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${this.selectedExtruder}`, wait)
       }
       const gcode = `G1 E-${amount} F${rate * 60}`
       this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
-      if (activeExtruder !== this.selectedExtruder) {
+      if (!(this.isIdex && (this.idexCopy || this.idexMirror)) && activeExtruder !== this.selectedExtruder) {
         this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${activeExtruder}`, wait)
       }
     }
@@ -232,13 +246,13 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   sendExtrudeGcode (amount: number, rate: number, wait?: string) {
     if (this.valid) {
       const activeExtruder = this.$store.state.printer.printer.toolhead.extruder || 'extruder'
-      if (activeExtruder !== this.selectedExtruder) {
+      if (!(this.isIdex && (this.idexCopy || this.idexMirror)) && activeExtruder !== this.selectedExtruder) {
         this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${this.selectedExtruder}`, wait)
       }
       const gcode = `G1 E${amount} F${rate * 60}`
       this.sendGcode('M83', wait)
       this.sendGcode(gcode, wait)
-      if (activeExtruder !== this.selectedExtruder) {
+      if (!(this.isIdex && (this.idexCopy || this.idexMirror)) && activeExtruder !== this.selectedExtruder) {
         this.sendGcode(`ACTIVATE_EXTRUDER EXTRUDER=${activeExtruder}`, wait)
       }
     }

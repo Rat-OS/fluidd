@@ -11,7 +11,7 @@
           small
           class="px-0 flex-grow-1"
           :disabled="!klippyReady || printerPrinting || !allHomed"
-          :color="idexMode != 'copy' && idexMode != 'mirror' ? 'primary' : undefined"
+          :color="!idexCopy && !idexMirror ? 'primary' : undefined"
           :loading="hasWait(`${$waits.onIdexMode}${'IDEX_SINGLE'}`)"
           @click="sendGcode('IDEX_SINGLE', `${$waits.onIdexMode}${'IDEX_SINGLE'}`)"
         >
@@ -21,7 +21,7 @@
           small
           class="px-0 flex-grow-1"
           :disabled="!klippyReady || printerPrinting || !allHomed"
-          :color="idexMode == 'copy' ? 'primary' : undefined"
+          :color="idexCopy ? 'primary' : undefined"
           dense
           :loading="hasWait(`${$waits.onIdexMode}${'IDEX_COPY'}`)"
           @click="sendGcode('IDEX_COPY', `${$waits.onIdexMode}${'IDEX_COPY'}`)"
@@ -32,7 +32,7 @@
           small
           class="px-0 flex-grow-1"
           :disabled="!klippyReady || printerPrinting || !allHomed"
-          :color="idexMode == 'mirror' ? 'primary' : undefined"
+          :color="idexMirror ? 'primary' : undefined"
           dense
           :loading="hasWait(`${$waits.onIdexMode}${'IDEX_MIRROR'}`)"
           @click="sendGcode('IDEX_MIRROR', `${$waits.onIdexMode}${'IDEX_MIRROR'}`)"
@@ -43,7 +43,7 @@
           v-if="hasIdexParkCommand"
           small
           class="px-0 flex-grow-1"
-          :disabled="!klippyReady || printerPrinting || !allHomed || idexMode == 'copy' || idexMode == 'mirror'"
+          :disabled="!klippyReady || printerPrinting || !allHomed || idexCopy || idexMirror"
           dense
           :loading="hasWait(`${$waits.onIdexMode}${'IDEX_PARK'}`)"
           @click="sendGcode('IDEX_PARK', `${$waits.onIdexMode}${'IDEX_PARK'}`)"
@@ -64,14 +64,6 @@ import type { GcodeCommands } from '@/store/printer/types'
 @Component({})
 export default class ToolHeadIdexControl extends Mixins(StateMixin, ToolheadMixin) {
 [x: string]: any
-
-get isIdex (): boolean {
-  return 'dual_carriage' in this.$store.state.printer.printer
-}
-
-get idexMode (): string {
-  return this.$store.state.printer.printer.dual_carriage?.carriage_1?.toString().toLowerCase()
-}
 
 get availableCommands (): GcodeCommands {
   return this.$store.getters['printer/getAvailableCommands'] as GcodeCommands

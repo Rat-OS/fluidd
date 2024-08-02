@@ -17,7 +17,22 @@
         style="font-size: 14px"
       >
         {{ item.name }}
-        <!-- {{ item.name }}{{ item.extruder.motion_queue != item.key ? item.extruder.motion_queue : '' }} -->
+      </span>
+      <v-icon
+        v-if="item.extruder.motion_queue != item.key && item.extruder.motion_queue != undefined"
+        small
+        primary
+        class="mb-1 ml-0"
+        style="transform: translateY(1px);"
+      >
+        $play
+      </v-icon>
+      <span
+        v-if="item.extruder.motion_queue != item.key && item.extruder.motion_queue != undefined"
+        :class="textClass"
+        style="font-size: 14px"
+      >
+        {{ item.extruder.motion_queue }}
       </span>
       <v-icon
         small

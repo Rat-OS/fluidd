@@ -15,7 +15,7 @@
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-icon
-            v-show="hasExtruder && !extruderReady"
+            v-show="hasExtruder && !activeExtruderReady"
             v-bind="attrs"
             class="ml-3"
             color="info"
@@ -177,10 +177,6 @@ export default class ToolheadCard extends Mixins(StateMixin, ToolheadMixin) {
   @Prop({ type: Boolean })
   readonly menuCollapsed?: boolean
 
-  get isIdex (): boolean {
-    return 'dual_carriage' in this.$store.state.printer.printer
-  }
-
   get printerSettings () {
     return this.$store.getters['printer/getPrinterSettings']()
   }
@@ -261,7 +257,7 @@ export default class ToolheadCard extends Mixins(StateMixin, ToolheadMixin) {
         name: loadFilamentMacro.name.toUpperCase(),
         label: loadFilamentMacro.name === 'm701' ? 'M701 (Load Filament)' : undefined,
         icon: '$loadFilament',
-        disabled: !(ignoreMinExtrudeTemp || this.extruderReady)
+        disabled: !(ignoreMinExtrudeTemp || this.activeExtruderReady)
       })
     }
 
@@ -274,7 +270,7 @@ export default class ToolheadCard extends Mixins(StateMixin, ToolheadMixin) {
         name: unloadFilamentMacro.name.toUpperCase(),
         label: unloadFilamentMacro.name === 'm702' ? 'M702 (Unload Filament)' : undefined,
         icon: '$unloadFilament',
-        disabled: !(ignoreMinExtrudeTemp || this.extruderReady)
+        disabled: !(ignoreMinExtrudeTemp || this.activeExtruderReady)
       })
     }
 
