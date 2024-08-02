@@ -221,7 +221,9 @@
             <a
               class="cc-btn outer"
               :class="yStepClasses"
-              @click="sendMoveGcode('Y', stepsXY[3], false)"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
             >
               <path
                 d="m143.333,132.727c8.297-6.121,18.548-9.744,29.65-9.744,11.366,0,21.842,3.799,30.24,10.188l83.834-83.834c1.644-1.644,1.542-4.335-.21-5.863C256.533,17.025,216.89,1,173.5,1S90.467,17.025,60.153,43.473c-1.752,1.529-1.855,4.219-.21,5.863l83.39,83.39Z"
@@ -246,7 +248,7 @@
               transform="translate(173.5, 25.664)"
               text-anchor="middle"
               :style="{
-                fill: xyHomed ? 'black' : 'white'
+                fill: yHomed ? 'black' : 'white'
               }"
             >
               {{ stepsXY[3] }}
@@ -304,7 +306,7 @@
               transform="translate(173.5, 60.664)"
               text-anchor="middle"
               :style="{
-                fill: xyHomed ? 'black' : 'white'
+                fill: yHomed ? 'black' : 'white'
               }"
             >
               {{ stepsXY[2] }}
@@ -362,7 +364,7 @@
               transform="translate(173.5, 95.664)"
               text-anchor="middle"
               :style="{
-                fill: xyHomed ? 'black' : 'white'
+                fill: yHomed ? 'black' : 'white'
               }"
             >
               {{ stepsXY[1] }}
@@ -420,7 +422,7 @@
               transform="translate(173.5, 130.664)"
               text-anchor="middle"
               :style="{
-                fill: xyHomed ? 'black' : 'white'
+                fill: yHomed ? 'black' : 'white'
               }"
             >
               {{ stepsXY[0] }}
