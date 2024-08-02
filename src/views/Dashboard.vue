@@ -7,7 +7,8 @@
       <v-col
         v-if="inLayout || hasCards(container)"
         :key="`container${containerIndex}`"
-        :cols="currColSpan[containerIndex]"
+        :cols="currColSpan"
+        :class="{ 'drag': inLayout }"
       >
         <app-draggable
           v-model="containers[containerIndex]"
@@ -88,51 +89,36 @@ export default class Dashboard extends Mixins(StateMixin) {
   @Ref('dashboard')
   readonly dashboardElement!: HTMLElement
 
-  menuCollapsed = false
-  containers: Array<LayoutConfig[]> = []
-
+  /**
+   * Lifecycle
+   */
   mounted () {
     this.onLayoutChange()
 
-    // window.addEventListener('resize', this.updateMenuCollapsed)
-    window.addEventListener('resize', throttle(this.updateMenuCollapsed, 500))
+    window.addEventListener('resize', throttle(this.onResize, 500))
 
-    this.updateMenuCollapsed()
-  }
-
-  currColSpan = [12, 12, 12, 12, 12, 12]
-
-  updateMenuCollapsed () {
-    let cols = Math.floor(window.innerWidth / this.minPanelWidth)
-    cols = Math.min(cols, Math.min(this.maxColumnCount, this.columnCount))
-    if (cols === 5) cols = 4
-    const nCols = 12 / cols
-    // let cols = 12
-    // if (window.innerWidth < 900) cols = 12
-    // else if (window.innerWidth >= 900 && window.innerWidth < 1800) cols = 6
-    // else if (window.innerWidth >= 1800 && window.innerWidth < 2800) cols = 3
-    // else cols = 2
-    // const nCols = Math.max(cols, 12 / this.columnCount)
-    if (cols === 4) this.currColSpan = [nCols, nCols, nCols, nCols, 6, 6]
-    else this.currColSpan = [nCols, nCols, nCols, nCols, nCols, nCols]
-    // if (this.currColSpan !== nCols) this.currColSpan = nCols
-    this.menuCollapsed = (window.innerWidth / this.columnCount) < 560
-  }
-
-  get minPanelWidth () {
-    return this.$store.state.config.uiSettings.general.minPanelWidth ?? 500
-  }
-
-  get useSixColumns () {
-    return this.$store.state.config.uiSettings.general.useSixColumns ?? false
+    this.onResize()
   }
 
   unmounted () {
-    window.removeEventListener('resize', this.updateMenuCollapsed)
+    window.removeEventListener('resize', this.onResize)
   }
 
-  get maxColumnCount () {
-    return this.useSixColumns ? 6 : 4
+  /**
+   * Layout
+   */
+  menuCollapsed = false
+  containers: Array<LayoutConfig[]> = []
+  currColSpan = 12
+
+  onResize () {
+    let newColumnCount = Math.floor(window.innerWidth / this.minPanelWidth)
+    newColumnCount = Math.min(newColumnCount, Math.min(this.maxColumnCount, this.columnCount))
+    if (newColumnCount === 5) newColumnCount = 4
+
+    const nCols = 12 / newColumnCount
+    this.currColSpan = nCols
+    this.menuCollapsed = (window.innerWidth / newColumnCount) < 560
   }
 
   get columnCount () {
@@ -144,7 +130,91 @@ export default class Dashboard extends Mixins(StateMixin) {
   onColumnCount (value: number) {
     this.$store.commit('config/setContainerColumnCount', value)
 
-    this.updateMenuCollapsed()
+    this.onResize()
+  }
+
+  @Watch('layout')
+  onLayoutChange () {
+    const containers: Array<LayoutConfig[]> = []
+
+    for (let index = 1; index <= this.maxColumnCount; index++) {
+      const container = this.layout[`container${index}`]
+
+      if (container?.length > 0) {
+        containers.push(container)
+      }
+    }
+
+    while (containers.length < this.maxColumnCount) {
+      containers.push([])
+    }
+
+    this.containers = containers.slice(0, this.maxColumnCount)
+  }
+
+  hasCards (container: LayoutConfig[]) {
+    return container.some(card => card.enabled && !this.filtered(card))
+  }
+
+  handleUpdateLayout () {
+    if (this.useSixColumns) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2],
+          container4: this.containers[3],
+          container5: this.containers[4],
+          container6: this.containers[5]
+        }
+      })
+    } else {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2],
+          container4: this.containers[3]
+        }
+      })
+    }
+  }
+
+  filtered (item: LayoutConfig) {
+    // Take care of special cases.
+    if (this.inLayout) return false
+    if (item.id === 'camera-card' && !this.hasCameras) return true
+    if (item.id === 'macros-card' && !this.hasMacros) return true
+    if (item.id === 'outputs-card' && !this.hasOutputs) return true
+    if (item.id === 'printer-status-card' && !this.klippyReady) return true
+    if (item.id === 'job-queue-card' && !this.supportsJobQueue) return true
+    if (item.id === 'retract-card' && !this.firmwareRetractionEnabled) return true
+    if (item.id === 'bed-mesh-card' && !this.supportsBedMesh) return true
+    if (item.id === 'runout-sensors-card' && !this.supportsRunoutSensors) return true
+    if (item.id === 'spoolman-card' && !this.supportsSpoolman) return true
+    if (item.id === 'sensors-card' && !this.hasSensors) return true
+    if (item.id === 'temperature-card' && !this.hasHeatersOrTemperatureSensors) return true
+
+    // Otherwise return the opposite of whatever the enabled state is.
+    return !item.enabled
+  }
+
+  /**
+   * Getters
+   */
+
+  get minPanelWidth () {
+    return this.$store.state.config.uiSettings.general.minPanelWidth ?? 500
+  }
+
+  get useSixColumns () {
+    return this.$store.state.config.uiSettings.general.useSixColumns ?? false
+  }
+
+  get maxColumnCount () {
+    return this.useSixColumns ? 6 : 4
   }
 
   get hasCameras (): boolean {
@@ -203,74 +273,6 @@ export default class Dashboard extends Mixins(StateMixin) {
   get layout () {
     const layoutName = this.$store.getters['layout/getSpecificLayoutName']
     return this.$store.getters['layout/getLayout'](layoutName)
-  }
-
-  @Watch('layout')
-  onLayoutChange () {
-    const containers: Array<LayoutConfig[]> = []
-
-    for (let index = 1; index <= this.maxColumnCount; index++) {
-      const container = this.layout[`container${index}`]
-
-      if (container?.length > 0) {
-        containers.push(container)
-      }
-    }
-
-    while (containers.length < this.maxColumnCount) {
-      containers.push([])
-    }
-
-    this.containers = containers.slice(0, this.maxColumnCount)
-  }
-
-  handleUpdateLayout () {
-    if (this.useSixColumns) {
-      this.$store.dispatch('layout/onLayoutChange', {
-        name: this.$store.getters['layout/getSpecificLayoutName'],
-        value: {
-          container1: this.containers[0],
-          container2: this.containers[1],
-          container3: this.containers[2],
-          container4: this.containers[3],
-          container5: this.containers[4],
-          container6: this.containers[5]
-        }
-      })
-    } else {
-      this.$store.dispatch('layout/onLayoutChange', {
-        name: this.$store.getters['layout/getSpecificLayoutName'],
-        value: {
-          container1: this.containers[0],
-          container2: this.containers[1],
-          container3: this.containers[2],
-          container4: this.containers[3]
-        }
-      })
-    }
-  }
-
-  hasCards (container: LayoutConfig[]) {
-    return container.some(card => card.enabled && !this.filtered(card))
-  }
-
-  filtered (item: LayoutConfig) {
-    // Take care of special cases.
-    if (this.inLayout) return false
-    if (item.id === 'camera-card' && !this.hasCameras) return true
-    if (item.id === 'macros-card' && !this.hasMacros) return true
-    if (item.id === 'outputs-card' && !this.hasOutputs) return true
-    if (item.id === 'printer-status-card' && !this.klippyReady) return true
-    if (item.id === 'job-queue-card' && !this.supportsJobQueue) return true
-    if (item.id === 'retract-card' && !this.firmwareRetractionEnabled) return true
-    if (item.id === 'bed-mesh-card' && !this.supportsBedMesh) return true
-    if (item.id === 'runout-sensors-card' && !this.supportsRunoutSensors) return true
-    if (item.id === 'spoolman-card' && !this.supportsSpoolman) return true
-    if (item.id === 'sensors-card' && !this.hasSensors) return true
-    if (item.id === 'temperature-card' && !this.hasHeatersOrTemperatureSensors) return true
-
-    // Otherwise return the opposite of whatever the enabled state is.
-    return !item.enabled
   }
 }
 </script>
