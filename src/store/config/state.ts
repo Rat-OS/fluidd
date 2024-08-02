@@ -25,6 +25,7 @@ export const defaultState = (): ConfigState => {
           y: { inverted: false },
           z: { inverted: false }
         },
+        minPanelWidth: 500,
         defaultExtrudeLength: 10,
         defaultExtrudeSpeed: 5,
         defaultToolheadMoveLength: 1.0,
@@ -65,6 +66,7 @@ export const defaultState = (): ConfigState => {
         flipConsoleLayout: false,
         cameraFullscreenAction: 'embed',
         topNavPowerToggle: null,
+        useSixColumns: true,
         showManualProbeDialogAutomatically: true,
         showBedScrewsAdjustDialogAutomatically: true,
         showScrewsTiltAdjustDialogAutomatically: true,

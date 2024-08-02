@@ -63,6 +63,7 @@ export interface GeneralConfig {
   chartVisible: boolean;
   hideTempWaits: boolean;
   axis: Axis;
+  minPanelWidth: number;
   defaultExtrudeLength: number;
   defaultExtrudeSpeed: number;
   defaultToolheadMoveLength: number;
@@ -98,6 +99,7 @@ export interface GeneralConfig {
   flipConsoleLayout: boolean;
   cameraFullscreenAction: CameraFullscreenAction;
   topNavPowerToggle: null | string;
+  useSixColumns: boolean;
   showManualProbeDialogAutomatically: boolean;
   showBedScrewsAdjustDialogAutomatically: boolean;
   showScrewsTiltAdjustDialogAutomatically: boolean;

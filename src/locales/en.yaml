@@ -573,6 +573,8 @@ app:
       default_toolhead_move_length: Default toolhead move length
       default_toolhead_xy_speed: Default toolhead XY speed
       default_toolhead_z_speed: Default toolhead Z speed
+      min_col_width: Minimum dashboard column width
+      use_six_cols: Use 6 instead of 4 dashboard columns
       dotted: Dotted
       draw_background: Draw Background
       draw_origin: Draw origin

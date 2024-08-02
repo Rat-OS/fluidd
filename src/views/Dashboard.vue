@@ -7,7 +7,7 @@
       <v-col
         v-if="inLayout || hasCards(container)"
         :key="`container${containerIndex}`"
-        :cols="currColSpan"
+        :cols="currColSpan[containerIndex]"
       >
         <app-draggable
           v-model="containers[containerIndex]"
@@ -100,22 +100,39 @@ export default class Dashboard extends Mixins(StateMixin) {
     this.updateMenuCollapsed()
   }
 
-  maxColumnCount = 6
-  currColSpan = 12
+  currColSpan = [12, 12, 12, 12, 12, 12]
 
   updateMenuCollapsed () {
-    let cols = 12
-    if (window.innerWidth < 900) cols = 12
-    else if (window.innerWidth >= 900 && window.innerWidth < 1800) cols = 6
-    else if (window.innerWidth >= 1800 && window.innerWidth < 2800) cols = 3
-    else cols = 2
-    const nCols = Math.max(cols, 12 / this.columnCount)
-    if (this.currColSpan !== nCols) this.currColSpan = nCols
+    let cols = Math.floor(window.innerWidth / this.minPanelWidth)
+    cols = Math.min(cols, Math.min(this.maxColumnCount, this.columnCount))
+    if (cols === 5) cols = 4
+    const nCols = 12 / cols
+    // let cols = 12
+    // if (window.innerWidth < 900) cols = 12
+    // else if (window.innerWidth >= 900 && window.innerWidth < 1800) cols = 6
+    // else if (window.innerWidth >= 1800 && window.innerWidth < 2800) cols = 3
+    // else cols = 2
+    // const nCols = Math.max(cols, 12 / this.columnCount)
+    if (cols === 4) this.currColSpan = [nCols, nCols, nCols, nCols, 6, 6]
+    else this.currColSpan = [nCols, nCols, nCols, nCols, nCols, nCols]
+    // if (this.currColSpan !== nCols) this.currColSpan = nCols
     this.menuCollapsed = (window.innerWidth / this.columnCount) < 560
+  }
+
+  get minPanelWidth () {
+    return this.$store.state.config.uiSettings.general.minPanelWidth ?? 500
+  }
+
+  get useSixColumns () {
+    return this.$store.state.config.uiSettings.general.useSixColumns ?? false
   }
 
   unmounted () {
     window.removeEventListener('resize', this.updateMenuCollapsed)
+  }
+
+  get maxColumnCount () {
+    return this.useSixColumns ? 6 : 4
   }
 
   get columnCount () {
@@ -208,17 +225,29 @@ export default class Dashboard extends Mixins(StateMixin) {
   }
 
   handleUpdateLayout () {
-    this.$store.dispatch('layout/onLayoutChange', {
-      name: this.$store.getters['layout/getSpecificLayoutName'],
-      value: {
-        container1: this.containers[0],
-        container2: this.containers[1],
-        container3: this.containers[2],
-        container4: this.containers[3],
-        container5: this.containers[4],
-        container6: this.containers[5]
-      }
-    })
+    if (this.useSixColumns) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2],
+          container4: this.containers[3],
+          container5: this.containers[4],
+          container6: this.containers[5]
+        }
+      })
+    } else {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2],
+          container4: this.containers[3]
+        }
+      })
+    }
   }
 
   hasCards (container: LayoutConfig[]) {
