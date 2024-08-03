@@ -232,6 +232,38 @@
 
       <v-divider />
 
+      <app-setting
+        :title="$t('app.setting.label.use_six_cols')"
+      >
+        <v-switch
+          v-model="useSixColumns"
+          hide-details
+          class="mt-0 mb-4"
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting :title="$t('app.setting.label.min_col_width')">
+        <v-text-field
+          :value="minPanelWidth"
+          :rules="[
+            $rules.required,
+            $rules.numberValid,
+            $rules.numberGreaterThanOrEqual(300),
+            $rules.lengthLessThanOrEqual(1000),
+          ]"
+          filled
+          dense
+          single-line
+          hide-details="auto"
+          suffix="columns"
+          @change="setMinPanelWidth"
+        />
+      </app-setting>
+
+      <v-divider />
+
       <app-setting :title="$t('app.setting.label.fluidd_settings_in_moonraker_db')">
         <app-btn
           outlined
@@ -377,6 +409,30 @@ export default class GeneralSettings extends Mixins(StateMixin) {
       value,
       server: true
     })
+  }
+
+  get useSixColumns () {
+    return this.$store.state.config.uiSettings.general.useSixColumns
+  }
+
+  set useSixColumns (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useSixColumns',
+      value,
+      server: true
+    })
+  }
+
+  setMinPanelWidth (value: number) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.minPanelWidth',
+      value: +value,
+      server: true
+    })
+  }
+
+  get minPanelWidth () {
+    return this.$store.state.config.uiSettings.general.minPanelWidth
   }
 
   get topNavPowerToggle () {

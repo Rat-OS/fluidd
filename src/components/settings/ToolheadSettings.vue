@@ -362,38 +362,6 @@
       <v-divider />
 
       <app-setting
-        :title="$t('app.setting.label.use_six_cols')"
-      >
-        <v-switch
-          v-model="useSixColumns"
-          hide-details
-          class="mt-0 mb-4"
-        />
-      </app-setting>
-
-      <v-divider />
-
-      <app-setting :title="$t('app.setting.label.min_col_width')">
-        <v-text-field
-          :value="minPanelWidth"
-          :rules="[
-            $rules.required,
-            $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(300),
-            $rules.lengthLessThanOrEqual(1000),
-          ]"
-          filled
-          dense
-          single-line
-          hide-details="auto"
-          suffix="columns"
-          @change="setMinPanelWidth"
-        />
-      </app-setting>
-
-      <v-divider />
-
-      <app-setting
         :title="$t('app.setting.label.show_manual_probe_dialog_automatically')"
         :sub-title="$t('app.setting.tooltip.show_manual_probe_dialog_automatically')"
       >
@@ -495,18 +463,6 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
 
   get defaultExtrudeSpeed () {
     return this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
-  }
-
-  setMinPanelWidth (value: number) {
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.minPanelWidth',
-      value: +value,
-      server: true
-    })
-  }
-
-  get minPanelWidth () {
-    return this.$store.state.config.uiSettings.general.minPanelWidth
   }
 
   setDefaultExtrudeSpeed (value: string) {
@@ -791,18 +747,6 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
 
   get printerSupportsForceMove () {
     return this.$store.getters['printer/getPrinterSettings']('force_move.enable_force_move') ?? false
-  }
-
-  get useSixColumns () {
-    return this.$store.state.config.uiSettings.general.useSixColumns
-  }
-
-  set useSixColumns (value: boolean) {
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.useSixColumns',
-      value,
-      server: true
-    })
   }
 
   get showManualProbeDialogAutomatically () {
