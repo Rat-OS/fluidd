@@ -125,7 +125,9 @@ export default class Dashboard extends Mixins(StateMixin) {
           const layoutContainer = this.$store.getters['layout/getLayout'](layout) as LayoutContainer
           usedColumns = 0
           for (const [key, value] of Object.entries(layoutContainer)) {
+            console.log(key)
             for (const [key2, value2] of Object.entries(value)) {
+              console.log(key2)
               if (value2.enabled) {
                 usedColumns = usedColumns + 1
                 break
