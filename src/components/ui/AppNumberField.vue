@@ -48,7 +48,7 @@
             @click="decrementValue()"
           >
             <v-icon
-              :color="hasFocus ? 'black' : 'white'"
+              :color="hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black'"
               class="pa-0 ma-0"
             >
               $minus
@@ -72,7 +72,7 @@
             @click="incrementValue()"
           >
             <v-icon
-              :color="hasFocus ? 'black' : 'white'"
+              :color="hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black'"
               class="pa-0 ma-0"
             >
               $plus
@@ -93,12 +93,13 @@
           :disabled="printerPrinting"
           dense
           class="_btn-e flex-grow-1 px-0"
+          style="height:24px;"
           :class="value == inputValue ? hasFocus ? 'primary' : 'btncolor' : ''"
           @click="setValue({ value })"
         >
           <span
             :style="{
-              'color': value == inputValue ? hasFocus ? 'black' : 'white' : 'white',
+              'color': value == inputValue ? hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black' : $vuetify.theme.dark ? 'white' : 'black',
             }"
           >
             {{ value }}
@@ -244,7 +245,7 @@ export default class AppNumberField extends Mixins(StateMixin) {
         border-width: thin;
         border-top-width: none;
         box-shadow: none;
-        height: 32px;
+        height: 24px;
         min-width: auto !important;
     }
 
@@ -265,7 +266,7 @@ export default class AppNumberField extends Mixins(StateMixin) {
 
 ._btn-e {
     font-size: 0.8rem !important;
-    max-height: 32px;
+    max-height: 24px;
 }
 
 .v-text-field>>> .v-text-field__suffix {

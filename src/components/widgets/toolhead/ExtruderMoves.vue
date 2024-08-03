@@ -54,27 +54,36 @@
       justify="end"
       class="pa-0 mt-1 mb-0"
     >
-      <v-col cols="6">
-        <app-btn
-          :disabled="!klippyReady || !selectedExtruderReady || !valid"
-          block
-          :loading="hasWait($waits.onRetract)"
-          @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onRetract)"
+      <v-col>
+        <app-btn-group
+          class="app-toolchanger-control d-flex"
+          :class="{
+            [$vuetify.theme.dark ? 'theme--dark': 'theme--light']: true,
+          }"
         >
-          {{ $t('app.general.btn.retract') }}
-          <v-icon>$chevronUp</v-icon>
-        </app-btn>
-      </v-col>
-      <v-col cols="6">
-        <app-btn
-          :disabled="!klippyReady || !selectedExtruderReady || !valid"
-          block
-          :loading="hasWait($waits.onExtrude)"
-          @click="sendExtrudeGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
-        >
-          {{ $t('app.general.btn.extrude') }}
-          <v-icon>$chevronDown</v-icon>
-        </app-btn>
+          <app-btn
+            min-width="10"
+            :disabled="!klippyReady || !selectedExtruderReady || !valid"
+            class="px-0 flex-grow-1"
+            :loading="hasWait($waits.onRetract)"
+            @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onRetract)"
+          >
+            <v-icon>$up</v-icon>
+            {{ $t('app.general.btn.retract') }}
+            <v-icon>$up</v-icon>
+          </app-btn>
+          <app-btn
+            min-width="10"
+            :disabled="!klippyReady || !selectedExtruderReady || !valid"
+            class="px-0 flex-grow-1"
+            :loading="hasWait($waits.onExtrude)"
+            @click="sendExtrudeGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
+          >
+            <v-icon>$down</v-icon>
+            {{ $t('app.general.btn.extrude') }}
+            <v-icon>$down</v-icon>
+          </app-btn>
+        </app-btn-group>
       </v-col>
     </v-row>
     <v-row
@@ -225,3 +234,25 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  @import 'vuetify/src/styles/styles.sass';
+
+  @include theme(app-toolchanger-control) using ($material) {
+    .extruder-color {
+      border-color: black;
+    }
+  }
+
+  .app-toolchanger-control .extruder-color {
+    width: 15px;
+    height: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 50%;
+
+    &.active {
+      border-color: black;
+    }
+  }
+</style>
