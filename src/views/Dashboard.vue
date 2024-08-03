@@ -5,7 +5,7 @@
   >
     <template v-for="(container, containerIndex) in containers">
       <v-col
-        v-if="inLayout || hasCards(container)"
+        v-if="(!inLayout && hasCards(container)) || (inLayout && containerIndex < currColCount)"
         :key="`container${containerIndex}`"
         :cols="currColSpan"
         :class="{ 'drag': inLayout }"
@@ -56,7 +56,7 @@ import ConsoleCard from '@/components/widgets/console/ConsoleCard.vue'
 import OutputsCard from '@/components/widgets/outputs/OutputsCard.vue'
 import PrinterLimitsCard from '@/components/widgets/limits/PrinterLimitsCard.vue'
 import RetractCard from '@/components/widgets/retract/RetractCard.vue'
-import type { LayoutConfig } from '@/store/layout/types'
+import type { Layouts, LayoutConfig, LayoutContainer } from '@/store/layout/types'
 import BedMeshCard from '@/components/widgets/bedmesh/BedMeshCard.vue'
 import GcodePreviewCard from '@/components/widgets/gcode-preview/GcodePreviewCard.vue'
 import JobQueueCard from '@/components/widgets/job-queue/JobQueueCard.vue'
@@ -89,10 +89,17 @@ export default class Dashboard extends Mixins(StateMixin) {
   @Ref('dashboard')
   readonly dashboardElement!: HTMLElement
 
+  menuCollapsed = false
+  containers: Array<LayoutConfig[]> = []
+  columnsUsed = [0, 0, 0, 0, 0, 0]
+  currColCount = 1
+  currColSpan = 12
+
   /**
    * Lifecycle
    */
   mounted () {
+    this.getUsedColumns()
     this.onLayoutChange()
 
     window.addEventListener('resize', throttle(this.onResize, 500))
@@ -107,29 +114,64 @@ export default class Dashboard extends Mixins(StateMixin) {
   /**
    * Layout
    */
-  menuCollapsed = false
-  containers: Array<LayoutConfig[]> = []
-  currColSpan = 12
+  usedColumns = [0, 0, 0, 0, 0]
+  getUsedColumns () {
+    const layouts = this.$store.getters['layout/getAllLayouts'] as Layouts
+    let layoutIndex = 0
+    let usedColumns = 0
+    for (const layout in layouts) {
+      if (layout.startsWith('dashboard-')) {
+        if (layout) {
+          const layoutContainer = this.$store.getters['layout/getLayout'](layout) as LayoutContainer
+          usedColumns = 0
+          for (const [key, value] of Object.entries(layoutContainer)) {
+            for (const [key2, value2] of Object.entries(value)) {
+              if (value2.enabled) {
+                usedColumns = usedColumns + 1
+                break
+              }
+            }
+          }
+        }
+        this.usedColumns[layoutIndex] = usedColumns
+        layoutIndex = layoutIndex + 1
+      }
+    }
+    console.error(this.usedColumns)
+  }
 
   onResize () {
+    console.error('onLayoutChange')
     let newColumnCount = Math.floor(window.innerWidth / this.minPanelWidth)
-    newColumnCount = Math.min(newColumnCount, Math.min(this.maxColumnCount, this.columnCount))
+    newColumnCount = Math.min(newColumnCount, this.maxColumnCount)
     if (newColumnCount === 5) newColumnCount = 4
-
+    if (!this.inLayout) {
+      newColumnCount = Math.min(newColumnCount, this.usedColumns[newColumnCount === 6 ? 4 : newColumnCount - 1])
+    }
     const nCols = 12 / newColumnCount
+    this.currColCount = newColumnCount
     this.currColSpan = nCols
+    this.columnCount = newColumnCount
     this.menuCollapsed = (window.innerWidth / newColumnCount) < 560
   }
 
-  get columnCount () {
-    if (this.inLayout) return this.maxColumnCount
-    return this.containers.reduce((count, container) => +this.hasCards(container) + count, 0)
+  get columnCount (): number {
+    return this.$store.state.config.containerColumnCount as number
+  }
+
+  set columnCount (value: number) {
+    this.$store.commit('config/setContainerColumnCount', value)
   }
 
   @Watch('columnCount')
   onColumnCount (value: number) {
     this.$store.commit('config/setContainerColumnCount', value)
 
+    this.onResize()
+  }
+
+  @Watch('layoutMode')
+  onLayoutModeChange () {
     this.onResize()
   }
 
@@ -157,7 +199,46 @@ export default class Dashboard extends Mixins(StateMixin) {
   }
 
   handleUpdateLayout () {
-    if (this.useSixColumns) {
+    console.error('handleUpdateLayout')
+    if (this.columnCount === 1) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0]
+        }
+      })
+    }
+    if (this.columnCount === 2) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1]
+        }
+      })
+    }
+    if (this.columnCount === 3) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2]
+        }
+      })
+    }
+    if (this.columnCount === 4) {
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: this.$store.getters['layout/getSpecificLayoutName'],
+        value: {
+          container1: this.containers[0],
+          container2: this.containers[1],
+          container3: this.containers[2],
+          container4: this.containers[3]
+        }
+      })
+    }
+    if (this.columnCount === 6) {
       this.$store.dispatch('layout/onLayoutChange', {
         name: this.$store.getters['layout/getSpecificLayoutName'],
         value: {
@@ -169,17 +250,8 @@ export default class Dashboard extends Mixins(StateMixin) {
           container6: this.containers[5]
         }
       })
-    } else {
-      this.$store.dispatch('layout/onLayoutChange', {
-        name: this.$store.getters['layout/getSpecificLayoutName'],
-        value: {
-          container1: this.containers[0],
-          container2: this.containers[1],
-          container3: this.containers[2],
-          container4: this.containers[3]
-        }
-      })
     }
+    this.getUsedColumns()
   }
 
   filtered (item: LayoutConfig) {
@@ -204,7 +276,6 @@ export default class Dashboard extends Mixins(StateMixin) {
   /**
    * Getters
    */
-
   get minPanelWidth () {
     return this.$store.state.config.uiSettings.general.minPanelWidth ?? 500
   }
@@ -266,8 +337,12 @@ export default class Dashboard extends Mixins(StateMixin) {
     )
   }
 
+  get layoutMode () {
+    return this.$store.state.config.layoutMode
+  }
+
   get inLayout (): boolean {
-    return (this.$store.state.config.layoutMode)
+    return (this.layoutMode)
   }
 
   get layout () {

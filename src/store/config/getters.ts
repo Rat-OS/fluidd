@@ -120,5 +120,9 @@ export const getters: GetterTree<ConfigState, RootState> = {
       'user-token': `user-token-${hash}`,
       'refresh-token': `refresh-token-${hash}`
     }
+  },
+
+  getContainerColumnCount: (state) => {
+    return state.containerColumnCount ?? 2
   }
 }

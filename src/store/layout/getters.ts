@@ -2,7 +2,6 @@ import type { GetterTree } from 'vuex'
 import type { LayoutState, LayoutContainer, LayoutConfig } from './types'
 import type { RootState } from '../types'
 import { cloneDeep } from 'lodash-es'
-import vuetify from '@/plugins/vuetify'
 
 export const getters: GetterTree<LayoutState, RootState> = {
   /**
@@ -28,6 +27,13 @@ export const getters: GetterTree<LayoutState, RootState> = {
     } else if (name.startsWith('dashboard')) {
       return cloneDeep(state.layouts.dashboard)
     }
+  },
+
+  /**
+   * Returns all layouts.
+   */
+  getAllLayouts: (state) => {
+    return state.layouts
   },
 
   isEnabledInLayout: (state, getters) => (layout: string, id: string) => {
@@ -68,7 +74,7 @@ export const getters: GetterTree<LayoutState, RootState> = {
     const user = rootGetters['auth/getCurrentUser']
     if (!user) return 'dashboard'
 
-    const size = vuetify.framework.breakpoint.name
-    return `dashboard-${size}-${user.username}`
+    const columns = rootGetters['config/getContainerColumnCount']
+    return `dashboard-${columns}-${user.username}`
   }
 }
