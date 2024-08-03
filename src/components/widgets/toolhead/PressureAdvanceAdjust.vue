@@ -1,14 +1,14 @@
 <template>
   <v-row
     justify="end"
-    class="pa-0 mt-4 mb-3"
+    class="pa-0 mt-3 mb-2"
     style="transform: translateY(-1px);"
   >
     <v-col
-      cols="6"
-      class="py-0"
+      cols="12"
+      class="pt-0"
     >
-      <app-number-input
+      <app-number-field
         v-model.number="pressureAdvance"
         :label="$t('app.general.label.pressure_advance')"
         :disabled="!klippyReady"
@@ -30,10 +30,10 @@
       />
     </v-col>
     <v-col
-      cols="6"
-      class="py-0"
+      cols="12"
+      class="pt-0"
     >
-      <app-number-input
+      <app-number-field
         v-model.number="smoothTime"
         :label="$t('app.general.label.smooth_time')"
         :disabled="!klippyReady"

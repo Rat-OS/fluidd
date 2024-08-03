@@ -6,10 +6,10 @@
   >
     <v-row
       justify="end"
-      class="pa-0 mt-2 mb-0"
+      class="pa-0 mt-1 mb-0 pt-0"
     >
-      <v-col cols="6">
-        <app-number-input
+      <v-col cols="12">
+        <app-number-field
           v-model.number="extrudeLength"
           :label="$t('app.general.label.extrude_length')"
           :disabled="!klippyReady || selectedExtruder == '' || selectedExtruder == undefined"
@@ -27,8 +27,11 @@
           :has-spinner="true"
         />
       </v-col>
-      <v-col cols="6">
-        <app-number-input
+      <v-col
+        cols="12"
+        class="pt-0"
+      >
+        <app-number-field
           v-model.number="extrudeSpeed"
           :label="$t('app.general.label.extrude_speed')"
           :disabled="!klippyReady || selectedExtruder == '' || selectedExtruder == undefined"
@@ -49,7 +52,7 @@
     </v-row>
     <v-row
       justify="end"
-      class="mt-0 mb-0"
+      class="mt-0 mb-0 mt-0 pt-0"
     >
       <v-col
         cols="6"

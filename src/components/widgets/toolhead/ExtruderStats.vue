@@ -6,7 +6,7 @@
   >
     <v-expansion-panel>
       <v-expansion-panel-header
-        class="pl-0 pr-0 pb-0"
+        class="pl-0 pr-0 pb-0 pt-0 mb-0"
       >
         <template #actions>
           <v-icon

@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    ref="field"
     v-model="inputValue"
     dense
     outlined
@@ -16,52 +17,68 @@
     :max="max"
     :dec="dec"
     :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
+    style="border-radius: 0px;"
     @blur="onBlur"
     @focus="onFocus"
     @keyup.enter.exact="onEnter($event)"
     @click:append="onReset()"
   >
     <template
-      v-if="hasSpinner"
+      #prepend
+    >
+      <v-btn
+        :tabindex="-1"
+        :disabled="inputValue <= min || disabled"
+        outlined
+        x-small
+        elevation="0"
+        style="border-top-right-radius: 0px; border-bottom-right-radius: 0px; height: 36px; border-right: 0px;"
+        :class="hasFocus ? 'primary' : 'btncolor'"
+        @click="decrementValue()"
+      >
+        <v-icon
+          :color="hasFocus ? 'black' : 'white'"
+          class="pa-0 ma-0"
+        >
+          $minus
+        </v-icon>
+      </v-btn>
+    </template>
+    <template
       #append-outer
     >
-      <div class="_spin_button_group">
-        <v-btn
-          :tabindex="-1"
-          :disabled="(inputValue >= max && max !== null) || disabled"
-          class="ml-0 mt-n3"
-          icon
-          plain
-          small
-          style="transform: translatex(-2px) translateY(2px);"
-          @click="incrementValue()"
+      <v-btn
+        :tabindex="-1"
+        :disabled="(inputValue >= max && max !== null) || disabled"
+        outlined
+        x-small
+        elevation="0"
+        style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; border-left: 0px;"
+        :class="hasFocus ? 'primary' : 'btncolor'"
+        @click="incrementValue()"
+      >
+        <v-icon
+          :color="hasFocus ? 'black' : 'white'"
+          class="pa-0 ma-0"
         >
-          <v-icon>$chevronUp</v-icon>
-        </v-btn>
-        <v-btn
-          :tabindex="-1"
-          :disabled="inputValue <= min || disabled"
-          class="ml-0 mb-n3"
-          icon
-          plain
-          small
-          style="transform: translatex(-2px) translateY(-5px);"
-          @click="decrementValue()"
-        >
-          <v-icon>$chevronDown</v-icon>
-        </v-btn>
-      </div>
+          $plus
+        </v-icon>
+      </v-btn>
     </template>
   </v-text-field>
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop, VModel } from 'vue-property-decorator'
+import { Component, Mixins, Prop, VModel, Ref } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import type { InputValidationRules } from 'vuetify'
+import type { VTextArea } from '@/types'
 
 @Component({})
-export default class AppNumberInput extends Mixins(StateMixin) {
+export default class AppNumberField extends Mixins(StateMixin) {
+  @Ref('field')
+  readonly field!: VTextArea
+
   @VModel({ type: Number, required: true })
     inputValue!: number
 
@@ -100,9 +117,6 @@ export default class AppNumberInput extends Mixins(StateMixin) {
 
   @Prop({ type: Number, required: true })
   readonly dec!: number
-
-  @Prop({ type: Boolean })
-  readonly hasSpinner?: boolean
 
   hasFocus = false
   created () {
@@ -148,6 +162,7 @@ export default class AppNumberInput extends Mixins(StateMixin) {
       )
     } else this.inputValue = this.max
     this.submit()
+    this.field.focus()
   }
 
   decrementValue (): void {
@@ -158,30 +173,45 @@ export default class AppNumberInput extends Mixins(StateMixin) {
       )
     } else this.inputValue = this.min
     this.submit()
+    this.field.focus()
   }
 }
 </script>
 
 <style scoped>
-._spin_button_group {
-    width: 24px;
-    margin-top: -5px;
-    margin-left: -5px;
-    margin-bottom: -5px;
-}
-
 .v-text-field>>> .v-text-field__suffix {
-  opacity: 0.5;
+  opacity: 0.7;
+  font-weight: 200;
+  font-size: 14px;
 }
 
 .v-text-field>>> .v-label--active {
-  opacity: 0.5;
+  opacity: 0.7;
+  font-weight: 200;
+  font-size: 14px;
   top: 8px;
+}
+
+.v-text-field>>> .v-input__append-outer {
+  margin: 0px;
+  padding: 0px;
+  transform: translateY(-8px);
+}
+
+.v-text-field>>> .v-input__prepend-outer {
+  margin: 0px;
+  padding: 0px;
+  transform: translateY(-8px);
 }
 
 .v-text-field>>> .v-input__append-inner {
   opacity: 0.5;
   padding: 0px;
+}
+
+.v-btn>>> .v-btn--outlined {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 .v-text-field>>> .v-input__icon--append {

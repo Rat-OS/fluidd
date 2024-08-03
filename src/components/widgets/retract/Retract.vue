@@ -1,15 +1,12 @@
 <template>
   <!-- Firmware Retraction -->
   <div>
-    <v-card-text class="mb-1 mt-1">
+    <v-card-text class="mb-0 mt-1">
       <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="retract_length"
             :reset-value="defaults.retract_length"
             :label="$t('app.general.label.retract_length')"
@@ -33,11 +30,8 @@
         </v-col>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="unretract_extra_length"
             :reset-value="defaults.unretract_extra_length"
             :label="$t('app.general.label.unretract_extra_length')"
@@ -63,11 +57,8 @@
       <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="retract_speed"
             :reset-value="defaults.retract_speed"
             :label="$t('app.general.label.retract_speed')"
@@ -91,11 +82,8 @@
         </v-col>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="unretract_speed"
             :reset-value="defaults.unretract_speed"
             :label="$t('app.general.label.unretract_speed')"

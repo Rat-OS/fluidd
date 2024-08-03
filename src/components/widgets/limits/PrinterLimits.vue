@@ -3,16 +3,13 @@
   <div>
     <v-card-text
       v-if="klippyReady"
-      class="mb-1 mt-1"
+      class="mb-0 mt-1"
     >
       <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="velocity"
             :reset-value="defaultVelocity"
             :label="$t('app.general.label.velocity')"
@@ -35,11 +32,8 @@
         </v-col>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="squareCornerVelocity"
             :reset-value="defaultSquareCornerVelocity"
             :label="$t('app.general.label.sqv')"
@@ -64,11 +58,8 @@
       <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-model.number="accel"
             :reset-value="defaultAccel"
             :label="$t('app.general.label.acceleration')"
@@ -91,11 +82,8 @@
         </v-col>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
-          <app-number-input
+          <app-number-field
             v-if="minimumCruiseRatio != null"
             v-model.number="minimumCruiseRatio"
             :reset-value="defaultMinimumCruiseRatio"
@@ -117,7 +105,7 @@
             :has-spinner="true"
             @submit="setMinimumCruiseRatio"
           />
-          <app-number-input
+          <app-number-field
             v-else-if="accelToDecel != null"
             v-model.number="accelToDecel"
             :reset-value="defaultAccelToDecel"
