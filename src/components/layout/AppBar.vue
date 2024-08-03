@@ -29,6 +29,7 @@
 
       <v-toolbar-title class="printer-title text--secondary">
         <a
+          v-if="$vuetify.breakpoint.mdAndUp"
           :href="ratOsConfiguratorUrl"
           target="_blank"
         >
@@ -150,7 +151,64 @@
       v-if="inLayout"
       #extension
     >
+      <v-menu
+        v-if="$vuetify.breakpoint.smAndDown"
+        center
+        offset-y
+        transition="slide-y-transition"
+      >
+        <template #activator="{ on, attrs, value }">
+          <app-btn
+            v-bind="attrs"
+            class="ms-1 my-1"
+            :disabled="!klippyReady"
+            color="primary"
+            v-on="on"
+          >
+            Tools
+            <v-icon
+              small
+              class="ml-1"
+              :class="{ 'rotate-180': value }"
+            >
+              $chevronDown
+            </v-icon>
+          </app-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item @click="handleExitLayout">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.exit_layout') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="handleResetLayout">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.reset_layout') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="handleSetDefaultLayout">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.set_default_layout') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="handleResetDefaultLayout">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.general.btn.reset_default_layout') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <app-btn
+        v-if="$vuetify.breakpoint.mdAndUp"
         small
         class="mx-2"
         color="primary"
@@ -159,6 +217,7 @@
         {{ $t('app.general.btn.exit_layout') }}
       </app-btn>
       <app-btn
+        v-if="$vuetify.breakpoint.mdAndUp"
         small
         class="mx-2"
         color="primary"
@@ -166,7 +225,7 @@
       >
         {{ $t('app.general.btn.reset_layout') }}
       </app-btn>
-      <template v-if="isDashboard">
+      <template v-if="isDashboard && $vuetify.breakpoint.mdAndUp">
         <v-divider
           vertical
           class="mx-2"

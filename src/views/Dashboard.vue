@@ -148,6 +148,7 @@ export default class Dashboard extends Mixins(StateMixin) {
     if (!this.inLayout) {
       newColumnCount = Math.min(newColumnCount, this.usedColumns[newColumnCount === 6 ? 4 : newColumnCount - 1])
     }
+    if (newColumnCount < 1) newColumnCount = 1
     const nCols = 12 / newColumnCount
     this.currColCount = newColumnCount
     this.currColSpan = nCols
