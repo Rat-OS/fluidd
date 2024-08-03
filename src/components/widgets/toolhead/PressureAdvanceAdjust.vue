@@ -1,12 +1,11 @@
 <template>
   <v-row
     justify="end"
-    class="pa-0 mt-3 mb-2"
+    class="pa-0 mt-1 mb-2"
     style="transform: translateY(-1px);"
   >
     <v-col
       cols="12"
-      class="pt-0"
     >
       <app-number-field
         v-model.number="pressureAdvance"
@@ -31,7 +30,6 @@
     </v-col>
     <v-col
       cols="12"
-      class="pt-0"
     >
       <app-number-field
         v-model.number="smoothTime"

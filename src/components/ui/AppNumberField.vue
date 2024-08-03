@@ -1,71 +1,112 @@
 <template>
-  <v-text-field
-    ref="field"
-    v-model="inputValue"
-    dense
-    outlined
-    hide-details
-    hide-spin-buttons
-    type="number"
-    :label="label"
-    :suffix="suffix"
-    :prefix="prefix"
-    :disabled="disabled"
-    :rules="rules"
-    :step="step"
-    :min="min"
-    :max="max"
-    :dec="dec"
-    :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
-    style="border-radius: 0px;"
-    @blur="onBlur"
-    @focus="onFocus"
-    @keyup.enter.exact="onEnter($event)"
-    @click:append="onReset()"
+  <v-row
+    justify="end"
+    class="pa-0 ma-0"
   >
-    <template
-      #prepend
+    <v-col
+      cols="12"
+      class="pa-0 ma-0"
     >
-      <v-btn
-        :tabindex="-1"
-        :disabled="inputValue <= min || disabled"
+      <v-text-field
+        ref="field"
+        v-model="inputValue"
+        dense
         outlined
-        x-small
-        elevation="0"
-        style="border-top-right-radius: 0px; border-bottom-right-radius: 0px; height: 36px; border-right: 0px;"
-        :class="hasFocus ? 'primary' : 'btncolor'"
-        @click="decrementValue()"
+        hide-details
+        hide-spin-buttons
+        type="number"
+        :label="label"
+        :suffix="suffix"
+        :prefix="prefix"
+        :disabled="disabled"
+        :rules="rules"
+        :step="step"
+        :min="min"
+        :max="max"
+        :dec="dec"
+        :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
+        style="border-radius: 0px; height: 36px;"
+        @blur="onBlur"
+        @focus="onFocus"
+        @keyup.enter.exact="onEnter($event)"
+        @click:append="onReset()"
       >
-        <v-icon
-          :color="hasFocus ? 'black' : 'white'"
-          class="pa-0 ma-0"
+        <template
+          #prepend
         >
-          $minus
-        </v-icon>
-      </v-btn>
-    </template>
-    <template
-      #append-outer
+          <v-btn
+            :tabindex="-1"
+            :disabled="inputValue <= min || disabled"
+            outlined
+            x-small
+            elevation="0"
+            style="border-top-right-radius: 0px; border-bottom-right-radius: 0px; height: 36px; border-right: 0px;"
+            :style="{
+              'border-bottom-left-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
+            }"
+            :class="hasFocus ? 'primary' : 'btncolor'"
+            @click="decrementValue()"
+          >
+            <v-icon
+              :color="hasFocus ? 'black' : 'white'"
+              class="pa-0 ma-0"
+            >
+              $minus
+            </v-icon>
+          </v-btn>
+        </template>
+        <template
+          #append-outer
+        >
+          <v-btn
+            :tabindex="-1"
+            :disabled="(inputValue >= max && max !== null) || disabled"
+            outlined
+            x-small
+            elevation="0"
+            style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; border-left: 0px;"
+            :style="{
+              'border-bottom-right-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
+            }"
+            :class="hasFocus ? 'primary' : 'btncolor'"
+            @click="incrementValue()"
+          >
+            <v-icon
+              :color="hasFocus ? 'black' : 'white'"
+              class="pa-0 ma-0"
+            >
+              $plus
+            </v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
+    </v-col>
+    <v-col
+      v-if="quickSelectors && quickSelectors.length > 0"
+      cols="12"
+      class="pa-0 ma-0"
     >
-      <v-btn
-        :tabindex="-1"
-        :disabled="(inputValue >= max && max !== null) || disabled"
-        outlined
-        x-small
-        elevation="0"
-        style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; border-left: 0px;"
-        :class="hasFocus ? 'primary' : 'btncolor'"
-        @click="incrementValue()"
-      >
-        <v-icon
-          :color="hasFocus ? 'black' : 'white'"
-          class="pa-0 ma-0"
+      <v-item-group class="_btn-group">
+        <v-btn
+          v-for="value in quickSelectors"
+          :key="value"
+          :disabled="printerPrinting"
+          dense
+          class="_btn-e flex-grow-1 px-0"
+          :class="value == inputValue ? hasFocus ? 'primary' : 'btncolor' : ''"
+          @click="setValue({ value })"
         >
-          $plus
-        </v-icon>
-      </v-btn>
-    </template>
-  </v-text-field>
+          <span
+            :style="{
+              'color': value == inputValue ? hasFocus ? 'black' : 'white' : 'white',
+            }"
+          >
+            {{ value }}
+          </span>
+        </v-btn>
+      </v-item-group>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -118,6 +159,9 @@ export default class AppNumberField extends Mixins(StateMixin) {
   @Prop({ type: Number, required: true })
   readonly dec!: number
 
+  @Prop({ type: Array<number> })
+  readonly quickSelectors?: number[]
+
   hasFocus = false
   created () {
     this.hasFocus = false
@@ -154,6 +198,12 @@ export default class AppNumberField extends Mixins(StateMixin) {
     this.$emit('submit', this.inputValue)
   }
 
+  setValue (params: { value: number }): void {
+    this.inputValue = params.value
+    this.submit()
+    this.field.focus()
+  }
+
   incrementValue (): void {
     if (this.inputValue + this.step < this.max! || this.max === null) {
       this.inputValue = (
@@ -179,6 +229,45 @@ export default class AppNumberField extends Mixins(StateMixin) {
 </script>
 
 <style scoped>
+._btn-group {
+    border-radius: 4px;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    min-width: 100%;
+    width: 100%;
+
+    .v-btn {
+        border-radius: 0;
+        border-color: rgba(255, 255, 255, 0.12);
+        border-style: solid;
+        border-width: thin;
+        border-top-width: none;
+        box-shadow: none;
+        height: 32px;
+        min-width: auto !important;
+    }
+
+    .v-btn:first-child {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: inherit;
+    }
+
+    .v-btn:last-child {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: inherit;
+    }
+
+    .v-btn:not(:first-child) {
+        border-left-width: 0;
+    }
+}
+
+._btn-e {
+    font-size: 0.8rem !important;
+    max-height: 32px;
+}
+
 .v-text-field>>> .v-text-field__suffix {
   opacity: 0.8;
   font-weight: 200;

@@ -3,10 +3,11 @@
     accordion
     multiple
     flat
+    class="pb-3 pt-0 mt-4"
   >
     <v-expansion-panel>
       <v-expansion-panel-header
-        class="pl-0 pr-0 pb-0 pt-0 mb-0"
+        class="pl-0 pr-0 pb-0 pt-0"
       >
         <template #actions>
           <v-icon
@@ -76,7 +77,7 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <div
-          class="text-center pa-0 mt-3 mb-0"
+          class="text-center pa-0 pb-0 mt-3"
           :class="{ 'text--disabled': !klippyReady }"
         >
           <p

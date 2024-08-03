@@ -4,11 +4,10 @@
     v-model="valid"
     @submit.prevent
   >
-    <v-row
-      justify="end"
-      class="pa-0 mt-1 mb-0 pt-0"
-    >
-      <v-col cols="12">
+    <v-row>
+      <v-col
+        cols="12"
+      >
         <app-number-field
           v-model.number="extrudeLength"
           :label="$t('app.general.label.extrude_length')"
@@ -25,11 +24,11 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
+          :quick-selectors="extrudeLengthsSorted"
         />
       </v-col>
       <v-col
         cols="12"
-        class="pt-0"
       >
         <app-number-field
           v-model.number="extrudeSpeed"
@@ -47,57 +46,18 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
+          :quick-selectors="extrudeSpeedsSorted"
         />
       </v-col>
     </v-row>
     <v-row
       justify="end"
-      class="mt-0 mb-0 mt-0 pt-0"
-    >
-      <v-col
-        cols="6"
-        class="py-0 mt-0 mb-0"
-      >
-        <v-item-group class="_btn-group">
-          <v-btn
-            v-for="value in extrudeLengthsSorted"
-            :key="value"
-            :disabled="printerPrinting"
-            dense
-            class="_btn-e flex-grow-1 px-0"
-            @click="setExtrudeLength({ value })"
-          >
-            {{ value }}
-          </v-btn>
-        </v-item-group>
-      </v-col>
-      <v-col
-        cols="6"
-        class="py-0 mt-0 mb-0"
-      >
-        <v-item-group class="_btn-group">
-          <v-btn
-            v-for="value in extrudeSpeedsSorted"
-            :key="value"
-            :disabled="printerPrinting"
-            dense
-            class="_btn-e flex-grow-1 px-0"
-            @click="setExtrudeSpeed({ value })"
-          >
-            {{ value }}
-          </v-btn>
-        </v-item-group>
-      </v-col>
-    </v-row>
-    <v-row
-      justify="end"
-      class="pa-0 mt-0 mb-0"
+      class="pa-0 mt-1 mb-0"
     >
       <v-col cols="6">
         <app-btn
           :disabled="!klippyReady || !selectedExtruderReady || !valid"
           block
-          small
           :loading="hasWait($waits.onRetract)"
           @click="sendRetractGcode(extrudeLength, extrudeSpeed, $waits.onRetract)"
         >
@@ -109,7 +69,6 @@
         <app-btn
           :disabled="!klippyReady || !selectedExtruderReady || !valid"
           block
-          small
           :loading="hasWait($waits.onExtrude)"
           @click="sendExtrudeGcode(extrudeLength, extrudeSpeed, $waits.onExtrude)"
         >
@@ -121,11 +80,11 @@
     <v-row
       v-if="!activeExtruderReady && (idexCopy || idexMirror)"
       justify="center"
-      class="pa-0 mt-0 mb-0"
+      class="pa-0 mt-1 mb-0"
     >
       <v-col
         cols="12"
-        class="pa-0"
+        class="pa-0 mt-1 mb-0"
       >
         <div
           class="text-center pa-0 mt-0 mb-0"
@@ -266,43 +225,3 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   }
 }
 </script>
-
-<style scoped>
-._btn-group {
-    border-radius: 4px;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    max-width: 100%;
-    min-width: 100%;
-    width: 100%;
-
-    .v-btn {
-        border-radius: 0;
-        border-color: rgba(255, 255, 255, 0.12);
-        border-style: solid;
-        border-width: thin;
-        box-shadow: none;
-        height: 28px;
-        min-width: auto !important;
-    }
-
-    .v-btn:first-child {
-        border-top-left-radius: inherit;
-        border-bottom-left-radius: inherit;
-    }
-
-    .v-btn:last-child {
-        border-top-right-radius: inherit;
-        border-bottom-right-radius: inherit;
-    }
-
-    .v-btn:not(:first-child) {
-        border-left-width: 0;
-    }
-}
-
-._btn-e {
-    font-size: 0.8rem !important;
-    max-height: 24px;
-}
-</style>
