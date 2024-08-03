@@ -180,13 +180,13 @@ export default class AppNumberField extends Mixins(StateMixin) {
 
 <style scoped>
 .v-text-field>>> .v-text-field__suffix {
-  opacity: 0.7;
+  opacity: 0.8;
   font-weight: 200;
   font-size: 14px;
 }
 
 .v-text-field>>> .v-label--active {
-  opacity: 0.7;
+  opacity: 0.8;
   font-weight: 200;
   font-size: 14px;
   top: 8px;
