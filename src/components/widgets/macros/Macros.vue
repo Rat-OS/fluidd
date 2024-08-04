@@ -19,7 +19,7 @@
             </v-icon>
           </template>
           <div>
-            {{ category.name ?? $t('app.general.label.uncategorized') }}
+            {{ category.name === null || category.name === '' ? $t('app.general.label.uncategorized') : category.name }}
             <v-chip
               small
               class="ml-2"

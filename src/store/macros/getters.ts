@@ -67,19 +67,21 @@ export const getters: GetterTree<MacrosState, RootState> = {
   // Gets visible macros, transformed. Should include the macro's config.
   // Is only used on the dashboard. Grouped by category.
   getVisibleMacros: (state, getters) => {
-    const defaultCategory = { id: '0', name: null }
+    const defaultCategory = { id: '0', name: '', order: 9999 }
     const categories = [...state.categories, defaultCategory]
 
     return categories
-      .map(({ id, name }) => ({
+      .map(({ id, name, order }) => ({
         id,
         name,
+        order,
         macros: getters.getMacrosByCategory(id).filter((macro: Macro) => macro.visible) as Macro[]
       }))
       .filter(category => category.macros.length > 0)
       .sort((a, b) => {
-        if (!a.name) return 1
-        if (!b.name) return -1
+        if ((a.order !== undefined && b.order !== undefined) && a.order !== b.order) {
+          return a.order - b.order
+        }
 
         return a.name.localeCompare(b.name)
       })
@@ -136,13 +138,10 @@ export const getters: GetterTree<MacrosState, RootState> = {
     const sortedCategories = cateories.sort((a: MacroCategory, b: MacroCategory) => {
       // Sorts preferrentially by order, then by name
       // This offers backward compatibility with macros that have no order
-      console.error('x ' + (a.order !== undefined ? 'x' : 'y'))
       if ((a.order !== undefined && b.order !== undefined) && a.order !== b.order) {
-        console.error('a')
         return a.order - b.order
       }
 
-      console.error('b')
       return a.name.localeCompare(b.name)
     })
     return sortedCategories
