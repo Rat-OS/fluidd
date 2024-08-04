@@ -32,7 +32,7 @@
               small
               color=""
               class="ml-2"
-              @click.prevent.stop="handleEditCategory"
+              @click.prevent.stop="handleEditCategory(category)"
             >
               <v-icon small>
                 $cog
@@ -72,6 +72,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import MacroBtn from './MacroBtn.vue'
+import type { MacroCategory } from '@/store/macros/types'
 
 @Component({
   components: {
@@ -94,8 +95,12 @@ export default class Macros extends Mixins(StateMixin) {
     this.$store.dispatch('macros/saveExpanded', val)
   }
 
-  handleEditCategory () {
-    this.$router.push('/settings/#macros')
+  handleEditCategory (category: MacroCategory) {
+    if (category.id === '0') {
+      this.$router.push('/settings/#macros')
+    } else {
+      this.$router.push('/settings/macros/' + category.id)
+    }
   }
 }
 </script>
