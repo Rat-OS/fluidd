@@ -18,10 +18,9 @@
           <v-btn
             v-if="zHomingOrigin !== 0"
             :loading="hasWait($waits.onZClear)"
-            color="warning"
+            color="error"
             text
             small
-            plain
             class="px-2 mr-1"
             @click="sendClearZAdjustGcode()"
           >
@@ -42,7 +41,6 @@
             color="primary"
             text
             small
-            plain
             class="px-2"
             @click="handleZOffsetApply"
           >
@@ -64,62 +62,39 @@
       class="pa-0 mt-0"
       dense
     >
-      <v-col
-        cols="12"
-      >
-        <div class="d-flex align-center">
-          <v-item-group class="_btn-group">
-            <v-btn
-              v-for="(value, index) in zAdjustValues"
-              :key="`zUp-${index}`"
-              :loading="hasWait(`${$waits.onZAdjust}${'+' + value}`)"
-              small
-              class="_btn-z flex-grow-1 px-1"
-              @click="sendZAdjustGcode('+', value)"
-            >
-              <span>&plus;{{ value }}</span>
-              <v-icon
-                v-if="index === zAdjustValues.length - 1"
-                left
-                small
-                class="mr-n1 ml-1"
-              >
-                $zUp
-              </v-icon>
-            </v-btn>
-          </v-item-group>
-        </div>
-      </v-col>
-      <v-col
-        cols="12"
-      >
-        <v-item-group
-          class="_btn-group"
-        >
+      <v-col cols="12">
+        <v-item-group class="values_btn-group">
+          <app-btn
+            min-width="10"
+            :loading="hasWait(`${$waits.onZAdjust}${'-'}`)"
+            :disabled="!klippyReady"
+            class="px-0 flex-grow-1"
+            @click="sendZAdjustGcode('-')"
+          >
+            <v-icon>$zDown</v-icon>
+          </app-btn>
           <v-btn
             v-for="(value, index) in zAdjustValues"
-            :key="`zDown-${index}`"
-            :loading="hasWait(`${$waits.onZAdjust}${'-' + value}`)"
+            :key="`zUp-${index}`"
             small
             class="_btn-z flex-grow-1 px-1"
-            @click="sendZAdjustGcode('-', value)"
+            :class="value == moveDistance ? 'btncolor' : ''"
+            @click="setMovingDistance(value)"
           >
-            <span>&minus;{{ value }}</span>
-            <v-icon
-              v-if="index === zAdjustValues.length - 1"
-              left
-              small
-              class="mr-n1 ml-1"
-            >
-              $zDown
-            </v-icon>
+            <span>{{ value }}</span>
           </v-btn>
+          <app-btn
+            min-width="10"
+            :loading="hasWait(`${$waits.onZAdjust}${'+'}`)"
+            :disabled="!klippyReady"
+            class="px-0 flex-grow-1"
+            @click="sendZAdjustGcode('+')"
+          >
+            <v-icon>$zUp</v-icon>
+          </app-btn>
         </v-item-group>
       </v-col>
     </v-row>
-    <!-- <v-divider
-      class="mt-5"
-    /> -->
   </v-container>
 </template>
 
@@ -130,8 +105,9 @@ import type { GcodeCommands } from '@/store/printer/types'
 
 @Component({})
 export default class ZHeightAdjust extends Mixins(StateMixin) {
-  moveDistanceValue: number | null = null
-
+  /**
+   * Common
+   */
   get zHomingOrigin (): number {
     // This is an array of 4 values, representing the homing origin.
     // It should be in the order of; X, Y, Z, E.
@@ -144,16 +120,47 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
     return zHomingOrigin
   }
 
-  get zAdjustValues () {
-    return this.$store.state.config.uiSettings.general.zAdjustDistances
+  /**
+   * Set moving distance
+   */
+  moveDistanceValue: number | null = null
+
+  setMovingDistance (value: any) {
+    this.moveDistanceValue = value
   }
 
   get moveDistance () {
-    return this.moveDistanceValue || this.zAdjustValues[0]
+    return this.moveDistanceValue !== null ? this.moveDistanceValue : this.zAdjustValues[0]
   }
 
   set moveDistance (value: number) {
     this.moveDistanceValue = value
+  }
+
+  get zAdjustValues () {
+    return this.$store.state.config.uiSettings.general.zAdjustDistances
+  }
+
+  /**
+   * Set Z-Offset
+   */
+  sendZAdjustGcode (direction: '+' | '-') {
+    const zHomed = this.$store.getters['printer/getHomedAxes']('z')
+    const gcode = `SET_GCODE_OFFSET Z_ADJUST=${direction}${this.moveDistance} MOVE=${+zHomed}`
+    this.sendGcode(gcode, `${this.$waits.onZAdjust}${direction + this.moveDistance}`)
+  }
+
+  /**
+   * Save Z-Offset
+   */
+  handleZOffsetApply () {
+    if (this.hasZOffsetApplyProbe && !this.hasZOffsetApplyEndstop) {
+      this.sendGcode('Z_OFFSET_APPLY_PROBE', this.$waits.onZApply)
+    }
+
+    if (this.hasZOffsetApplyEndstop && !this.hasZOffsetApplyProbe) {
+      this.sendGcode('Z_OFFSET_APPLY_ENDSTOP', this.$waits.onZApply)
+    }
   }
 
   get availableCommands (): GcodeCommands {
@@ -169,37 +176,18 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
   }
 
   /**
-   * Send a Z adjust gcode script.
-   */
-  sendZAdjustGcode (direction: '+' | '-', zValue: any) {
-    const zHomed = this.$store.getters['printer/getHomedAxes']('z')
-    const gcode = `SET_GCODE_OFFSET Z_ADJUST=${direction}${zValue} MOVE=${+zHomed}`
-    this.sendGcode(gcode, `${this.$waits.onZAdjust}${direction + zValue}`)
-  }
-
-  /**
-   * Clear Z adjust gcode script.
+   * Clear Z-Offset
    */
   sendClearZAdjustGcode () {
     const zHomed = this.$store.getters['printer/getHomedAxes']('z')
     const gcode = `SET_GCODE_OFFSET Z=0 MOVE=${+zHomed}`
     this.sendGcode(gcode, this.$waits.onZClear)
   }
-
-  handleZOffsetApply () {
-    if (this.hasZOffsetApplyProbe && !this.hasZOffsetApplyEndstop) {
-      this.sendGcode('Z_OFFSET_APPLY_PROBE', this.$waits.onZApply)
-    }
-
-    if (this.hasZOffsetApplyEndstop && !this.hasZOffsetApplyProbe) {
-      this.sendGcode('Z_OFFSET_APPLY_ENDSTOP', this.$waits.onZApply)
-    }
-  }
 }
 </script>
 
 <style scoped>
-._btn-group {
+.values_btn-group {
     border-radius: 4px;
     display: inline-flex;
     flex-wrap: nowrap;
@@ -213,7 +201,7 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
         border-style: solid;
         border-width: thin;
         box-shadow: none;
-        height: 28px;
+        height: 32px;
         min-width: auto !important;
     }
 
@@ -235,6 +223,6 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
 ._btn-z {
     font-size: 0.8rem !important;
     font-weight: 400;
-    max-height: 28px;
+    max-height: 32px;
 }
 </style>

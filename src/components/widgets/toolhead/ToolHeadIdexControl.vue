@@ -3,9 +3,6 @@
     <v-col>
       <app-btn-group
         class="app-toolchanger-control d-flex"
-        :class="{
-          [$vuetify.theme.dark ? 'theme--dark': 'theme--light']: true,
-        }"
       >
         <app-btn
           small
