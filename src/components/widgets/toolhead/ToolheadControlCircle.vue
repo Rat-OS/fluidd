@@ -176,7 +176,10 @@
                 r="25"
                 class="cc-btn-container"
               />
-              <path d="m396.25,169.25v2.833h-25.5v-2.833h25.5Zm-17.657,12.75h9.815l-4.907-8.5-4.907,8.5Z" />
+              <path
+                :style="!printerBedLeveled ? 'transform: rotate(-15deg); transform-origin: 383.5px 173.5px' : ''"
+                d="m396.25,169.25v2.833h-25.5v-2.833h25.5Zm-17.657,12.75h9.815l-4.907-8.5-4.907,8.5Z"
+              />
             </a>
             <a
               v-else
