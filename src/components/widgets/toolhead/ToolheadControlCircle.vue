@@ -165,7 +165,9 @@
               v-if="printerSupportsLeveling"
               class="cc-btn"
               :class="levelingClasses"
-              style="fill: black"
+              :style="{
+                fill: printerBedLeveled ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendLevelingGcode"
             >
               <circle
@@ -602,21 +604,6 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
     return this.$store.getters['printer/getPrinterSettings']()
   }
 
-  get printerSupportsQuadGantryLevel (): boolean {
-    return 'quad_gantry_level' in this.printerSettings
-  }
-
-  get printerSupportsZTiltAdjust (): boolean {
-    return 'z_tilt' in this.printerSettings
-  }
-
-  get printerSupportsLeveling (): boolean {
-    return (
-      this.printerSupportsQuadGantryLevel ||
-      this.printerSupportsZTiltAdjust
-    )
-  }
-
   get xStepClasses () {
     return {
       disabled: (
@@ -749,7 +736,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
         !this.allHomed ||
         disabled
       ),
-      primary
+      primary: !this.printerBedLeveled
     }
   }
 

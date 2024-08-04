@@ -143,6 +143,30 @@ export default class ToolheadMixin extends Vue {
     return this.$store.getters['printer/getHasScrewsTiltAdjustResults'] as boolean
   }
 
+  get printerSupportsLeveling (): boolean {
+    return this.printerSupportsZTiltAdjust || this.printerSupportsQuadGantryLevel
+  }
+
+  get printerSupportsZTiltAdjust (): boolean {
+    return this.$store.getters['printer/getPrinterSupportsZTiltAdjust'] as boolean
+  }
+
+  get printerSupportsQuadGantryLevel (): boolean {
+    return this.$store.getters['printer/getPrinterSupportsQuadGantryLevel'] as boolean
+  }
+
+  get printerBedLeveled (): boolean {
+    return this.printerZTiltApplied || this.printerZTiltApplied
+  }
+
+  get printerZTiltApplied (): boolean {
+    return this.$store.getters['printer/getPrinterZTiltApplied'] as boolean
+  }
+
+  get printerQuadGantryLevelApplied (): boolean {
+    return this.$store.getters['printer/getPrinterQuadGantryLevelApplied'] as boolean
+  }
+
   get isIdex (): boolean {
     return 'dual_carriage' in this.$store.state.printer.printer
   }

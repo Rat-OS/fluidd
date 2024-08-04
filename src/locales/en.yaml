@@ -746,6 +746,7 @@ app:
       home_x: X
       home_y: 'Y'
       home_all: All
+      level_bed: LEVEL
     title:
       bed_screws_adjust: Bed Screws Adjust
       manual_probe: Manual Probe
@@ -762,6 +763,7 @@ app:
       extruder_disabled: extruder disabled, below min_extrude_temp (%{min}<small>°C</small>)
       home_xy: Home XY
       home_z: Home Z
+      level_bed: automatic bed leveling
       manual_probe: Manual Probe
       motors_off: Motors Off
       relative_positioning: Relative

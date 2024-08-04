@@ -77,6 +77,14 @@ export default class ToolheadControlBarsAxis extends Mixins(StateMixin, Toolhead
       : this.$store.state.config.uiSettings.general.defaultToolheadXYSpeed
   }
 
+  sendLevelingGcode () {
+    if (this.printerSupportsQuadGantryLevel) {
+      this.sendGcode('QUAD_GANTRY_LEVEL', this.$waits.onQGL)
+    } else if (this.printerSupportsZTiltAdjust) {
+      this.sendGcode('Z_TILT_ADJUST', this.$waits.onZTilt)
+    }
+  }
+
   sendMoveGcode (distance: number) {
     this.sendGcode(`G91
     G1 ${this.axis}${distance} F${this.rate * 60}

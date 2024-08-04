@@ -133,7 +133,7 @@
           >
             <v-col
               cols="auto"
-              class="ml-12 mr-7"
+              class="ml-12"
             >
               <app-btn-toolhead-move
                 :color="axisButtonColor(yHomed)"
@@ -144,7 +144,27 @@
             </v-col>
             <v-col
               cols="auto"
-              class="ml-7"
+              class="ml-2"
+            >
+              <app-btn-toolhead-move
+                :color="(!xyHomed) ? 'primary' : undefined"
+                :loading="hasWait($waits.onZTilt) || hasWait($waits.onQGL)"
+                :disabled="!printerSupportsLeveling || !klippyReady || printerPrinting || !allHomed"
+                :tooltip="$t('app.tool.tooltip.level_bed')"
+                @click="sendLevelingGcode"
+              >
+                <v-icon
+                  small
+                  class="mr-1"
+                  :style="!printerBedLeveled ? 'transform: rotate(-15deg);' : ''"
+                >
+                  $minus
+                </v-icon>
+              </app-btn-toolhead-move>
+            </v-col>
+            <v-col
+              cols="auto"
+              class="ml-2"
             >
               <app-btn-toolhead-move
                 :color="axisButtonColor(zHomed)"
@@ -274,6 +294,14 @@ export default class ToolheadControlCross extends Mixins(StateMixin, ToolheadMix
       this.sendGcode(`G91
       G1 ${axis}${distance} F${rate * 60}
       G90`)
+    }
+  }
+
+  sendLevelingGcode () {
+    if (this.printerSupportsQuadGantryLevel) {
+      this.sendGcode('QUAD_GANTRY_LEVEL', this.$waits.onQGL)
+    } else if (this.printerSupportsZTiltAdjust) {
+      this.sendGcode('Z_TILT_ADJUST', this.$waits.onZTilt)
     }
   }
 }

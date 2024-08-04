@@ -9,6 +9,7 @@ import type { GcodeHelp } from '../console/types'
 import type { ServerInfo } from '../server/types'
 import { Globals } from '@/globals'
 import isKeyOf from '@/util/is-key-of'
+import { mdiCheckUnderlineCircle } from '@mdi/js'
 
 export const getters: GetterTree<PrinterState, RootState> = {
 
@@ -1052,5 +1053,23 @@ export const getters: GetterTree<PrinterState, RootState> = {
       results &&
       Object.keys(results).length > 0
     )
+  },
+
+  getPrinterSupportsZTiltAdjust: (state) => {
+    return state.printer.z_tilt !== undefined
+  },
+
+  getPrinterSupportsQuadGantryLevel: (state) => {
+    return state.printer.quad_gantry_level !== undefined
+  },
+
+  getPrinterZTiltApplied: (state) => {
+    const { applied } = state.printer.z_tilt ?? {}
+    return applied
+  },
+
+  getPrinterQuadGantryLevelApplied: (state) => {
+    const { applied } = state.printer.quad_gantry_level ?? {}
+    return applied
   }
 }

@@ -40,6 +40,24 @@
           </v-icon>
           XY
         </app-btn>
+
+        <app-btn
+          v-if="printerSupportsLeveling"
+          :disabled="!allHomed || !klippyReady || printerPrinting"
+          :loading="hasWait($waits.onZTilt) || hasWait($waits.onQGL)"
+          :color="!xyHomed ? 'primary' : undefined"
+          class="px-2 ml-2"
+          @click="sendLevelingGcode"
+        >
+          <v-icon
+            small
+            class="mr-1"
+            :style="!printerBedLeveled ? 'transform: rotate(-15deg);' : ''"
+          >
+            $minus
+          </v-icon>
+          LEVEL
+        </app-btn>
       </v-col>
     </v-row>
   </div>
@@ -76,6 +94,14 @@ export default class ToolheadControlBars extends Mixins(StateMixin, ToolheadMixi
 
   get forceMove (): boolean {
     return this.$store.state.config.uiSettings.toolhead.forceMove as boolean
+  }
+
+  sendLevelingGcode () {
+    if (this.printerSupportsQuadGantryLevel) {
+      this.sendGcode('QUAD_GANTRY_LEVEL', this.$waits.onQGL)
+    } else if (this.printerSupportsZTiltAdjust) {
+      this.sendGcode('Z_TILT_ADJUST', this.$waits.onZTilt)
+    }
   }
 }
 </script>
