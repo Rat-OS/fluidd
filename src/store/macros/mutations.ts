@@ -95,7 +95,8 @@ export const mutations: MutationTree<MacrosState> = {
     Vue.set(state.categories, i, {
       id: payload.id,
       name: payload.name,
-      order: payload.order
+      order: payload.order,
+      visible: payload.visible
     })
     state.stored.forEach((macro, i) => {
       if (macro.categoryId === payload.id) {

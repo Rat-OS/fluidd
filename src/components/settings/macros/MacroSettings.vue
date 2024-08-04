@@ -92,50 +92,6 @@
           </app-setting>
         </section>
       </app-draggable>
-      <!-- <template v-for="category in categories">
-        <v-divider :key="`divider-${category.name}`" />
-
-        <app-setting
-          :key="`category-${category.name}`"
-          :r-cols="3"
-          @click="handleCategoryClick(category)"
-        >
-          <template #title>
-            {{ category.name }}
-            <v-chip
-              small
-              class="mr-4"
-            >
-              {{ category.visible }} / {{ category.count }}
-            </v-chip>
-          </template>
-
-          <app-btn
-            fab
-            text
-            x-small
-            color=""
-            @click.stop="handleEditCategoryDialog(category)"
-          >
-            <v-icon color="">
-              $edit
-            </v-icon>
-          </app-btn>
-
-          <app-btn
-            fab
-            text
-            x-small
-            color=""
-            @click.stop="handleRemoveCategory(category)"
-          >
-            <v-icon color="">
-              $close
-            </v-icon>
-          </app-btn>
-
-        </app-setting>
-      </template> -->
 
       <template v-if="uncategorizedMacros.count > 0">
         <v-divider />
