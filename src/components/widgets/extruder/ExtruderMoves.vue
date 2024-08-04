@@ -89,19 +89,19 @@
     <v-row
       v-if="!activeExtruderReady && (idexCopy || idexMirror)"
       justify="center"
-      class="pa-0 mt-1 mb-0"
+      class="pa-0 ma-0"
     >
       <v-col
         cols="12"
-        class="pa-0 mt-1 mb-0"
+        class="pa-0 ma-0"
       >
         <div
-          class="text-center pa-0 mt-0 mb-0"
+          class="text-center pa-0 ma-0"
           :class="'text--disabled'"
         >
           <p
-            class="mb-0"
-            style="font-size: 14px"
+            class="pa-0 ma-0"
+            style="font-size: 14px; color"
             v-html="'One or both extruder below extrusion temp!'"
           />
         </div>

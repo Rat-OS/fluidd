@@ -3,7 +3,7 @@
     :title="$t('app.general.title.extruder')"
     icon="$extrusions"
     draggable
-    layout-path="dashboard.printer-extruder-card"
+    layout-path="dashboard.extruder-card"
   >
     <extruder />
   </collapsable-card>
@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import { Component, Mixins, Prop } from 'vue-property-decorator'
-import StateMixin from '@/mixins/state'
 import Extruder from './Extruder.vue'
 
 @Component({
@@ -19,7 +18,7 @@ import Extruder from './Extruder.vue'
     Extruder
   }
 })
-export default class ExtruderCard extends Mixins(StateMixin) {
+export default class ExtruderCard extends Mixins() {
   @Prop({ type: Boolean })
   readonly menuCollapsed?: boolean
 }
