@@ -63,6 +63,7 @@ import JobQueueCard from '@/components/widgets/job-queue/JobQueueCard.vue'
 import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
+import ExtruderCard from '@/components/widgets/extruder/ExtruderCard.vue'
 import { throttle } from 'lodash'
 
 @Component({
@@ -82,7 +83,8 @@ import { throttle } from 'lodash'
     JobQueueCard,
     SpoolmanCard,
     SensorsCard,
-    RunoutSensorsCard
+    RunoutSensorsCard,
+    ExtruderCard
   }
 })
 export default class Dashboard extends Mixins(StateMixin) {

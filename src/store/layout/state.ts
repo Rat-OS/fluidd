@@ -18,6 +18,7 @@ export const defaultState = (): LayoutState => {
           { id: 'spoolman-card', enabled: true, collapsed: false },
           { id: 'camera-card', enabled: true, collapsed: false },
           { id: 'toolhead-card', enabled: true, collapsed: false },
+          { id: 'extruder-card', enabled: true, collapsed: false },
           { id: 'macros-card', enabled: true, collapsed: false },
           { id: 'outputs-card', enabled: true, collapsed: false },
           { id: 'runout-sensors-card', enabled: false, collapsed: false },

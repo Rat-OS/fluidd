@@ -446,6 +446,7 @@ app:
       jobs: Jobs
       job_queue: Job Queue
       limits: Printer Limits
+      extruder: Extruder
       macros: Macros
       metrics_explorer: Metrics Explorer
       not_found: 404 Not Found

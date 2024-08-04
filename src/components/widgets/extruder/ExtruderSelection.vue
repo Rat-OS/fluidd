@@ -85,7 +85,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import ToolheadMixin from '@/mixins/toolhead'
 import BrowserMixin from '@/mixins/browser'
-import ExtruderItem from '@/components/widgets/toolhead/ExtruderItem.vue'
+import ExtruderItem from './ExtruderItem.vue'
 import type { Extruder, KnownExtruder } from '@/store/printer/types'
 
 @Component({

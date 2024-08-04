@@ -1,23 +1,8 @@
 <template>
   <v-row>
     <v-col
-      cols="12"
-      class="px-2 pa-0 mt-5 mb-5"
+      class="px-2 pa-0 mt-5 mb-0"
     >
-      <app-named-slider
-        :label="$t('app.general.label.speed')"
-        suffix="%"
-        :value="speed"
-        overridable
-        :reset-value="100"
-        :disabled="!klippyReady"
-        :loading="hasWait($waits.onSetSpeed)"
-        :locked="isMobileViewport"
-        :min="1"
-        :max="200"
-        :icon="'$motion'"
-        @submit="handleSetSpeed"
-      />
       <app-named-slider
         :label="$t('app.general.label.flow')"
         suffix="%"
@@ -29,7 +14,6 @@
         :locked="isMobileViewport"
         :min="1"
         :max="200"
-        class="mt-3"
         :icon="'$printer3dNozzle'"
         @submit="handleSetFlow"
       />
@@ -50,14 +34,6 @@ export default class SpeedAndFlowAdjust extends Mixins(StateMixin, BrowserMixin)
 
   handleSetFlow (val: number) {
     this.sendGcode(`M221 S${val}`, this.$waits.onSetFlow)
-  }
-
-  get speed () {
-    return Math.round(this.$store.state.printer.printer.gcode_move.speed_factor * 100) || 100
-  }
-
-  handleSetSpeed (val: number) {
-    this.sendGcode(`M220 S${val}`, this.$waits.onSetSpeed)
   }
 }
 </script>
