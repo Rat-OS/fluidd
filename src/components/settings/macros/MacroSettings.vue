@@ -25,7 +25,74 @@
         </app-btn>
       </app-setting>
 
-      <template v-for="category in categories">
+      <app-draggable
+        v-model="categories"
+        :options="{
+          animation: 200,
+          handle: '.handle',
+          ghostClass: 'ghost'
+        }"
+      >
+        <section
+          v-for="category in categories"
+          :key="`category-${category.name}`"
+        >
+          <v-divider />
+
+          <app-setting
+            :accent-color="category.color"
+            :r-cols="2"
+            @click="handleCategoryClick(category)"
+          >
+            <template #title>
+              <v-icon
+                class="handle"
+                left
+              >
+                $drag
+              </v-icon>
+
+              {{ category.name.toUpperCase() }}
+            </template>
+
+            <app-btn
+              fab
+              text
+              x-small
+              color=""
+              class="mr-3"
+              @click.stop="handleEditCategoryDialog(category)"
+            >
+              <v-icon color="">
+                $edit
+              </v-icon>
+            </app-btn>
+
+            <app-btn
+              fab
+              text
+              x-small
+              color=""
+              class="mr-3"
+              @click.stop="handleRemoveCategory(category)"
+            >
+              <v-icon color="">
+                $close
+              </v-icon>
+            </app-btn>
+
+            <v-switch
+              class="mt-0 pt-0"
+              :input-value="category.visible"
+              color="primary"
+              hide-details
+              @click.stop
+              @change="handleCategoryVisible(category, $event)"
+            />
+          </app-setting>
+        </section>
+      </app-draggable>
+      <!-- <template v-for="category in categories">
         <v-divider :key="`divider-${category.name}`" />
 
         <app-setting
@@ -67,9 +134,8 @@
             </v-icon>
           </app-btn>
 
-          <!-- <v-icon>$chevronRight</v-icon> -->
         </app-setting>
-      </template>
+      </template> -->
 
       <template v-if="uncategorizedMacros.count > 0">
         <v-divider />
@@ -127,6 +193,10 @@ export default class MacroSettings extends Mixins(StateMixin) {
     return this.$store.getters['macros/getCategories']
   }
 
+  set categories (categories: MacroCategory[]) {
+    this.$store.dispatch('macros/saveAllCategoriesOrder', categories)
+  }
+
   get uncategorizedMacros () {
     const uncategorized = this.$store.getters['macros/getMacrosByCategory']()
     const count = uncategorized.length
@@ -178,6 +248,13 @@ export default class MacroSettings extends Mixins(StateMixin) {
   handleCategoryClick (category?: MacroCategory) {
     const id = category?.id ?? 0
     this.$router.push(`/settings/macros/${id}`)
+  }
+
+  handleCategoryVisible (category: MacroCategory, value: boolean) {
+    const newCategory = {
+      ...category, visible: value
+    }
+    this.$store.dispatch('macros/saveCategory', newCategory)
   }
 }
 </script>

@@ -19,6 +19,19 @@ export const actions: ActionTree<MacrosState, RootState> = {
     commit('initMacros', payload)
   },
 
+  saveAllCategoriesOrder ({ state, commit }, payload: MacroCategory[]) {
+    // Commit the change...
+    payload.forEach((categories, index) => {
+      commit('setUpdateMacroCategory', {
+        ...categories,
+        order: index
+      })
+    })
+
+    // Save to moonraker.
+    SocketActions.serverWrite(Globals.MOONRAKER_DB.fluidd.ROOTS.macros.name + '.categories', state.categories)
+  },
+
   /**
    * Saves the state of a given macro.
    */
@@ -78,6 +91,14 @@ export const actions: ActionTree<MacrosState, RootState> = {
 
     // Save to moonraker.
     SocketActions.serverWrite(Globals.MOONRAKER_DB.fluidd.ROOTS.macros.name, state)
+  },
+
+  saveCategory ({ state, commit }, category: MacroCategory) {
+    // Commit the change...
+    commit('setUpdateMacroCategory', category)
+
+    // Save to moonraker.
+    SocketActions.serverWrite(Globals.MOONRAKER_DB.fluidd.ROOTS.macros.name + '.categories', state.categories)
   },
 
   saveExpanded ({ commit, state }, expanded: number[]) {

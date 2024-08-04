@@ -141,11 +141,9 @@ export default class Dashboard extends Mixins(StateMixin) {
         layoutIndex = layoutIndex + 1
       }
     }
-    console.error(this.usedColumns)
   }
 
   onResize () {
-    console.error('onLayoutChange')
     let newColumnCount = Math.floor(window.innerWidth / this.minPanelWidth)
     newColumnCount = Math.min(newColumnCount, this.maxColumnCount)
     if (newColumnCount === 5) newColumnCount = 4
@@ -204,7 +202,6 @@ export default class Dashboard extends Mixins(StateMixin) {
   }
 
   handleUpdateLayout () {
-    console.error('handleUpdateLayout')
     if (this.columnCount === 1) {
       this.$store.dispatch('layout/onLayoutChange', {
         name: this.$store.getters['layout/getSpecificLayoutName'],

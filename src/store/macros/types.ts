@@ -23,4 +23,6 @@ export interface MacroCategory {
   name: string;
   count?: number;
   visible?: number;
+  order?: number;
+  color?: string;
 }

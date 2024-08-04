@@ -66,7 +66,8 @@ export const mutations: MutationTree<MacrosState> = {
     const i = state.categories.findIndex(category => category.id === payload.id)
     Vue.set(state.categories, i, {
       id: payload.id,
-      name: payload.name
+      name: payload.name,
+      order: payload.order
     })
     state.stored.forEach((macro, i) => {
       if (macro.categoryId === payload.id) {
@@ -87,6 +88,20 @@ export const mutations: MutationTree<MacrosState> = {
         }
       })
     }
+  },
+
+  setUpdateMacroCategory (state, payload: MacroCategory) {
+    const i = state.categories.findIndex(i => i.id === payload.id)
+    Vue.set(state.categories, i, {
+      id: payload.id,
+      name: payload.name,
+      order: payload.order
+    })
+    state.stored.forEach((macro, i) => {
+      if (macro.categoryId === payload.id) {
+        Vue.set(state.stored, i, { ...macro, categoryId: payload.id })
+      }
+    })
   },
 
   setExpanded (state, expanded: number[]) {

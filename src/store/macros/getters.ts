@@ -1,5 +1,5 @@
 import type { GetterTree } from 'vuex'
-import type { Macro, MacrosState } from './types'
+import type { Macro, MacroCategory, MacrosState } from './types'
 import type { RootState } from '../types'
 
 export const MACRO_DEFAULTS = {
@@ -114,9 +114,9 @@ export const getters: GetterTree<MacrosState, RootState> = {
    * them.
    */
   getCategories: (state, getters) => {
-    const categories = state.categories
+    const cateories = state.categories
       .map(category => {
-        const { id, name } = category
+        const { id, name, color, order } = category
 
         const macros = getters.getMacrosByCategory(id) as Macro[]
         const count = macros.length
@@ -128,11 +128,23 @@ export const getters: GetterTree<MacrosState, RootState> = {
           id,
           name,
           visible,
-          count
+          count,
+          color,
+          order
         }
       })
-      .sort((a, b) => a.name.localeCompare(b.name))
+    const sortedCategories = cateories.sort((a: MacroCategory, b: MacroCategory) => {
+      // Sorts preferrentially by order, then by name
+      // This offers backward compatibility with macros that have no order
+      console.error('x ' + (a.order !== undefined ? 'x' : 'y'))
+      if ((a.order !== undefined && b.order !== undefined) && a.order !== b.order) {
+        console.error('a')
+        return a.order - b.order
+      }
 
-    return categories
+      console.error('b')
+      return a.name.localeCompare(b.name)
+    })
+    return sortedCategories
   }
 }
