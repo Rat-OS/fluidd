@@ -64,6 +64,7 @@ import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
 import ExtruderCard from '@/components/widgets/extruder/ExtruderCard.vue'
+import { defaultState } from '@/store/layout/state'
 import { throttle } from 'lodash'
 
 @Component({
@@ -119,10 +120,15 @@ export default class Dashboard extends Mixins(StateMixin) {
   usedColumns = [0, 0, 0, 0, 0]
   getUsedColumns () {
     const layouts = this.$store.getters['layout/getAllLayouts'] as Layouts
-    let layoutIndex = 0
     let usedColumns = 0
+    let layoutIndex = -1
     for (const layout in layouts) {
-      if (layout.startsWith('dashboard-')) {
+      if (layout.startsWith('dashboard-1')) layoutIndex = 0
+      if (layout.startsWith('dashboard-2')) layoutIndex = 1
+      if (layout.startsWith('dashboard-3')) layoutIndex = 2
+      if (layout.startsWith('dashboard-4')) layoutIndex = 3
+      if (layout.startsWith('dashboard-6')) layoutIndex = 4
+      if (layoutIndex >= 0) {
         if (layout) {
           const layoutContainer = this.$store.getters['layout/getLayout'](layout) as LayoutContainer
           usedColumns = 0
@@ -138,8 +144,15 @@ export default class Dashboard extends Mixins(StateMixin) {
           }
         }
         this.usedColumns[layoutIndex] = usedColumns
-        layoutIndex = layoutIndex + 1
       }
+    }
+    if (layoutIndex === -1) {
+      console.error('no new layouts found')
+      this.$store.dispatch('layout/onLayoutChange', {
+        name: 'dashboard',
+        value: defaultState().layouts.dashboard
+      })
+      this.usedColumns = [1, 1, 1, 1, 1]
     }
   }
 

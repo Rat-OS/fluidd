@@ -23,9 +23,7 @@ export const defaultState = (): LayoutState => {
           { id: 'outputs-card', enabled: true, collapsed: false },
           { id: 'runout-sensors-card', enabled: false, collapsed: false },
           { id: 'printer-limits-card', enabled: true, collapsed: false },
-          { id: 'retract-card', enabled: true, collapsed: false }
-        ],
-        container2: [
+          { id: 'retract-card', enabled: true, collapsed: false },
           { id: 'temperature-card', enabled: true, collapsed: false },
           { id: 'sensors-card', enabled: true, collapsed: false },
           { id: 'console-card', enabled: true, collapsed: false },
