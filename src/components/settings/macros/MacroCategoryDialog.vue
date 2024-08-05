@@ -14,10 +14,7 @@
           dense
           filled
           hide-details
-          :rules="[
-            $rules.required,
-            // customRules.uniqueName
-          ]"
+          :rules="rules"
           required
         />
       </app-setting>
@@ -59,8 +56,8 @@
 </template>
 
 <script lang="ts">
-import type { MacroCategory } from '@/store/macros/types'
 import { Component, Vue, Prop, VModel } from 'vue-property-decorator'
+import type { InputValidationRules } from 'vuetify'
 
 @Component({})
 export default class MacroCategoryDialog extends Vue {
@@ -82,15 +79,12 @@ export default class MacroCategoryDialog extends Vue {
   @Prop({ type: Boolean, required: true })
   readonly visible!: boolean
 
+  @Prop({ type: Array<InputValidationRules> })
+  readonly rules?: InputValidationRules[]
+
   newName = ''
   newColor = ''
   newVisible = true
-
-  get customRules () {
-    return {
-      uniqueName: (v: string) => this.categories.findIndex((c: MacroCategory) => c.name.toLowerCase() === v.toLowerCase()) < 0 || this.$t('app.general.simple_form.error.exists')
-    }
-  }
 
   mounted () {
     this.newName = this.name

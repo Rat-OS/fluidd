@@ -120,6 +120,7 @@
         :name="categoryDialogState.name"
         :color="categoryDialogState.color"
         :visible="categoryDialogState.visible"
+        :rules="categoryDialogState.rules"
         @save="categoryDialogState.handler"
       />
     </v-card>
@@ -144,6 +145,9 @@ export default class MacroSettings extends Mixins(StateMixin) {
     label: '',
     category: null,
     name: '',
+    color: '',
+    visible: true,
+    rules: [],
     handler: this.handleAddCategory
   }
 
@@ -174,6 +178,10 @@ export default class MacroSettings extends Mixins(StateMixin) {
       name: '',
       color: '',
       visible: true,
+      rules: [
+        this.$rules.required,
+        this.customRules.uniqueName
+      ],
       handler: this.handleAddCategory
     }
   }
@@ -187,6 +195,9 @@ export default class MacroSettings extends Mixins(StateMixin) {
       name: category.name,
       color: category.color ?? '',
       visible: category.visible,
+      rules: [
+        this.$rules.required
+      ],
       handler: this.handleEditCategory
     }
   }
@@ -219,6 +230,12 @@ export default class MacroSettings extends Mixins(StateMixin) {
       ...category, visible: value
     }
     this.$store.dispatch('macros/saveCategory', newCategory)
+  }
+
+  get customRules () {
+    return {
+      uniqueName: (v: string) => this.categories.findIndex((c: MacroCategory) => c.name.toLowerCase() === v.toLowerCase()) < 0 || this.$t('app.general.simple_form.error.exists')
+    }
   }
 }
 </script>
