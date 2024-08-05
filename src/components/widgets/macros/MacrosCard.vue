@@ -14,7 +14,7 @@
         @click="handleSettings"
       >
         <v-icon>
-          $cog
+          $edit
         </v-icon>
       </v-btn>
     </template>
