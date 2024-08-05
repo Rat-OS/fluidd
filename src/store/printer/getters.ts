@@ -1019,7 +1019,6 @@ export const getters: GetterTree<PrinterState, RootState> = {
   },
 
   getAvailableCommands: (state, getters, rootState, rootGetters): GcodeCommands => {
-    console.error(Date.now().toString())
     const availableCommands = state.printer.gcode.commands as GcodeCommands | null
 
     if (availableCommands) {

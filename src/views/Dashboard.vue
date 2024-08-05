@@ -146,7 +146,6 @@ export default class Dashboard extends Mixins(StateMixin) {
       }
     }
     if (layoutIndex === -1) {
-      // console.error('no new layouts found')
       // this.$store.dispatch('layout/onLayoutChange', {
       //   name: 'dashboard',
       //   value: defaultState().layouts.dashboard

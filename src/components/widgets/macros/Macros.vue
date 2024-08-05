@@ -91,7 +91,6 @@ export default class Macros extends Mixins(StateMixin) {
   }
 
   get expanded () {
-    console.error('printerState ' + this.printerState)
     let expanded: number[] = this.$store.state.macros.expanded
     // Remove any indexes that may no longer exist.
     expanded = expanded.filter(i => i <= this.macros.length)

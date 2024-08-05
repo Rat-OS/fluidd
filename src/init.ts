@@ -241,14 +241,14 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
               }
             }
           } else {
-            console.error('Error loading default settings')
+            consola.debug('Error loading default settings')
           }
         } else {
-          console.error('Error loading default settings')
+          consola.debug('Error loading default settings')
         }
       }
     } catch (e) {
-      console.error('Error loading default settings: ' + e)
+      consola.debug('Error loading default settings: ' + e)
     }
   }
 

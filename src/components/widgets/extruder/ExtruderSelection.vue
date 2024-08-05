@@ -128,7 +128,6 @@ export default class ExtruderSelection extends Mixins(StateMixin, ToolheadMixin,
     if (this.cachedActiveAxtruder !== activeExtruder) {
       this.cachedActiveAxtruder = activeExtruder
       this.selectedExtruder = activeExtruder
-      this.setSelectedExtruder(activeExtruder)
     }
   }
 
