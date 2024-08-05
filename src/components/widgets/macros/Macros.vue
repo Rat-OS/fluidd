@@ -10,7 +10,7 @@
         :key="`category-${category.id}`"
       >
         <v-expansion-panel-header
-          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && printerState === 'ready'))"
+          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled')))"
         >
           <template #actions>
             <v-icon
@@ -44,7 +44,7 @@
         </v-expansion-panel-header>
 
         <v-expansion-panel-content
-          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && printerState === 'ready'))"
+          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled')))"
         >
           <v-tooltip
             v-for="macro in category.macros"
@@ -54,7 +54,7 @@
           >
             <template #activator="{ on, attrs }">
               <macro-btn
-                v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && printerState === 'ready')"
+                v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled'))"
                 v-bind="attrs"
                 :macro="macro"
                 :category="category"
