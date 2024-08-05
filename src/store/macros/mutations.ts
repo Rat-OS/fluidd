@@ -101,6 +101,7 @@ export const mutations: MutationTree<MacrosState> = {
       id: payload.id,
       name: payload.name,
       order: payload.order,
+      color: payload.color,
       visible: payload.visible,
       hideWhilePrinting: payload.hideWhilePrinting,
       hideWhilePaused: payload.hideWhilePaused,

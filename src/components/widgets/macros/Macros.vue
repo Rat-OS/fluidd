@@ -9,7 +9,9 @@
         v-for="category in macros"
         :key="`category-${category.id}`"
       >
-        <v-expansion-panel-header>
+        <v-expansion-panel-header
+          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && printerState === 'ready'))"
+        >
           <template #actions>
             <v-icon
               small
@@ -41,7 +43,9 @@
           </div>
         </v-expansion-panel-header>
 
-        <v-expansion-panel-content>
+        <v-expansion-panel-content
+          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && printerState === 'ready'))"
+        >
           <v-tooltip
             v-for="macro in category.macros"
             :key="`category-${macro.name}`"
@@ -50,6 +54,7 @@
           >
             <template #activator="{ on, attrs }">
               <macro-btn
+                v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && printerState === 'ready')"
                 v-bind="attrs"
                 :macro="macro"
                 :category="category"
@@ -86,6 +91,7 @@ export default class Macros extends Mixins(StateMixin) {
   }
 
   get expanded () {
+    console.error('printerState ' + this.printerState)
     let expanded: number[] = this.$store.state.macros.expanded
     // Remove any indexes that may no longer exist.
     expanded = expanded.filter(i => i <= this.macros.length)
@@ -97,11 +103,7 @@ export default class Macros extends Mixins(StateMixin) {
   }
 
   handleEditCategory (category: MacroCategory) {
-    if (category.id === '0') {
-      this.$router.push('/settings/#macros')
-    } else {
-      this.$router.push('/settings/macros/' + category.id)
-    }
+    this.$router.push('/settings/macros/' + category.id)
   }
 }
 </script>

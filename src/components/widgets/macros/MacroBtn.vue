@@ -1,6 +1,7 @@
 <template>
   <app-btn-group divided>
     <app-btn
+      v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && printerState === 'ready')"
       :disabled="(macro.disabledWhilePrinting && printerPrinting) || !klippyReady"
       :style="borderStyle"
       v-on="filteredListeners"

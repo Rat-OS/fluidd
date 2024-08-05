@@ -5,6 +5,19 @@
     draggable
     layout-path="dashboard.macros-card"
   >
+    <template #menu>
+      <v-btn
+        fab
+        x-small
+        text
+        class="ms-1 my-1"
+        @click="handleSettings"
+      >
+        <v-icon>
+          $cog
+        </v-icon>
+      </v-btn>
+    </template>
     <macros />
   </collapsable-card>
 </template>
@@ -19,5 +32,8 @@ import Macros from '@/components/widgets/macros/Macros.vue'
   }
 })
 export default class MacrosCard extends Vue {
+  handleSettings () {
+    this.$router.push('/settings/#macros')
+  }
 }
 </script>
