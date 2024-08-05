@@ -91,6 +91,7 @@
                 >
                   <template #append>
                     <app-btn
+                      v-if="params[param].value !== params[param].reset"
                       style="margin-top: -4px; margin-right: -6px;"
                       color=""
                       icon
