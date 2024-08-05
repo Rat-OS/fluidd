@@ -9,7 +9,6 @@ import type { GcodeHelp } from '../console/types'
 import type { ServerInfo } from '../server/types'
 import { Globals } from '@/globals'
 import isKeyOf from '@/util/is-key-of'
-import { mdiCheckUnderlineCircle } from '@mdi/js'
 
 export const getters: GetterTree<PrinterState, RootState> = {
 
