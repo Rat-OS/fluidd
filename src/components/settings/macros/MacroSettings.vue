@@ -118,6 +118,8 @@
         :title="categoryDialogState.title"
         :label="categoryDialogState.label"
         :name="categoryDialogState.name"
+        :color="categoryDialogState.color"
+        :visible="categoryDialogState.visible"
         @save="categoryDialogState.handler"
       />
     </v-card>
@@ -170,6 +172,8 @@ export default class MacroSettings extends Mixins(StateMixin) {
       label: this.$t('app.general.label.name'),
       category: null,
       name: '',
+      color: '',
+      visible: true,
       handler: this.handleAddCategory
     }
   }
@@ -181,6 +185,8 @@ export default class MacroSettings extends Mixins(StateMixin) {
       label: this.$t('app.general.label.name'),
       category,
       name: category.name,
+      color: category.color ?? '',
+      visible: category.visible,
       handler: this.handleEditCategory
     }
   }
@@ -193,10 +199,12 @@ export default class MacroSettings extends Mixins(StateMixin) {
     this.$store.dispatch('macros/addCategory', category)
   }
 
-  handleEditCategory (name: string) {
+  handleEditCategory (name: string, color: string, visible: boolean) {
     const category = {
       ...this.categoryDialogState.category,
-      name
+      name,
+      color,
+      visible
     }
     this.$store.dispatch('macros/editCategory', category)
   }

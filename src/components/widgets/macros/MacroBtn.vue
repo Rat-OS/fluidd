@@ -84,13 +84,16 @@
 <script lang="ts">
 import { Component, Prop, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
-import type { Macro } from '@/store/macros/types'
+import type { Macro, MacroCategory } from '@/store/macros/types'
 import gcodeMacroParams from '@/util/gcode-macro-params'
 
 @Component({})
 export default class MacroBtn extends Mixins(StateMixin) {
   @Prop({ type: Object, required: true })
   readonly macro!: Macro
+
+  @Prop({ type: Object, required: true })
+  readonly category!: MacroCategory
 
   params: { [index: string]: { value: string | number; reset: string | number }} = {}
 
@@ -131,8 +134,9 @@ export default class MacroBtn extends Mixins(StateMixin) {
   }
 
   get borderStyle () {
-    if (this.macro && this.macro.color !== '') {
-      return `border-color: ${this.macro.color} !important; border-left: solid 4px ${this.macro.color} !important;`
+    const color = this.macro && this.macro.color !== '' ? this.macro.color : this.category && this.category.color !== '' ? this.category.color : ''
+    if (color !== '') {
+      return `border-color: ${color} !important; border-left: solid 4px ${color} !important;`
     }
     return ''
   }

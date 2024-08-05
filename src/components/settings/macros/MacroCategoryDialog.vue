@@ -5,18 +5,55 @@
     max-width="350"
     @save="handleSave"
   >
-    <v-card-text>
-      <v-text-field
-        v-model="newName"
-        autofocus
-        outlined
-        :label="label"
-        :rules="[
-          $rules.required,
-          customRules.uniqueName
-        ]"
-        required
-      />
+    <v-card-text class="pa-0">
+      <app-setting
+        :title="label"
+      >
+        <v-text-field
+          v-model="newName"
+          dense
+          filled
+          hide-details
+          :rules="[
+            $rules.required,
+            // customRules.uniqueName
+          ]"
+          required
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.color')"
+      >
+        <app-btn
+          outlined
+          small
+          color="primary"
+          class="mr-1"
+          @click="handleResetColor"
+        >
+          {{ $t('app.setting.btn.reset') }}
+        </app-btn>
+        <app-color-picker
+          v-model="newColor"
+          :title="$t('app.general.btn.set_color')"
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.visible')"
+      >
+        <v-switch
+          v-model="newVisible"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
     </v-card-text>
   </app-dialog>
 </template>
@@ -39,7 +76,15 @@ export default class MacroCategoryDialog extends Vue {
   @Prop({ type: String, required: true })
   readonly name!: string
 
+  @Prop({ type: String, required: true })
+  readonly color!: string
+
+  @Prop({ type: Boolean, required: true })
+  readonly visible!: boolean
+
   newName = ''
+  newColor = ''
+  newVisible = true
 
   get customRules () {
     return {
@@ -49,6 +94,8 @@ export default class MacroCategoryDialog extends Vue {
 
   mounted () {
     this.newName = this.name
+    this.newColor = this.color
+    this.newVisible = this.visible
   }
 
   get categories () {
@@ -56,8 +103,12 @@ export default class MacroCategoryDialog extends Vue {
   }
 
   handleSave () {
-    this.$emit('save', this.newName)
+    this.$emit('save', this.newName, this.newColor, this.newVisible)
     this.open = false
+  }
+
+  handleResetColor () {
+    this.newColor = ''
   }
 }
 </script>

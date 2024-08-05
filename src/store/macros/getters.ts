@@ -67,14 +67,15 @@ export const getters: GetterTree<MacrosState, RootState> = {
   // Gets visible macros, transformed. Should include the macro's config.
   // Is only used on the dashboard. Grouped by category.
   getVisibleMacros: (state, getters) => {
-    const defaultCategory = { id: '0', name: '', order: 9999, visible: true }
+    const defaultCategory = { id: '0', name: '', order: 9999, color: '', visible: true }
     const categories = [...state.categories, defaultCategory]
 
     return categories
-      .map(({ id, name, order, visible }) => ({
+      .map(({ id, name, order, color, visible }) => ({
         id,
         name,
         order,
+        color,
         visible,
         macros: getters.getMacrosByCategory(id).filter((macro: Macro) => macro.visible) as Macro[]
       }))

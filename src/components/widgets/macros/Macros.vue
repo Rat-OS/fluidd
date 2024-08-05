@@ -52,6 +52,7 @@
               <macro-btn
                 v-bind="attrs"
                 :macro="macro"
+                :category="category"
                 :loading="hasWait(`${$waits.onMacro}${macro.name}`)"
                 class="me-2 mb-2 d-inline-block"
                 v-on="on"
