@@ -162,21 +162,11 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
 </script>
 
 <style scoped>
-.no-padding :deep(.v-input__slot) {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
 .v-expansion-panel-header>>> .v-expansion-panel-header--active {
   padding: 0 !important;
 }
 
 .v-expansion-panel-content>>> .v-expansion-panel-content__wrap {
   padding: 0 !important;
-}
-
-.no-underline .v-select__selections {
-  border-bottom: none !important;
-  box-shadow: none !important;
 }
 </style>

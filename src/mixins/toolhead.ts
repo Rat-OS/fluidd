@@ -1,6 +1,18 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import type { Extruder } from '@/store/printer/types'
+import type { Extruder, GcodeCommands } from '@/store/printer/types'
+import type { TranslateResult } from 'vue-i18n'
+
+export type ToolChangeCommand = {
+  name: string,
+  description: string | TranslateResult,
+  color?: string,
+  active?: boolean,
+  spoolId?: number,
+  default?: boolean,
+  remap?: number,
+  join?: number
+}
 
 @Component
 export default class ToolheadMixin extends Vue {
@@ -181,5 +193,93 @@ export default class ToolheadMixin extends Vue {
 
   get idexMirror (): boolean {
     return this.isIdex && this.idexMode === 'mirror'
+  }
+
+  // get hasIdexFilamentSensors (): boolean {
+  //   try {
+  //     const toolhead_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t0
+  //     const toolhead_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t1
+  //     if (toolhead_filament_sensor_t0 !== undefined && toolhead_filament_sensor_t1 !== undefined) {
+  //       return true
+  //     }
+  //     return true
+  //   } catch { }
+  //   try {
+  //     const feeder_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t0
+  //     const feeder_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t1
+  //     if (feeder_filament_sensor_t0 !== undefined && feeder_filament_sensor_t1 !== undefined) {
+  //       return true
+  //     }
+  //     return true
+  //   } catch { }
+  //   return false
+  // }
+
+  get allowsSpoolJoining (): boolean {
+    for (const txMacro of this.toolChangeCommands) {
+      if (txMacro.remap === undefined) {
+        return false
+      }
+    }
+    return true
+  }
+
+  get allowsToolheadRemapping (): boolean {
+    for (const txMacro of this.toolChangeCommands) {
+      if (txMacro.join === undefined) {
+        return false
+      }
+    }
+    return true
+  }
+
+  get spoolJoinActive (): boolean {
+    for (const txMacro of this.toolChangeCommands) {
+      if (txMacro.join?.toString() !== txMacro.name.substring(1)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  get toolheadRemapActive (): boolean {
+    for (const txMacro of this.toolChangeCommands) {
+      if (txMacro.remap?.toString() !== txMacro.name.substring(1)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  get toolChangeCommands (): ToolChangeCommand[] {
+    const availableCommands = this.$store.getters['printer/getAvailableCommands'] as GcodeCommands
+
+    return Object.keys(availableCommands)
+      .filter(command => /^t\d+$/i.test(command))
+      .map(command => {
+        const { help } = availableCommands[command]
+        const description = help && help !== 'G-Code macro'
+          ? help
+          : this.$t('app.tool.tooltip.select_tool', { tool: command.substring(1) })
+
+        const macro = this.$store.getters['macros/getMacroByName'](command.toLowerCase())
+
+        return {
+          name: command,
+          description,
+          color: macro?.variables?.color ? `#${macro.variables.color}` : undefined,
+          active: macro?.variables?.active ?? false,
+          spoolId: macro?.variables?.spool_id,
+          default: macro?.variables?.default ?? false,
+          remap: macro?.variables?.remap,
+          join: macro?.variables?.join
+        } satisfies ToolChangeCommand
+      })
+      .sort((a, b) => {
+        const numberA = parseInt(a.name.substring(1))
+        const numberB = parseInt(b.name.substring(1))
+
+        return numberA - numberB
+      })
   }
 }

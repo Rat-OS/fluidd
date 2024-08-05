@@ -11,7 +11,9 @@
             <toolhead-control-bars v-else-if="toolheadControlStyle === 'bars'" />
             <toolhead-control-circle v-else-if="toolheadControlStyle === 'circle'" />
             <z-height-adjust />
-            <speed-adjust />
+            <speed-adjust class="mb-2" />
+            <toolhead-remapping />
+            <spool-joining />
           </template>
         </v-col>
       </v-row>
@@ -31,6 +33,8 @@ import ZHeightAdjust from './ZHeightAdjust.vue'
 import SpeedAdjust from './SpeedAdjust.vue'
 import ToolChangeCommands from './ToolChangeCommands.vue'
 import ToolHeadIdexControl from './ToolHeadIdexControl.vue'
+import SpoolJoining from './SpoolJoining.vue'
+import ToolheadRemapping from './ToolheadRemapping.vue'
 import type { ToolheadControlStyle } from '@/store/config/types'
 
 @Component({
@@ -42,7 +46,9 @@ import type { ToolheadControlStyle } from '@/store/config/types'
     ZHeightAdjust,
     SpeedAdjust,
     ToolChangeCommands,
-    ToolHeadIdexControl
+    ToolHeadIdexControl,
+    SpoolJoining,
+    ToolheadRemapping
   }
 })
 export default class Toolhead extends Mixins(StateMixin, ToolheadMixin) {

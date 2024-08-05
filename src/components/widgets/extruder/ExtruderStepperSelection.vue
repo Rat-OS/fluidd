@@ -147,11 +147,6 @@ export default class ExtruderStepperSelection extends Mixins(StateMixin) {
 </script>
 
 <style scoped>
-.no-padding :deep(.v-input__slot) {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
 .v-expansion-panel-header>>> .v-expansion-panel-header--active {
   padding: 0 !important;
 }
@@ -159,11 +154,6 @@ export default class ExtruderStepperSelection extends Mixins(StateMixin) {
 .v-expansion-panel-content>>> .v-expansion-panel-content__wrap {
   padding: 0 !important;
   padding-top: 4px;
-}
-
-.no-underline .v-select__selections {
-  border-bottom: none !important;
-  box-shadow: none !important;
 }
 
 .v-select>>> .v-select__suffix {
