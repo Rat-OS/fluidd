@@ -64,7 +64,6 @@ import SpoolmanCard from '@/components/widgets/spoolman/SpoolmanCard.vue'
 import SensorsCard from '@/components/widgets/sensors/SensorsCard.vue'
 import RunoutSensorsCard from '@/components/widgets/runout-sensors/RunoutSensorsCard.vue'
 import ExtruderCard from '@/components/widgets/extruder/ExtruderCard.vue'
-import { defaultState } from '@/store/layout/state'
 import { throttle } from 'lodash'
 
 @Component({
