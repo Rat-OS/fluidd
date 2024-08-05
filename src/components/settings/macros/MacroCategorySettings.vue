@@ -184,7 +184,8 @@ export default class MacroCategorySettings extends Vue {
   }
 
   handleBack () {
-    this.$router.push('/settings/#macros')
+    this.$router.go(-1)
+    // this.$router.push('/settings/#macros')
   }
 
   handleSettingsDialog (macro: Macro) {
