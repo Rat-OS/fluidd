@@ -2,7 +2,7 @@
   <app-dialog
     v-model="open"
     :title="title"
-    max-width="350"
+    max-width="480"
     @save="handleSave"
   >
     <v-card-text class="pa-0">
@@ -51,6 +51,45 @@
           hide-details
         />
       </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.hide_while_printing')"
+      >
+        <v-switch
+          v-model="newHideWhilePrinting"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.hide_while_paused')"
+      >
+        <v-switch
+          v-model="newHideWhilePaused"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.hide_while_standby')"
+      >
+        <v-switch
+          v-model="newHideWhileStandby"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
     </v-card-text>
   </app-dialog>
 </template>
@@ -79,17 +118,32 @@ export default class MacroCategoryDialog extends Vue {
   @Prop({ type: Boolean, required: true })
   readonly visible!: boolean
 
+  @Prop({ type: Boolean, required: true })
+  readonly hideWhilePrinting!: boolean
+
+  @Prop({ type: Boolean, required: true })
+  readonly hideWhilePaused!: boolean
+
+  @Prop({ type: Boolean, required: true })
+  readonly hideWhileStandby!: boolean
+
   @Prop({ type: Array<InputValidationRules> })
   readonly rules?: InputValidationRules[]
 
   newName = ''
   newColor = ''
   newVisible = true
+  newHideWhilePrinting = true
+  newHideWhilePaused = true
+  newHideWhileStandby = true
 
   mounted () {
     this.newName = this.name
     this.newColor = this.color
     this.newVisible = this.visible
+    this.newHideWhilePrinting = this.hideWhilePrinting
+    this.newHideWhilePaused = this.hideWhilePaused
+    this.newHideWhileStandby = this.hideWhileStandby
   }
 
   get categories () {
@@ -97,7 +151,7 @@ export default class MacroCategoryDialog extends Vue {
   }
 
   handleSave () {
-    this.$emit('save', this.newName, this.newColor, this.newVisible)
+    this.$emit('save', this.newName, this.newColor, this.newVisible, this.newHideWhilePrinting, this.newHideWhilePaused, this.newHideWhileStandby)
     this.open = false
   }
 

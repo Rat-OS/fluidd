@@ -260,6 +260,9 @@ app:
       current_user: Current user
       default: Default
       disabled_while_printing: Disabled while printing
+      hide_while_printing: Hide while printing
+      hide_while_paused: Hide when paused
+      hide_while_standby: Hide in standby
       edit_camera: Edit Camera
       edit_filter: Edit Filter
       edit_preset: Edit Preset

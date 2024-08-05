@@ -12,6 +12,9 @@ export interface Macro {
   category?: MacroCategory;
   assignTo?: string;
   disabledWhilePrinting?: boolean;
+  hideWhilePrinting?: boolean;
+  hideWhilePaused?: boolean;
+  hideWhileStandby?: boolean;
   color?: string;
   config?: any;
   order?: number;
@@ -25,4 +28,7 @@ export interface MacroCategory {
   visible?: number;
   order?: number;
   color?: string;
+  hideWhilePrinting?: boolean;
+  hideWhilePaused?: boolean;
+  hideWhileStandby?: boolean;
 }

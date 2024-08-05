@@ -69,7 +69,10 @@ export const mutations: MutationTree<MacrosState> = {
       name: payload.name,
       order: payload.order,
       color: payload.color,
-      visible: payload.visible
+      visible: payload.visible,
+      hideWhilePrinting: payload.hideWhilePrinting,
+      hideWhilePaused: payload.hideWhilePaused,
+      hideWhileStandby: payload.hideWhileStandby
     })
     state.stored.forEach((macro, i) => {
       if (macro.categoryId === payload.id) {
@@ -98,7 +101,10 @@ export const mutations: MutationTree<MacrosState> = {
       id: payload.id,
       name: payload.name,
       order: payload.order,
-      visible: payload.visible
+      visible: payload.visible,
+      hideWhilePrinting: payload.hideWhilePrinting,
+      hideWhilePaused: payload.hideWhilePaused,
+      hideWhileStandby: payload.hideWhileStandby
     })
     state.stored.forEach((macro, i) => {
       if (macro.categoryId === payload.id) {

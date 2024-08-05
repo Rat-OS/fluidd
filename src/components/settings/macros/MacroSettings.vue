@@ -120,6 +120,9 @@
         :name="categoryDialogState.name"
         :color="categoryDialogState.color"
         :visible="categoryDialogState.visible"
+        :hide-while-printing="categoryDialogState.hideWhilePrinting"
+        :hide-while-paused="categoryDialogState.hideWhilePaused"
+        :hide-while-standby="categoryDialogState.hideWhileStandby"
         :rules="categoryDialogState.rules"
         @save="categoryDialogState.handler"
       />
@@ -147,6 +150,9 @@ export default class MacroSettings extends Mixins(StateMixin) {
     name: '',
     color: '',
     visible: true,
+    hideWhilePrinting: false,
+    hideWhilePaused: false,
+    hideWhileStandby: false,
     rules: [],
     handler: this.handleAddCategory
   }
@@ -178,6 +184,9 @@ export default class MacroSettings extends Mixins(StateMixin) {
       name: '',
       color: '',
       visible: true,
+      hideWhilePrinting: false,
+      hideWhilePaused: false,
+      hideWhileStandby: false,
       rules: [
         this.$rules.required,
         this.customRules.uniqueName
@@ -195,6 +204,9 @@ export default class MacroSettings extends Mixins(StateMixin) {
       name: category.name,
       color: category.color ?? '',
       visible: category.visible,
+      hideWhilePrinting: category.hideWhilePrinting,
+      hideWhilePaused: category.hideWhilePaused,
+      hideWhileStandby: category.hideWhileStandby,
       rules: [
         this.$rules.required
       ],
@@ -210,12 +222,15 @@ export default class MacroSettings extends Mixins(StateMixin) {
     this.$store.dispatch('macros/addCategory', category)
   }
 
-  handleEditCategory (name: string, color: string, visible: boolean) {
+  handleEditCategory (name: string, color: string, visible: boolean, hideWhilePrinting: boolean, hideWhilePaused: boolean, hideWhileStandby: boolean) {
     const category = {
       ...this.categoryDialogState.category,
       name,
       color,
-      visible
+      visible,
+      hideWhilePrinting,
+      hideWhilePaused,
+      hideWhileStandby
     }
     this.$store.dispatch('macros/editCategory', category)
   }

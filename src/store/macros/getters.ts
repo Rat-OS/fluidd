@@ -6,6 +6,9 @@ export const MACRO_DEFAULTS = {
   alias: '',
   visible: true,
   disabledWhilePrinting: false,
+  hideWhilePrinting: false,
+  hideWhilePaused: false,
+  hideWhileStandby: false,
   color: '',
   categoryId: '0',
   order: undefined
@@ -121,7 +124,7 @@ export const getters: GetterTree<MacrosState, RootState> = {
   getCategories: (state, getters) => {
     const cateories = state.categories
       .map(category => {
-        const { id, name, color, order, visible } = category
+        const { id, name, color, order, visible, hideWhilePrinting, hideWhilePaused, hideWhileStandby } = category
 
         const macros = getters.getMacrosByCategory(id) as Macro[]
         const count = macros.length
@@ -133,6 +136,9 @@ export const getters: GetterTree<MacrosState, RootState> = {
           id,
           name,
           visible,
+          hideWhilePrinting,
+          hideWhilePaused,
+          hideWhileStandby,
           count,
           color,
           order

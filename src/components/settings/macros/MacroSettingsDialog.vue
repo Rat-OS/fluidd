@@ -73,6 +73,19 @@
         <v-divider /> -->
 
       <app-setting
+        :title="$t('app.general.label.visible')"
+      >
+        <v-switch
+          v-model="newMacro.visible"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
         :title="$t('app.general.label.disabled_while_printing')"
       >
         <v-switch
@@ -86,10 +99,36 @@
       <v-divider />
 
       <app-setting
-        :title="$t('app.general.label.visible')"
+        :title="$t('app.general.label.hide_while_printing')"
       >
         <v-switch
-          v-model="newMacro.visible"
+          v-model="newMacro.hideWhilePrinting"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.hide_while_paused')"
+      >
+        <v-switch
+          v-model="newMacro.hideWhilePaused"
+          class="mt-0 pt-0"
+          color="primary"
+          hide-details
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
+        :title="$t('app.general.label.hide_while_standby')"
+      >
+        <v-switch
+          v-model="newMacro.hideWhileStandby"
           class="mt-0 pt-0"
           color="primary"
           hide-details
