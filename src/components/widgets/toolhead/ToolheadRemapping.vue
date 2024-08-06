@@ -216,8 +216,7 @@ export default class ToolheadRemapping extends Mixins(StateMixin, ToolheadMixin)
 
   get targetTools () {
     const tools = this.toolChangeCommands
-    return tools
-      .filter(x => x.name !== this.sourceModel)
+    return tools.filter(x => x.name !== this.sourceModel)
   }
 }
 </script>
