@@ -13,6 +13,13 @@ export type ToolChangeCommand = {
   remap?: number,
   join?: number,
   runout_sensor?: string
+  message?: ToolChangeMessage
+}
+
+export type ToolChangeMessage = {
+  type: string,
+  message: string,
+  action: string,
 }
 
 @Component
@@ -261,6 +268,18 @@ export default class ToolheadMixin extends Vue {
           : this.$t('app.tool.tooltip.select_tool', { tool: command.substring(1) })
 
         const macro = this.$store.getters['macros/getMacroByName'](command.toLowerCase())
+        const message: ToolChangeMessage = { type: '', message: '', action: '' }
+        if (macro?.variables?.message) {
+          try {
+            const split = macro?.variables?.message.split('|')
+            message.type = split[0]
+            message.message = split[1]
+            message.action = split[2]
+            console.error(macro?.variables?.message)
+          } catch {
+            console.error('error')
+          }
+        }
 
         return {
           name: command,
@@ -271,7 +290,8 @@ export default class ToolheadMixin extends Vue {
           default: macro?.variables?.default ?? false,
           remap: macro?.variables?.remap,
           join: macro?.variables?.join,
-          runout_sensor: macro?.variables?.runout_sensor
+          runout_sensor: macro?.variables?.runout_sensor,
+          message: message ?? undefined
         } satisfies ToolChangeCommand
       })
       .sort((a, b) => {

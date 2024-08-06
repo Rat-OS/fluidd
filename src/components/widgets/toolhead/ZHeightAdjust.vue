@@ -63,36 +63,46 @@
       dense
     >
       <v-col cols="12">
-        <v-item-group class="values_btn-group">
+        <app-btn-group class="d-flex">
           <app-btn
+            v-for="(value, index) in zAdjustValues"
+            :key="`zUp-${index}`"
+            small
+            class="px-0 flex-grow-1"
+            :color="value === moveDistance ? 'btncolor' : ''"
+            @click="setMovingDistance(value)"
+          >
+            <span>{{ value }}</span>
+          </app-btn>
+          <app-btn
+            small
             min-width="10"
             :loading="hasWait(`${$waits.onZAdjust}${'-'}`)"
             :disabled="!klippyReady"
             class="px-0 flex-grow-1"
             @click="sendZAdjustGcode('-')"
           >
-            <v-icon>$zDown</v-icon>
+            <v-icon
+              small
+            >
+              $zDown
+            </v-icon>
           </app-btn>
-          <v-btn
-            v-for="(value, index) in zAdjustValues"
-            :key="`zUp-${index}`"
-            small
-            class="_btn-z flex-grow-1 px-1"
-            :class="value == moveDistance ? 'btncolor' : ''"
-            @click="setMovingDistance(value)"
-          >
-            <span>{{ value }}</span>
-          </v-btn>
           <app-btn
+            small
             min-width="10"
             :loading="hasWait(`${$waits.onZAdjust}${'+'}`)"
             :disabled="!klippyReady"
             class="px-0 flex-grow-1"
             @click="sendZAdjustGcode('+')"
           >
-            <v-icon>$zUp</v-icon>
+            <v-icon
+              small
+            >
+              $zUp
+            </v-icon>
           </app-btn>
-        </v-item-group>
+        </app-btn-group>
       </v-col>
     </v-row>
   </v-container>

@@ -1,6 +1,6 @@
 <template>
-  <v-row v-if="toolChangeCommands.length > 1">
-    <v-col>
+  <v-row v-if="toolChangeCommands.length > 0">
+    <v-col cols="12">
       <app-btn-group
         class="app-toolchanger-control d-flex"
         :class="{
@@ -47,6 +47,84 @@
         </v-tooltip>
       </app-btn-group>
     </v-col>
+    <v-col
+      cols="12"
+      class="pa-0 ma-0"
+    >
+      <v-list
+        v-for="(macro, index) in toolChangeCommands"
+        :key="`toolheadWarning-${index}`"
+        dense
+        nav
+        class="pa-0 ma-0"
+      >
+        <v-list-item
+          v-if="macro.message && (macro.message.type === 'warning' || macro.message.type === 'error' || macro.message.type === 'info')"
+          :key="`toolheadWarning-${index}`"
+          :value="macro"
+          :class="macro.message.type == 'error' ? 'pa-0 mx-2 error' : macro.message.type == 'warning' ? 'pa-0 mx-2 warning' : 'pa-0 mx-2 info'"
+          @click="messageAction(macro)"
+        >
+          <v-list-item-icon
+            class="ml-2 mr-3"
+          >
+            <v-icon
+              v-if="macro.message.type == 'error'"
+              class="mt-1"
+              color="white"
+            >
+              $error
+            </v-icon>
+            <v-icon
+              v-if="macro.message.type == 'warning'"
+              class="mt-1"
+              color="white"
+            >
+              $warning
+            </v-icon>
+            <v-icon
+              v-if="macro.message.type == 'info'"
+              class="mt-1"
+              color="white"
+            >
+              $alertCircle
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-row
+              dense
+            >
+              <v-col
+                class="me-auto my-0 mt-2"
+                cols="auto"
+              >
+                <span
+                  style="font-size: 14px"
+                >
+                  {{ macro.name.toUpperCase() }}: {{ macro.message.message }}
+                </span>
+              </v-col>
+              <v-col
+                cols="auto"
+                class="mr-2"
+              >
+                <app-btn
+                  icon
+                  small
+                  color="white"
+                  class="ml-2"
+                  @click.prevent.stop="messageCancel(macro)"
+                >
+                  <v-icon small>
+                    $close
+                  </v-icon>
+                </app-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-col>
   </v-row>
 </template>
 
@@ -71,10 +149,6 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
     return macro.active ? this.allHomed ? 'primary' : 'secondary' : undefined
   }
 
-  get sensors () {
-    return this.$store.getters['printer/getRunoutSensors']
-  }
-
   hasSensorRunout (macro: ToolChangeCommand, index: number): boolean {
     if (macro.runout_sensor?.toString() !== undefined) {
       if (this.toolheadRunoutSensors && this.toolheadRunoutSensors!.length > 0) {
@@ -88,6 +162,17 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
       }
     }
     return false
+  }
+
+  messageAction (macro: ToolChangeCommand) {
+    if (macro.message?.action) {
+      this.messageCancel(macro)
+      this.sendGcode(macro.message?.action)
+    }
+  }
+
+  messageCancel (macro: ToolChangeCommand) {
+    this.sendGcode(`SET_GCODE_VARIABLE MACRO=${macro.name} VARIABLE=message VALUE="''"`)
   }
 }
 </script>
@@ -111,5 +196,9 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
     &.active {
       border-color: black;
     }
+  }
+
+  .v-list-item>>> .v-list-item__content {
+    padding: 0 !important;
   }
 </style>
