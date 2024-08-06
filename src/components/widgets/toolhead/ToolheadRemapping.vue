@@ -219,22 +219,6 @@ export default class ToolheadRemapping extends Mixins(StateMixin, ToolheadMixin)
     return tools
       .filter(x => x.name !== this.sourceModel)
   }
-
-  setToolRemap () {
-    if (this.isIdex) {
-      if (this.toolheadRemapActive) {
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T0 VARIABLE=remap VALUE=0')
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T1 VARIABLE=remap VALUE=1')
-        this.sendGcode('M117 Toolhead remapping disabled!')
-      } else {
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T0 VARIABLE=remap VALUE=1')
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T1 VARIABLE=remap VALUE=0')
-        this.sendGcode('M117 Toolhead remapping enabled!')
-      }
-    } else {
-      this.sendGcode('M117 Not implemented yet!')
-    }
-  }
 }
 </script>
 
