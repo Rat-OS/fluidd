@@ -89,7 +89,10 @@
               </v-icon>
             </app-btn>
           </v-row>
-          <v-row dense>
+          <v-row
+            v-if="sourceTools.length > 0"
+            dense
+          >
             <v-menu
               left
               offset-y
