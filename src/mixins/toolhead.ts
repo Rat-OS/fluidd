@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
-import type { Extruder, GcodeCommands } from '@/store/printer/types'
+import type { Extruder, GcodeCommands, RunoutSensor } from '@/store/printer/types'
 import type { TranslateResult } from 'vue-i18n'
 
 export type ToolChangeCommand = {
@@ -11,7 +11,8 @@ export type ToolChangeCommand = {
   spoolId?: number,
   default?: boolean,
   remap?: number,
-  join?: number
+  join?: number,
+  runout_sensor?: string
 }
 
 @Component
@@ -195,25 +196,22 @@ export default class ToolheadMixin extends Vue {
     return this.isIdex && this.idexMode === 'mirror'
   }
 
-  // get hasIdexFilamentSensors (): boolean {
-  //   try {
-  //     const toolhead_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t0
-  //     const toolhead_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.toolhead_filament_sensor_t1
-  //     if (toolhead_filament_sensor_t0 !== undefined && toolhead_filament_sensor_t1 !== undefined) {
-  //       return true
-  //     }
-  //     return true
-  //   } catch { }
-  //   try {
-  //     const feeder_filament_sensor_t0 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t0
-  //     const feeder_filament_sensor_t1 = this.$store.state.printer.printer.configfile?.settings?.feeder_filament_sensor_t1
-  //     if (feeder_filament_sensor_t0 !== undefined && feeder_filament_sensor_t1 !== undefined) {
-  //       return true
-  //     }
-  //     return true
-  //   } catch { }
-  //   return false
-  // }
+  get toolheadRunoutSensors (): RunoutSensor[] {
+    const result = [] as RunoutSensor[]
+    const sensors = this.$store.getters['printer/getRunoutSensors']
+    for (const macro of this.toolChangeCommands) {
+      let runoutSensor = undefined as unknown as RunoutSensor
+      if (macro.runout_sensor !== undefined) {
+        for (const sensor of sensors) {
+          if (sensor.name.toLowerCase() === macro.runout_sensor!.toLowerCase()) {
+            runoutSensor = sensor
+          }
+        }
+      }
+      result.push(runoutSensor)
+    }
+    return result
+  }
 
   get allowsSpoolJoining (): boolean {
     for (const txMacro of this.toolChangeCommands) {
@@ -272,7 +270,8 @@ export default class ToolheadMixin extends Vue {
           spoolId: macro?.variables?.spool_id,
           default: macro?.variables?.default ?? false,
           remap: macro?.variables?.remap,
-          join: macro?.variables?.join
+          join: macro?.variables?.join,
+          runout_sensor: macro?.variables?.runout_sensor
         } satisfies ToolChangeCommand
       })
       .sort((a, b) => {

@@ -16,7 +16,7 @@
             <app-btn
               v-bind="attrs"
               min-width="10"
-              :color="macro.active ? allHomed ? 'primary' : 'secondary' : undefined"
+              :color="getButtonColor(macro, index)"
               :disabled="!klippyReady || printerPrinting"
               class="px-0 flex-grow-1"
               :loading="hasWait(`${$waits.onToolChange}${macro.name}`)"
@@ -53,7 +53,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
-import ToolheadMixin from '@/mixins/toolhead'
+import ToolheadMixin, { type ToolChangeCommand } from '@/mixins/toolhead'
 import type { Spool } from '@/store/spoolman/types'
 
 @Component({})
@@ -64,6 +64,30 @@ export default class ToolChangeCommands extends Mixins(ToolheadMixin, StateMixin
 
   getSpoolColor (spool: Spool | undefined) {
     return `#${spool?.filament.color_hex ?? (this.$vuetify.theme.dark ? 'fff' : '000')}`
+  }
+
+  getButtonColor (macro: ToolChangeCommand, index: number) {
+    if (this.hasSensorRunout(macro, index)) return 'error'
+    return macro.active ? this.allHomed ? 'primary' : 'secondary' : undefined
+  }
+
+  get sensors () {
+    return this.$store.getters['printer/getRunoutSensors']
+  }
+
+  hasSensorRunout (macro: ToolChangeCommand, index: number): boolean {
+    if (macro.runout_sensor?.toString() !== undefined) {
+      if (this.toolheadRunoutSensors && this.toolheadRunoutSensors!.length > 0) {
+        if (this.toolheadRunoutSensors![index]) {
+          if (this.toolheadRunoutSensors![index].enabled) {
+            if (!this.toolheadRunoutSensors![index].filament_detected) {
+              return true
+            }
+          }
+        }
+      }
+    }
+    return false
   }
 }
 </script>

@@ -80,7 +80,7 @@
                 <v-text-field
                   v-for="(param, i) in paramList"
                   :key="param"
-                  v-model="params[param].value"
+                  v-model="idexConfigParams[param].value"
                   :label="param"
                   outlined
                   dense
@@ -91,12 +91,12 @@
                 >
                   <template #append>
                     <app-btn
-                      v-if="params[param].value !== params[param].reset"
+                      v-if="idexConfigParams[param].value !== idexConfigParams[param].reset"
                       style="margin-top: -4px; margin-right: -6px;"
                       color=""
                       icon
                       small
-                      @click="params[param].value = params[param].reset"
+                      @click="idexConfigParams[param].value = idexConfigParams[param].reset"
                     >
                       <v-icon small>
                         $reset
@@ -135,6 +135,9 @@ import gcodeMacroParams from '@/util/gcode-macro-params'
 export default class ToolHeadIdexControl extends Mixins(StateMixin, ToolheadMixin) {
   menu = false
 
+  idexConfigMacro: Macro | undefined = undefined
+  idexConfigParams: { [index: string]: { value: string | number; reset: string | number }} = {}
+
   get availableCommands (): GcodeCommands {
     return this.$store.getters['printer/getAvailableCommands'] as GcodeCommands
   }
@@ -153,21 +156,18 @@ export default class ToolHeadIdexControl extends Mixins(StateMixin, ToolheadMixi
     return result
   }
 
-  macro: Macro | undefined = undefined
-  params: { [index: string]: { value: string | number; reset: string | number }} = {}
-
   get paramList () {
-    return Object.keys(this.params)
+    return Object.keys(this.idexConfigParams)
   }
 
   sendIdexConfig () {
     this.menu = false
-    const command = this.macro!.name.toUpperCase()
+    const command = this.idexConfigMacro!.name.toUpperCase()
 
-    if (this.params) {
+    if (this.idexConfigParams) {
       const params = this.isMacroWithRawParam
-        ? this.params.message.value.toString()
-        : Object.entries(this.params)
+        ? this.idexConfigParams.message.value.toString()
+        : Object.entries(this.idexConfigParams)
           .map(([key, param]) => `${key.toUpperCase()}=${param.value}`)
           .join(' ')
 
@@ -180,19 +180,19 @@ export default class ToolHeadIdexControl extends Mixins(StateMixin, ToolheadMixi
   }
 
   get isMacroWithRawParam () {
-    return ['m117', 'm118'].includes(this.macro!.name)
+    return ['m117', 'm118'].includes(this.idexConfigMacro!.name)
   }
 
   createParams () {
-    this.macro = this.$store.getters['macros/getMacroByName']('IDEX_CONFIG'.toLowerCase()) as Macro | undefined
-    if (!this.macro?.config || !this.macro.config.gcode) return []
+    this.idexConfigMacro = this.$store.getters['macros/getMacroByName']('IDEX_CONFIG'.toLowerCase()) as Macro | undefined
+    if (!this.idexConfigMacro?.config || !this.idexConfigMacro.config.gcode) return []
 
     if (this.isMacroWithRawParam) {
-      this.$set(this.params, 'message', { value: '', reset: '' })
+      this.$set(this.idexConfigParams, 'message', { value: '', reset: '' })
     } else {
-      for (const { name, value } of gcodeMacroParams(this.macro.config.gcode)) {
-        if (!this.params[name]) {
-          this.$set(this.params, name, { value, reset: value })
+      for (const { name, value } of gcodeMacroParams(this.idexConfigMacro.config.gcode)) {
+        if (!this.idexConfigParams[name]) {
+          this.$set(this.idexConfigParams, name, { value, reset: value })
         }
       }
     }
