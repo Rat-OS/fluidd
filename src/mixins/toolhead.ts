@@ -13,12 +13,12 @@ export type ToolChangeCommand = {
   remap?: number,
   join?: number,
   runout_sensor?: string
-  message?: ToolChangeMessage
+  alert?: ToolHeadAlert
 }
 
-export type ToolChangeMessage = {
+export type ToolHeadAlert = {
   type: string,
-  message: string,
+  text: string,
   action: string,
 }
 
@@ -256,6 +256,15 @@ export default class ToolheadMixin extends Vue {
     return false
   }
 
+  get hasToolheadAlerts (): boolean {
+    for (const txMacro of this.toolChangeCommands) {
+      if (txMacro.alert && txMacro.alert.toString().length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
   get toolChangeCommands (): ToolChangeCommand[] {
     const availableCommands = this.$store.getters['printer/getAvailableCommands'] as GcodeCommands
 
@@ -268,14 +277,14 @@ export default class ToolheadMixin extends Vue {
           : this.$t('app.tool.tooltip.select_tool', { tool: command.substring(1) })
 
         const macro = this.$store.getters['macros/getMacroByName'](command.toLowerCase())
-        const message: ToolChangeMessage = { type: '', message: '', action: '' }
-        if (macro?.variables?.message) {
+        const alert: ToolHeadAlert = { type: '', text: '', action: '' }
+        if (macro?.variables?.alert) {
           try {
-            const split = macro?.variables?.message.split('|')
-            message.type = split[0]
-            message.message = split[1]
-            message.action = split[2]
-            console.error(macro?.variables?.message)
+            const split = macro?.variables?.alert.split('|')
+            alert.type = split[0]
+            alert.text = split[1]
+            alert.action = split[2]
+            console.error(macro?.variables?.alert)
           } catch {
             console.error('error')
           }
@@ -291,7 +300,7 @@ export default class ToolheadMixin extends Vue {
           remap: macro?.variables?.remap,
           join: macro?.variables?.join,
           runout_sensor: macro?.variables?.runout_sensor,
-          message: message ?? undefined
+          alert: alert ?? undefined
         } satisfies ToolChangeCommand
       })
       .sort((a, b) => {
