@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panels
-    v-if="allowsSpoolJoining && !(isIdex && (idexCopy || idexMirror))"
-    :disabled="!klippyReady"
+    v-if="allowsSpoolJoining"
+    :disabled="!klippyReady || printerPrinting || (isIdex && (idexCopy || idexMirror))"
     accordion
     multiple
     flat
@@ -46,12 +46,118 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <div
-          class="text-center pa-0 pb-0 mt-3"
+          class="pa-0 pb-0 mt-3"
           :class="{ 'text--disabled': !klippyReady }"
         >
-          <p
-            v-html="'Spool joining'"
-          />
+          <v-row
+            v-for="(joins, index) in spoolJoins"
+            :key="`joins-${index}`"
+            dense
+          >
+            <app-btn
+              v-for="join in joins"
+              :key="`join-${join}`"
+              small
+              class="ms-1 my-1"
+            >
+              T{{ join }}
+            </app-btn>
+            <app-btn
+              small
+              icon
+              class="ms-1 my-1"
+              @click="stoppSpoolJoin(joins)"
+            >
+              <v-icon
+                small
+                color="white"
+              >
+                $cancel
+              </v-icon>
+            </app-btn>
+          </v-row>
+          <v-row
+            dense
+          >
+            <app-btn
+              v-for="item in newJoinModel"
+              :key="`addModelResult-${item}`"
+              small
+              class="ms-1 my-1"
+            >
+              {{ item }}
+            </app-btn>
+            <v-col
+              class="pa-0 ma-0"
+            >
+              <v-menu
+                v-if="addTools.length > 0"
+                left
+                offset-y
+                transition="slide-y-transition"
+              >
+                <template #activator="{ on, attrs, value }">
+                  <app-btn
+                    v-bind="attrs"
+                    small
+                    class="ms-1 my-1"
+                    v-on="on"
+                  >
+                    {{ addNameModel }}
+                    <v-icon
+                      small
+                      class="ml-1"
+                      :class="{ 'rotate-180': value }"
+                    >
+                      $chevronDown
+                    </v-icon>
+                  </app-btn>
+                </template>
+                <v-list dense>
+                  <template v-for="item in addTools">
+                    <v-list-item
+                      :key="`addModel-${item.name}`"
+                      @click="selectAddModel(item)"
+                    >
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ item.name }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-list>
+              </v-menu>
+              <app-btn
+                v-if="newJoinModel.length > 0"
+                small
+                icon
+                class="ms-1 my-1"
+                @click="cancel"
+              >
+                <v-icon
+                  small
+                  color="white"
+                >
+                  $cancel
+                </v-icon>
+              </app-btn>
+              <app-btn
+                v-if="newJoinModel.length > 1"
+                small
+                icon
+                class="ms-1 my-1"
+                @click="save"
+              >
+                <v-icon
+                  small
+                  color="white"
+                >
+                  $save
+                </v-icon>
+              </app-btn>
+            </v-col>
+          </v-row>
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -60,25 +166,78 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import ToolheadMixin from '@/mixins/toolhead'
+import ToolheadMixin, { type ToolChangeCommand } from '@/mixins/toolhead'
 import StateMixin from '@/mixins/state'
 
 @Component({})
 export default class SpoolJoining extends Mixins(StateMixin, ToolheadMixin) {
-  setSpoolJoin () {
-    if (this.isIdex) {
-      if (this.spoolJoinActive) {
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T0 VARIABLE=join VALUE=0')
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T1 VARIABLE=join VALUE=1')
-        this.sendGcode('M117 Spool joining disabled!')
-      } else {
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T0 VARIABLE=join VALUE=1')
-        this.sendGcode('SET_GCODE_VARIABLE MACRO=T1 VARIABLE=join VALUE=0')
-        this.sendGcode('M117 Spool joining enabled!')
-      }
-    } else {
-      this.sendGcode('M117 Not implemented yet!')
+  addNameModel = 'Add'
+  newJoinModel: string[] = []
+
+  selectAddModel (value: ToolChangeCommand) {
+    this.addNameModel = 'Add'
+    this.newJoinModel.push(value.name)
+  }
+
+  get addTools () {
+    const tools = this.toolChangeCommands
+    return tools
+      .filter(x => x.name?.toString().substring(1) === x.join?.toString())
+      .filter(x => !this.newJoinModel.includes(x.name))
+      .filter(x => !this.isJoined(x.name?.toString().substring(1)))
+  }
+
+  cancel () {
+    this.addNameModel = 'Add'
+    this.newJoinModel = []
+  }
+
+  save () {
+    for (const item of this.newJoinModel) {
+      this.sendGcode(`SET_GCODE_VARIABLE MACRO=${item} VARIABLE=join VALUE="'${this.newJoinModel.join('|').replace(/T/g, '')}'"`)
     }
+    this.addNameModel = 'Add'
+    this.newJoinModel = []
+  }
+
+  stoppSpoolJoin (join: string[] | undefined) {
+    if (join) {
+      for (const item of join) {
+        this.sendGcode(`SET_GCODE_VARIABLE MACRO=T${item} VARIABLE=join VALUE="'${item}'"`)
+      }
+    }
+  }
+
+  isJoined (tool: string) {
+    for (const joins of this.spoolJoins) {
+      if (joins) {
+        for (const join of joins) {
+          if (join === tool) {
+            return true
+          }
+        }
+      }
+    }
+    return false
+  }
+
+  get spoolJoins () {
+    const joins: (string[] | undefined)[] = []
+    for (const item of this.toolChangeCommands) {
+      if (item.name?.substring(1) !== item.join?.toString()) {
+        const join = item.join?.toString().split('|')
+        if (join) {
+          const containsArray = joins.some(subArray =>
+            subArray?.length === join?.length &&
+            subArray?.every((value, index) => value === join[index])
+          )
+          if (!containsArray) {
+            joins.push(join)
+          }
+        }
+      }
+    }
+    return joins
   }
 }
 </script>

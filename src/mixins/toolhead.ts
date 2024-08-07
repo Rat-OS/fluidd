@@ -277,6 +277,7 @@ export default class ToolheadMixin extends Vue {
           : this.$t('app.tool.tooltip.select_tool', { tool: command.substring(1) })
 
         const macro = this.$store.getters['macros/getMacroByName'](command.toLowerCase())
+
         const alert: ToolHeadAlert = { type: '', text: '', action: '' }
         if (macro?.variables?.alert) {
           try {
@@ -284,10 +285,7 @@ export default class ToolheadMixin extends Vue {
             alert.type = split[0]
             alert.text = split[1]
             alert.action = split[2]
-            console.error(macro?.variables?.alert)
-          } catch {
-            console.error('error')
-          }
+          } catch { }
         }
 
         return {
