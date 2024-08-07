@@ -1,7 +1,7 @@
 <template>
   <v-expansion-panels
-    v-if="allowsSpoolJoining"
-    :disabled="!klippyReady || (isIdex && (idexCopy || idexMirror))"
+    v-if="allowsSpoolJoining && !(isIdex && (idexCopy || idexMirror))"
+    :disabled="!klippyReady"
     accordion
     multiple
     flat
