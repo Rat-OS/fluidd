@@ -1,7 +1,6 @@
 <template>
   <v-expansion-panels
-    v-if="allowsToolheadRemapping && !(isIdex && (idexCopy || idexMirror))"
-    :disabled="!klippyReady"
+    v-if="klippyReady && allowsToolheadRemapping && !(isIdex && (idexCopy || idexMirror))"
     accordion
     multiple
     flat

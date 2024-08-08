@@ -1,7 +1,6 @@
 <template>
   <v-expansion-panels
-    v-if="allowsSpoolJoining"
-    :disabled="!klippyReady || printerPrinting || (isIdex && (idexCopy || idexMirror))"
+    v-if="klippyReady && allowsSpoolJoining || (isIdex && (idexCopy || idexMirror))"
     accordion
     multiple
     flat
@@ -251,3 +250,7 @@ export default class SpoolJoining extends Mixins(StateMixin, ToolheadMixin) {
   padding: 0 !important;
 }
 </style>
+
+<!-- sudo cp /etc/nginx/sites-available/mainsail /etc/nginx/sites-available/fluidd
+sudo ln -s /etc/nginx/sites-available/fluidd /etc/nginx/sites-enabled/fluidd
+sudo nano /etc/nginx/sites-available/fluidd -->
