@@ -25,7 +25,10 @@
         :max="max"
         :dec="dec"
         :append-icon="klippyReady && (resetValue != undefined && resetValue !== inputValue) ? '$reset' : undefined"
-        style="border-radius: 0px; height: 36px;"
+        style="border-top-right-radius: 0px; border-bottom-right-radius: 0px; height: 36px;"
+        :style="{
+          'border-bottom-left-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
+        }"
         @blur="onBlur"
         @focus="onFocus"
         @change="onChange"
@@ -33,48 +36,38 @@
         @click:append="onReset()"
       >
         <template
-          #prepend
-        >
-          <v-btn
-            :tabindex="-1"
-            :disabled="inputValue <= min || disabled"
-            outlined
-            x-small
-            elevation="0"
-            style="border-top-right-radius: 0px; border-bottom-right-radius: 0px; height: 36px; border-right: 0px;"
-            :style="{
-              'border-bottom-left-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
-            }"
-            :class="hasFocus ? 'primary' : 'btncolor'"
-            @click="decrementValue()"
-          >
-            <v-icon
-              :color="hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black'"
-              class="pa-0 ma-0"
-            >
-              $minus
-            </v-icon>
-          </v-btn>
-        </template>
-        <template
           #append-outer
         >
           <v-btn
             :tabindex="-1"
+            :disabled="inputValue <= min || disabled"
+            flat
+            style="border-radius: 0px; height: 36px; margin-left: 2px;"
+            min-width="10"
+            class="px-0"
+            :color="'btncolor'"
+            @click="decrementValue()"
+          >
+            <v-icon
+              :color="$vuetify.theme.dark ? 'white' : 'black'"
+              class="py-0 px-2 ma-0"
+            >
+              $minus
+            </v-icon>
+          </v-btn>
+          <v-btn
+            :tabindex="-1"
             :disabled="(inputValue >= max && max !== null) || disabled"
-            outlined
-            x-small
-            elevation="0"
-            style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; border-left: 0px;"
-            :style="{
-              'border-bottom-right-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
-            }"
-            :class="hasFocus ? 'primary' : 'btncolor'"
+            flat
+            style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; margin-left: 2px;"
+            :color="'btncolor'"
+            min-width="10"
+            class="px-0"
             @click="incrementValue()"
           >
             <v-icon
-              :color="hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black'"
-              class="pa-0 ma-0"
+              :color="$vuetify.theme.dark ? 'white' : 'black'"
+              class="py-0 px-2 ma-0"
             >
               $plus
             </v-icon>
@@ -87,26 +80,26 @@
       cols="12"
       class="pa-0 ma-0"
     >
-      <v-item-group class="_btn-group">
+      <app-btn-group class="values_btn-group d-flex">
         <v-btn
           v-for="value in quickSelectors"
           :key="value"
           :disabled="printerPrinting"
-          dense
-          class="_btn-e flex-grow-1 px-0"
-          style="height:24px;"
-          :class="value == inputValue ? hasFocus ? 'primary' : 'btncolor' : ''"
+          flat
+          class="px-0 flex-grow-1"
+          style="height:24px; margin-top: 3px;"
+          :color="value == inputValue ? 'btncolor' : ''"
           @click="setValue({ value })"
         >
           <span
             :style="{
-              'color': value == inputValue ? hasFocus ? 'black' : $vuetify.theme.dark ? 'white' : 'black' : $vuetify.theme.dark ? 'white' : 'black',
+              'color': value == inputValue ? $vuetify.theme.dark ? 'white' : 'black' : $vuetify.theme.dark ? 'white' : 'black',
             }"
           >
             {{ value }}
           </span>
         </v-btn>
-      </v-item-group>
+      </app-btn-group>
     </v-col>
   </v-row>
 </template>
@@ -235,23 +228,11 @@ export default class AppNumberField extends Mixins(StateMixin) {
 </script>
 
 <style scoped>
-._btn-group {
+.values_btn-group {
     border-radius: 4px;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    max-width: 100%;
-    min-width: 100%;
-    width: 100%;
 
     .v-btn {
         border-radius: 0;
-        border-color: rgba(255, 255, 255, 0.12);
-        border-style: solid;
-        border-width: thin;
-        border-top-width: none;
-        box-shadow: none;
-        height: 24px;
-        min-width: auto !important;
     }
 
     .v-btn:first-child {
@@ -263,15 +244,6 @@ export default class AppNumberField extends Mixins(StateMixin) {
         border-top-right-radius: 0px;
         border-bottom-right-radius: inherit;
     }
-
-    .v-btn:not(:first-child) {
-        border-left-width: 0;
-    }
-}
-
-._btn-e {
-    font-size: 0.8rem !important;
-    max-height: 24px;
 }
 
 .v-text-field>>> .v-text-field__suffix {

@@ -72,6 +72,7 @@
           :width="inputWidth"
         >
           <v-text-field
+            ref="field"
             v-model="currentValue"
             :prefix="prefix"
             :suffix="suffix"
@@ -142,11 +143,14 @@
 <script lang="ts">
 import { Component, Prop, Watch, Ref, VModel, Mixins } from 'vue-property-decorator'
 import type { InputValidationRules } from 'vuetify'
-import type { VForm } from '@/types'
+import type { VForm, VTextArea } from '@/types'
 import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class AppNamedSlider extends Mixins(BrowserMixin) {
+  @Ref('field')
+  readonly field!: VTextArea
+
   @VModel({ type: Number, required: true })
     inputValue!: number
 
@@ -341,11 +345,13 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
   minus (): void {
     this.sliderValue = this.sliderValue > this.min ? Math.round(this.sliderValue - this.step) : this.min
     this.handleChange(this.sliderValue)
+    this.field.focus()
   }
 
   plus (): void {
     this.sliderValue = this.sliderValue < this.max || this.step ? Math.round(this.sliderValue + this.step) : this.max
     this.handleChange(this.sliderValue)
+    this.field.focus()
   }
 }
 </script>

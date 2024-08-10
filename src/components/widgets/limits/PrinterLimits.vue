@@ -20,7 +20,7 @@
             :min="0"
             :max="1000"
             :step="10"
-            :input-width="200"
+            :input-width="150"
             @submit="setVelocity"
           />
         </v-col>
@@ -39,7 +39,7 @@
             :min="0"
             :max="100000"
             :step="10"
-            :input-width="200"
+            :input-width="150"
             @submit="setAccel"
           />
         </v-col>
@@ -60,7 +60,7 @@
             :min="0"
             :max="100"
             :step="1"
-            :input-width="200"
+            :input-width="150"
             @submit="setSquareCornerVelocity"
           />
         </v-col>
@@ -79,8 +79,8 @@
             :locked="isMobileViewport"
             :min="0"
             :max="1"
-            :step="0.05"
-            :input-width="200"
+            :step="0.1"
+            :input-width="150"
             @submit="setMinimumCruiseRatio"
           />
           <app-named-slider
@@ -94,9 +94,9 @@
             :loading="hasWait($waits.onSetAccelToDecel)"
             :locked="isMobileViewport"
             :min="0"
-            :max="null"
+            :max="100000"
             :step="10"
-            :input-width="200"
+            :input-width="150"
             @submit="setAccelToDecel"
           />
         </v-col>
