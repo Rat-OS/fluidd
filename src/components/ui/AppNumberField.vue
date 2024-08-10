@@ -60,6 +60,9 @@
             :disabled="(inputValue >= max && max !== null) || disabled"
             flat
             style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; margin-left: 2px;"
+            :style="{
+              'border-bottom-right-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
+            }"
             :color="'btncolor'"
             min-width="10"
             class="px-0"
