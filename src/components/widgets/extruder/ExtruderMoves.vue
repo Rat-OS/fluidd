@@ -24,7 +24,8 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
-          :quick-selectors="extrudeLengthsSorted"
+          :quick-selectors="extrudeLengths"
+          @change="setExtrudeLength"
         />
       </v-col>
       <v-col
@@ -46,7 +47,8 @@
           :step="1"
           :dec="1"
           :has-spinner="true"
-          :quick-selectors="extrudeSpeedsSorted"
+          :quick-selectors="extrudeSpeeds"
+          @change="setExtrudeSpeed"
         />
       </v-col>
     </v-row>
@@ -122,35 +124,37 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   readonly form!: VForm
 
   valid = true
+
   /**
    * Extrude Length
    */
+  _extrudeLength = -1
+
   get extrudeLength () {
-    const extrudeLength = this.$store.state.config.uiSettings.toolhead.extrudeLength
-    const value = extrudeLength === -1
-      ? this.$store.state.config.uiSettings.general.defaultExtrudeLength
-      : extrudeLength
-    return value
+    const defaultExtrudeLength = this.$store.state.config.uiSettings.extruder.defaultExtrudeLength
+    if (this._extrudeLength === -1 && defaultExtrudeLength > 0) {
+      this.setExtrudeLength(defaultExtrudeLength)
+    }
+    const extrudeLength = this.$store.state.config.uiSettings.extruder.extrudeLength
+    return extrudeLength
   }
 
   set extrudeLength (value: number) {
     this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.toolhead.extrudeLength',
-      value,
-      server: false
+      path: 'uiSettings.extruder.extrudeLength',
+      value: +value,
+      server: true
     })
   }
 
-  setExtrudeLength (params: { value: number }): void {
-    this.extrudeLength = params.value
+  setExtrudeLength (value: number): void {
+    this.extrudeLength = value
+    this._extrudeLength = value
   }
 
   get extrudeLengths () {
-    return this.$store.state.config.uiSettings.general.extrudeLengths
-  }
-
-  get extrudeLengthsSorted () {
-    return [...this.extrudeLengths].sort((a, b) => {
+    const extrudeLengths = this.$store.state.config.uiSettings.extruder.extrudeLengths
+    return [...extrudeLengths].sort((a, b) => {
       return b - a
     })
   }
@@ -158,32 +162,33 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
   /**
    * Extrude Speed
    */
+  _extrudeSpeed = -1
+
   get extrudeSpeed () {
-    const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
-    const value = extrudeSpeed === -1
-      ? this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
-      : extrudeSpeed
-    return value
+    const defaultExtrudeSpeed = this.$store.state.config.uiSettings.extruder.defaultExtrudeSpeed
+    if (this._extrudeSpeed === -1 && defaultExtrudeSpeed > 0) {
+      this.setExtrudeSpeed(defaultExtrudeSpeed)
+    }
+    const extrudeSpeed = this.$store.state.config.uiSettings.extruder.extrudeSpeed
+    return extrudeSpeed
   }
 
   set extrudeSpeed (value: number) {
     this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.toolhead.extrudeSpeed',
-      value,
-      server: false
+      path: 'uiSettings.extruder.extrudeSpeed',
+      value: +value,
+      server: true
     })
   }
 
-  setExtrudeSpeed (params: { value: number }): void {
-    this.extrudeSpeed = params.value
+  setExtrudeSpeed (value: number): void {
+    this.extrudeSpeed = value
+    this._extrudeSpeed = value
   }
 
   get extrudeSpeeds () {
-    return this.$store.state.config.uiSettings.general.extrudeSpeeds
-  }
-
-  get extrudeSpeedsSorted () {
-    return [...this.extrudeSpeeds].sort((a, b) => {
+    const extrudeSpeeds = this.$store.state.config.uiSettings.extruder.extrudeSpeeds
+    return [...extrudeSpeeds].sort((a, b) => {
       return b - a
     })
   }

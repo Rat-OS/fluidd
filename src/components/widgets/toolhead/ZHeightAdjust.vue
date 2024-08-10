@@ -133,22 +133,24 @@ export default class ZHeightAdjust extends Mixins(StateMixin) {
   /**
    * Set moving distance
    */
-  moveDistanceValue: number | null = null
-
   setMovingDistance (value: any) {
-    this.moveDistanceValue = value
+    this.moveDistance = value
   }
 
   get moveDistance () {
-    return this.moveDistanceValue !== null ? this.moveDistanceValue : this.zAdjustValues[0]
+    return this.$store.state.config.uiSettings.toolhead.zAdjustDistance ?? this.zAdjustValues[0]
   }
 
   set moveDistance (value: number) {
-    this.moveDistanceValue = value
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.toolhead.zAdjustDistance',
+      value: +value,
+      server: true
+    })
   }
 
   get zAdjustValues () {
-    return this.$store.state.config.uiSettings.general.zAdjustDistances
+    return this.$store.state.config.uiSettings.toolhead.zAdjustDistances
   }
 
   /**

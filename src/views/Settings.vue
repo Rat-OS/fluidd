@@ -18,6 +18,7 @@
         <macro-settings />
         <camera-settings />
         <toolhead-settings />
+        <extruder-settings />
         <preset-settings />
         <gcode-preview-settings />
         <timelapse-settings v-if="supportsTimelapse" />
@@ -37,6 +38,7 @@ import GeneralSettings from '@/components/settings/GeneralSettings.vue'
 import PresetSettings from '@/components/settings/presets/PresetSettings.vue'
 import CameraSettings from '@/components/settings/cameras/CameraSettings.vue'
 import ToolheadSettings from '@/components/settings/ToolheadSettings.vue'
+import ExtruderSettings from '@/components/settings/ExtruderSettings.vue'
 import ThemeSettings from '@/components/settings/ThemeSettings.vue'
 import VersionSettings from '@/components/settings/VersionSettings.vue'
 import GcodePreviewSettings from '@/components/settings/GcodePreviewSettings.vue'
@@ -56,6 +58,7 @@ import SpoolmanSettings from '@/components/settings/SpoolmanSettings.vue'
     PresetSettings,
     CameraSettings,
     ToolheadSettings,
+    ExtruderSettings,
     ThemeSettings,
     VersionSettings,
     GcodePreviewSettings,

@@ -277,90 +277,6 @@
 
       <v-divider />
 
-      <app-setting :title="$t('app.setting.label.default_extrude_length')">
-        <v-text-field
-          :value="defaultExtrudeLength"
-          :rules="[
-            $rules.required,
-            $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(1)
-          ]"
-          filled
-          dense
-          single-line
-          hide-details="auto"
-          suffix="mm"
-          @change="setDefaultExtrudeLength"
-        />
-      </app-setting>
-
-      <v-divider />
-
-      <app-setting :title="$t('app.setting.label.extrude_length_values')">
-        <v-combobox
-          ref="extrudeLengthValues"
-          v-model="extrudeLengthValues"
-          filled
-          dense
-          hide-selected
-          hide-details="auto"
-          suffix="mm"
-          multiple
-          small-chips
-          append-icon=""
-          deletable-chips
-          :rules="[
-            $rules.lengthGreaterThanOrEqual(1),
-            $rules.lengthLessThanOrEqual(5),
-            $rules.numberArrayValid
-          ]"
-        />
-      </app-setting>
-
-      <v-divider />
-
-      <app-setting :title="$t('app.setting.label.default_extrude_speed')">
-        <v-text-field
-          :value="defaultExtrudeSpeed"
-          :rules="[
-            $rules.required,
-            $rules.numberValid,
-            $rules.numberGreaterThanOrEqual(1)
-          ]"
-          filled
-          dense
-          single-line
-          hide-details="auto"
-          suffix="mm/s"
-          @change="setDefaultExtrudeSpeed"
-        />
-      </app-setting>
-
-      <v-divider />
-
-      <app-setting :title="$t('app.setting.label.extrude_speed_values')">
-        <v-combobox
-          ref="extrudeSpeedValues"
-          v-model="extrudeSpeedValues"
-          filled
-          dense
-          hide-selected
-          hide-details="auto"
-          suffix="mm/s"
-          multiple
-          small-chips
-          append-icon=""
-          deletable-chips
-          :rules="[
-            $rules.lengthGreaterThanOrEqual(1),
-            $rules.lengthLessThanOrEqual(5),
-            $rules.numberArrayValid
-          ]"
-        />
-      </app-setting>
-
-      <v-divider />
-
       <app-setting
         :title="$t('app.setting.label.show_manual_probe_dialog_automatically')"
         :sub-title="$t('app.setting.tooltip.show_manual_probe_dialog_automatically')"
@@ -455,36 +371,6 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
   @Ref('zAdjustValues')
   readonly zAdjustValuesElement!: VInput
 
-  @Ref('extrudeLengthValues')
-  readonly extrudeLengthValuesElement!: VInput
-
-  @Ref('extrudeSpeedValues')
-  readonly extrudeSpeedValuesElement!: VInput
-
-  get defaultExtrudeSpeed () {
-    return this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
-  }
-
-  setDefaultExtrudeSpeed (value: string) {
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.defaultExtrudeSpeed',
-      value: +value,
-      server: true
-    })
-  }
-
-  get defaultExtrudeLength () {
-    return this.$store.state.config.uiSettings.general.defaultExtrudeLength
-  }
-
-  setDefaultExtrudeLength (value: number) {
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.defaultExtrudeLength',
-      value: +value,
-      server: true
-    })
-  }
-
   get defaultToolheadMoveLength () {
     return this.$store.state.config.uiSettings.general.defaultToolheadMoveLength
   }
@@ -522,7 +408,7 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
   }
 
   get zAdjustValues () {
-    return this.$store.state.config.uiSettings.general.zAdjustDistances
+    return this.$store.state.config.uiSettings.toolhead.zAdjustDistances
   }
 
   set zAdjustValues (value: (number | string)[]) {
@@ -531,39 +417,7 @@ export default class ToolHeadSettings extends Mixins(ToolheadMixin) {
     }
 
     this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.zAdjustDistances',
-      value: [...new Set(value.map(Number))].sort((a, b) => a - b),
-      server: true
-    })
-  }
-
-  get extrudeLengthValues () {
-    return this.$store.state.config.uiSettings.general.extrudeLengths
-  }
-
-  set extrudeLengthValues (value: (number | string)[]) {
-    if (!this.extrudeLengthValuesElement.validate(true)) {
-      return
-    }
-
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.extrudeLengths',
-      value: [...new Set(value.map(Number))].sort((a, b) => a - b),
-      server: true
-    })
-  }
-
-  get extrudeSpeedValues () {
-    return this.$store.state.config.uiSettings.general.extrudeSpeeds
-  }
-
-  set extrudeSpeedValues (value: (number | string)[]) {
-    if (!this.extrudeSpeedValuesElement.validate(true)) {
-      return
-    }
-
-    this.$store.dispatch('config/saveByPath', {
-      path: 'uiSettings.general.extrudeSpeeds',
+      path: 'uiSettings.toolhead.zAdjustDistances',
       value: [...new Set(value.map(Number))].sort((a, b) => a - b),
       server: true
     })

@@ -234,6 +234,8 @@ app:
         Moonraker has failed plugins, please check your logs, update your
         configuration and restart moonraker.
     label:
+      slider_input: Slider
+      number_input: Number input
       accel_to_decel: Accel to Decel
       acceleration: Acceleration
       accepted_screws: Accepted screws
@@ -681,6 +683,7 @@ app:
       theme: Theme
       thermal_presets: Thermal Presets
       tool: Tool
+      extruder: Extruder
     tooltip:
       average_calculation: If more than one option is select, an average will be calculated
       diagnostics_performance: '[BETA] Logging diagnostics info may impact performance'
@@ -696,6 +699,8 @@ app:
         However, please note that these themes are not officially maintained by the respective brands.<br>
         Any issues or inquiries related to the themes should be directed to the Fluidd team.<br>
         The use of brand names and logos is for decorative and aesthetic purposes only, and no official association with or endorsement by the brands is implied.
+      default_extrude_speed: If set to 0 last value will be remembered
+      default_extrude_length: If set to 0 last value will be remembered
   socket:
     msg:
       connecting: Connecting to moonraker...

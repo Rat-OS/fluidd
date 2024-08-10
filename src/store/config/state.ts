@@ -26,8 +26,6 @@ export const defaultState = (): ConfigState => {
           z: { inverted: false }
         },
         minPanelWidth: 500,
-        defaultExtrudeLength: 10,
-        defaultExtrudeSpeed: 5,
         defaultToolheadMoveLength: 1.0,
         defaultToolheadXYSpeed: 130,
         defaultToolheadZSpeed: 10,
@@ -39,9 +37,6 @@ export const defaultState = (): ConfigState => {
         toolheadCircleZMoveDistances: [0.1, 1, 10, 50],
         toolheadCircleXYHomingEnabled: false,
         useGcodeCoords: false,
-        zAdjustDistances: [0.005, 0.01, 0.025, 0.050],
-        extrudeLengths: [50, 25, 10, 5, 1],
-        extrudeSpeeds: [10, 5, 2, 1],
         outputsCollapsed: [],
         useMeshWireframe: true,
         useMeshFlatSurface: false,
@@ -159,8 +154,16 @@ export const defaultState = (): ConfigState => {
       },
       toolhead: {
         forceMove: false,
+        zAdjustDistance: 0.01,
+        zAdjustDistances: [0.005, 0.01, 0.025, 0.050]
+      },
+      extruder: {
+        defaultExtrudeLength: 10,
+        defaultExtrudeSpeed: 5,
         extrudeSpeed: -1,
-        extrudeLength: -1
+        extrudeSpeeds: [10, 5, 2, 1],
+        extrudeLength: -1,
+        extrudeLengths: [50, 25, 10, 5, 1]
       },
       spoolman: {
         autoSpoolSelectionDialog: true,

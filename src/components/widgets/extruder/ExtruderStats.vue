@@ -132,7 +132,7 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     if (isNaN(+extrudeLength)) return 0
 
     return extrudeLength === -1
-      ? this.$store.state.config.uiSettings.general.defaultExtrudeLength
+      ? this.$store.state.config.uiSettings.extruder.defaultExtrudeLength
       : extrudeLength
   }
 
@@ -142,7 +142,7 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     if (isNaN(+extrudeSpeed)) return 0
 
     return extrudeSpeed === -1
-      ? this.$store.state.config.uiSettings.general.defaultExtrudeSpeed
+      ? this.$store.state.config.uiSettings.extruder.defaultExtrudeSpeed
       : extrudeSpeed
   }
 

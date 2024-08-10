@@ -28,6 +28,7 @@
         style="border-radius: 0px; height: 36px;"
         @blur="onBlur"
         @focus="onFocus"
+        @change="onChange"
         @keyup.enter.exact="onEnter($event)"
         @click:append="onReset()"
       >
@@ -186,6 +187,10 @@ export default class AppNumberField extends Mixins(StateMixin) {
       this.$emit('blur', event)
       this.hasFocus = false
     }
+  }
+
+  onChange (value: number) {
+    this.$emit('change', value)
   }
 
   onReset () {

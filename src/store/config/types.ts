@@ -22,13 +22,23 @@ export interface UiSettings {
   gcodePreview: GcodePreviewConfig;
   fileSystem: FileSystemConfig;
   toolhead: ToolheadConfig;
+  extruder: ExtruderConfig;
   spoolman: SpoolmanConfig;
 }
 
 export interface ToolheadConfig {
   forceMove: boolean;
+  zAdjustDistance: number;
+  zAdjustDistances: number[];
+}
+
+export interface ExtruderConfig {
+  defaultExtrudeLength: number;
+  defaultExtrudeSpeed: number;
   extrudeSpeed: number;
   extrudeLength: number;
+  extrudeLengths: number[];
+  extrudeSpeeds: number[];
 }
 
 export interface SpoolmanConfig {
@@ -64,8 +74,6 @@ export interface GeneralConfig {
   hideTempWaits: boolean;
   axis: Axis;
   minPanelWidth: number;
-  defaultExtrudeLength: number;
-  defaultExtrudeSpeed: number;
   defaultToolheadMoveLength: number;
   defaultToolheadXYSpeed: number;
   defaultToolheadZSpeed: number;
@@ -77,9 +85,6 @@ export interface GeneralConfig {
   toolheadCircleZMoveDistances: number[];
   toolheadCircleXYHomingEnabled: boolean;
   useGcodeCoords: boolean;
-  zAdjustDistances: number[];
-  extrudeLengths: number[];
-  extrudeSpeeds: number[];
   enableVersionNotifications: boolean;
   outputsCollapsed: number[];
   confirmOnEstop: boolean;

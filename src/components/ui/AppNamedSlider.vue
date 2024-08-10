@@ -69,7 +69,7 @@
       >
         <v-responsive
           class="ma-0 pa-0"
-          :width="100"
+          :width="inputWidth"
         >
           <v-text-field
             v-model="currentValue"
@@ -77,14 +77,12 @@
             :suffix="suffix"
             :rules="textRules"
             :disabled="disabled || loading || internalLocked"
-            :step="step"
             class="v-input--text-right v-input--x-dense d-flex"
             type="number"
             single-line
             outlined
             hide-details
             append-inner-icon="$lockReset"
-            @click:append-inner="handleReset"
             @focus="handleFocus"
             @blur="handleBlur"
             @keyup.enter.exact="handleSubmit(+currentValue)"
@@ -203,6 +201,9 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
   @Prop({ type: Number, default: 0 })
   readonly fanSpeed!: number
 
+  @Prop({ type: Number, default: 100 })
+  readonly inputWidth!: number
+
   @Ref('form')
   readonly form!: VForm
 
@@ -289,6 +290,7 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
 
   handleReset () {
     if (this.resetValue !== undefined) {
+      console.error('handleReset ' + this.resetValue)
       this.$emit('change', this.resetValue)
       this.submitValue(this.resetValue)
     }
@@ -326,7 +328,6 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
   }
 
   handleChange (value: number) {
-    this.$emit('change', value)
     this.submitValue(value)
   }
 
