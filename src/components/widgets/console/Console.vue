@@ -205,7 +205,7 @@ export default class Console extends Mixins(StateMixin) {
   }
 
   .console-scroller {
-    height: 300px;
+    height: 450px;
   }
   .console-scroller-fullscreen {
     height: calc(100vh - 240px);
