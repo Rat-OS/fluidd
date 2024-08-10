@@ -82,6 +82,8 @@
                   :key="param"
                   v-model="idexConfigParams[param].value"
                   :label="param"
+                  :placeholder="idexConfigParams[param].reset"
+                  :persistent-placeholder="true"
                   outlined
                   dense
                   hide-details="auto"

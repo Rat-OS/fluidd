@@ -44,6 +44,8 @@
                 :key="param"
                 v-model="params[param].value"
                 :label="param"
+                :placeholder="params[param].reset"
+                :persistent-placeholder="true"
                 outlined
                 dense
                 hide-details="auto"
