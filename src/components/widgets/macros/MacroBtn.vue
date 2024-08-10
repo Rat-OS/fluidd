@@ -50,9 +50,11 @@
                 spellcheck="false"
                 class="console-command"
                 :class="{ 'mb-3': (i < paramList.length - 1) }"
+                @focus="$event.target.select()"
               >
                 <template #append>
                   <app-btn
+                    v-if="params[param].value !== params[param].reset"
                     style="margin-top: -4px; margin-right: -6px;"
                     color=""
                     icon

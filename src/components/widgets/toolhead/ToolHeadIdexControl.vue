@@ -88,6 +88,7 @@
                   spellcheck="false"
                   class="console-command"
                   :class="{ 'mb-3': (i < paramList.length - 1) }"
+                  @focus="$event.target.select()"
                 >
                   <template #append>
                     <app-btn
