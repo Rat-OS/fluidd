@@ -440,6 +440,7 @@ export const Filters = {
    * route matching via :to
    */
   routeTo (router: VueRouter, path: string) {
+    console.error(path)
     if (router.currentRoute.fullPath !== path) router.push(path)
   },
 

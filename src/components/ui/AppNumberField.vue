@@ -41,7 +41,6 @@
           <v-btn
             :tabindex="-1"
             :disabled="inputValue <= min || disabled"
-            flat
             style="border-radius: 0px; height: 36px; margin-left: 2px;"
             min-width="10"
             class="px-0"
@@ -58,7 +57,6 @@
           <v-btn
             :tabindex="-1"
             :disabled="(inputValue >= max && max !== null) || disabled"
-            flat
             style="border-top-left-radius: 0px; border-bottom-left-radius: 0px; height: 36px; margin-left: 2px;"
             :style="{
               'border-bottom-right-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
@@ -88,7 +86,6 @@
           v-for="value in quickSelectors"
           :key="value"
           :disabled="printerPrinting"
-          flat
           class="px-0 flex-grow-1"
           style="height:24px; margin-top: 3px;"
           :color="value == inputValue ? 'btncolor' : ''"

@@ -28,22 +28,15 @@
       </app-btn>
 
       <v-toolbar-title class="printer-title text--secondary">
-        <a
-          v-if="$vuetify.breakpoint.mdAndUp"
-          :href="ratOsConfiguratorUrl"
-          target="_blank"
+        <img
+          v-if="customAppBarLogoSrc"
+          alt="WorkFlow"
+          height="40"
+          decoding="async"
+          :src="customAppBarLogoSrc"
+          class="mr-0 ml-0"
+          style="color:transparent; transform: translateX(-2px) translateY(6px);"
         >
-          <img
-            alt="WorkFlow"
-            loading="lazy"
-            width="160"
-            height="40"
-            decoding="async"
-            :src="ratOsImageUrl"
-            class="mr-0 ml-0"
-            style="color:transparent; transform: translateX(-2px) translateY(6px);"
-          >
-        </a>
         <router-link
           to="/"
           v-html="instanceName"
@@ -263,7 +256,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import UserPasswordDialog from '@/components/settings/auth/UserPasswordDialog.vue'
 import PendingChangesDialog from '@/components/settings/PendingChangesDialog.vue'
 import AppSaveConfigAndRestartBtn from './AppSaveConfigAndRestartBtn.vue'
@@ -289,6 +282,25 @@ export default class AppBar extends Mixins(StateMixin, ServicesMixin, FilesMixin
   menu = false
   userPasswordDialogOpen = false
   pendingChangesDialogOpen = false
+  customAppBarLogoSrc?: string = undefined
+
+  get ratOsConfiguratorUrl () {
+    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure'
+  }
+
+  get customAppBarLogo () {
+    return this.$store.getters['config/getCustomThemeFile']('appbar-logo', ['.svg'])
+  }
+
+  @Watch('customAppBarLogo')
+  async onCustomAppBarLogo (value: string) {
+    if (!value) {
+      return
+    }
+
+    const url = await this.createFileUrlWithToken(value, 'config')
+    this.customAppBarLogoSrc = url
+  }
 
   get supportsAuth () {
     return this.$store.getters['server/componentSupport']('authorization')
@@ -296,14 +308,6 @@ export default class AppBar extends Mixins(StateMixin, ServicesMixin, FilesMixin
 
   get instances () {
     return this.$store.state.config.instances
-  }
-
-  get ratOsImageUrl () {
-    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure/_next/static/media/logo-white.6051cbc7.svg'
-  }
-
-  get ratOsConfiguratorUrl () {
-    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure'
   }
 
   get instanceName () {
