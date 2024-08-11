@@ -94,7 +94,7 @@ export default class AppNavDrawer extends Mixins(StateMixin, BrowserMixin, Files
     }
     return this.navItemsList
       .sort((a, b) => {
-        return a.order + b.order
+        return a.order - b.order
       })
   }
 
@@ -115,9 +115,8 @@ export default class AppNavDrawer extends Mixins(StateMixin, BrowserMixin, Files
     const url = await this.createFileUrlWithToken(value, 'config')
     const naviData = await (await fetch(url)).json()
     if (naviData) {
-      const list = this.navItemsList
       naviData.forEach((item: { title: string; href: string; target: string; position: string; icon: string }) => {
-        list.push({ title: item.title, icon: item.icon, to: item.href, order: parseInt(item.position), external: true })
+        this.navItemsList.push({ title: item.title, icon: item.icon, to: item.href, order: parseInt(item.position), external: true })
       })
     }
   }

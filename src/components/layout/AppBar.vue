@@ -284,10 +284,6 @@ export default class AppBar extends Mixins(StateMixin, ServicesMixin, FilesMixin
   pendingChangesDialogOpen = false
   customAppBarLogoSrc?: string = undefined
 
-  get ratOsConfiguratorUrl () {
-    return window.location.href.replace('#/', '').replace(/:\d+/, '') + '/configure'
-  }
-
   get customAppBarLogo () {
     return this.$store.getters['config/getCustomThemeFile']('appbar-logo', ['.svg'])
   }

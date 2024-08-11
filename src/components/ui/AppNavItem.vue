@@ -4,9 +4,30 @@
     :disabled="isMobileViewport"
   >
     <template #activator="{ attrs, on }">
+      <a
+        v-if="external"
+        :href="url"
+      >
+        <v-list-item
+          :exact="exact"
+          link
+          color="secondary"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title><slot /></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </a>
       <v-list-item
-        :to="to"
+        v-else
         :exact="exact"
+        :to="to"
         link
         color="secondary"
         v-bind="attrs"
@@ -53,6 +74,15 @@ export default class AppNavItem extends Mixins(StateMixin, BrowserMixin) {
 
   @Prop({ type: String })
   readonly icon?: string
+
+  @Prop({ type: Boolean })
+  readonly external?: boolean
+
+  get url (): string | undefined {
+    // return this.to
+    // const baseUrl = url.split(':')[0] + '://' + url.split('/')[2].split(':')[0];
+    return window.location.href.split(':')[0] + '://' + window.location.href.split('/')[2].split(':')[0] + this.to
+  }
 
   get accelerator (): string | undefined {
     if (this.to) {
