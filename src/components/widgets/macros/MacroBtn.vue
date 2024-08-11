@@ -1,7 +1,7 @@
 <template>
   <app-btn-group divided>
     <app-btn
-      v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled'))"
+      v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && printerStandby)"
       :disabled="(macro.disabledWhilePrinting && printerPrinting) || !klippyReady"
       :style="borderStyle"
       v-on="filteredListeners"
@@ -127,6 +127,7 @@ export default class MacroBtn extends Mixins(StateMixin) {
       const params = this.isMacroWithRawParam
         ? this.params.message.value.toString()
         : Object.entries(this.params)
+          .filter(([key, param]) => key !== '' && param.value !== '')
           .map(([key, param]) => `${key.toUpperCase()}=${param.value}`)
           .join(' ')
 

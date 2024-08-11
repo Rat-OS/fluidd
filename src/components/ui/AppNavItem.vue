@@ -79,8 +79,6 @@ export default class AppNavItem extends Mixins(StateMixin, BrowserMixin) {
   readonly external?: boolean
 
   get url (): string | undefined {
-    // return this.to
-    // const baseUrl = url.split(':')[0] + '://' + url.split('/')[2].split(':')[0];
     return window.location.href.split(':')[0] + '://' + window.location.href.split('/')[2].split(':')[0] + this.to
   }
 

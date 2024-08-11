@@ -9,9 +9,7 @@
         v-for="category in macros"
         :key="`category-${category.id}`"
       >
-        <v-expansion-panel-header
-          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled')))"
-        >
+        <v-expansion-panel-header>
           <template #actions>
             <v-icon
               small
@@ -43,9 +41,7 @@
           </div>
         </v-expansion-panel-header>
 
-        <v-expansion-panel-content
-          v-if="category.id === '0' || (!(category.hideWhilePrinting && printerPrinting) && !(category.hideWhilePaused && printerPaused) && !(category.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled')))"
-        >
+        <v-expansion-panel-content>
           <v-tooltip
             v-for="macro in category.macros"
             :key="`category-${macro.name}`"
@@ -54,7 +50,6 @@
           >
             <template #activator="{ on, attrs }">
               <macro-btn
-                v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && (printerState === 'ready' || printerState === 'idle' || printerState === 'canceled'))"
                 v-bind="attrs"
                 :macro="macro"
                 :category="category"
@@ -87,7 +82,7 @@ import type { MacroCategory } from '@/store/macros/types'
 })
 export default class Macros extends Mixins(StateMixin) {
   get macros () {
-    return this.$store.getters['macros/getVisibleMacros']
+    return this.$store.getters['macros/getVisibleMacros'](this.printerPrinting, this.printerPaused, this.printerStandby)
   }
 
   get expanded () {

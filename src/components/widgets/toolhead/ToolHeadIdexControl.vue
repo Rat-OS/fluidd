@@ -171,6 +171,7 @@ export default class ToolHeadIdexControl extends Mixins(StateMixin, ToolheadMixi
       const params = this.isMacroWithRawParam
         ? this.idexConfigParams.message.value.toString()
         : Object.entries(this.idexConfigParams)
+          .filter(([key, param]) => key !== '' && param.value !== '')
           .map(([key, param]) => `${key.toUpperCase()}=${param.value}`)
           .join(' ')
 

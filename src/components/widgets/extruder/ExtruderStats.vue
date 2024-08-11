@@ -126,24 +126,30 @@ export default class ExtruderMoves extends Mixins(StateMixin, ToolheadMixin) {
     return 0.2
   }
 
-  get extrudeLength (): number {
-    const extrudeLength = this.$store.state.config.uiSettings.toolhead.extrudeLength
-
-    if (isNaN(+extrudeLength)) return 0
-
-    return extrudeLength === -1
-      ? this.$store.state.config.uiSettings.extruder.defaultExtrudeLength
-      : extrudeLength
+  get extrudeLength () {
+    const extruder_extrudeLength = this.$store.state.config.uiSettings.extruder.extrudeLength
+    const extruder_defaultExtrudeLength = this.$store.state.config.uiSettings.extruder.defaultExtrudeLength
+    if (extruder_extrudeLength === -1) {
+      if (extruder_defaultExtrudeLength > 0) {
+        return extruder_defaultExtrudeLength
+      } else {
+        return 0
+      }
+    }
+    return extruder_extrudeLength
   }
 
-  get extrudeSpeed (): number {
-    const extrudeSpeed = this.$store.state.config.uiSettings.toolhead.extrudeSpeed
-
-    if (isNaN(+extrudeSpeed)) return 0
-
-    return extrudeSpeed === -1
-      ? this.$store.state.config.uiSettings.extruder.defaultExtrudeSpeed
-      : extrudeSpeed
+  get extrudeSpeed () {
+    const extruder_extrudeSpeed = this.$store.state.config.uiSettings.extruder.extrudeSpeed
+    const extruder_defaultExtrudeSpeed = this.$store.state.config.uiSettings.extruder.defaultExtrudeSpeed
+    if (extruder_extrudeSpeed === -1) {
+      if (extruder_defaultExtrudeSpeed > 0) {
+        return extruder_defaultExtrudeSpeed
+      } else {
+        return 0
+      }
+    }
+    return extruder_extrudeSpeed
   }
 
   get estimatedExtrudedLength (): number {

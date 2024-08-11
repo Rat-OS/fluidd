@@ -69,7 +69,17 @@ export const getters: GetterTree<MacrosState, RootState> = {
 
   // Gets visible macros, transformed. Should include the macro's config.
   // Is only used on the dashboard. Grouped by category.
-  getVisibleMacros: (state, getters) => {
+  getVisibleMacros: (state, getters) => (isPrinting?: boolean, isPaused?: boolean, isStandby?: boolean) => {
+    const printing = !isPrinting
+      ? undefined
+      : isPrinting
+    const paused = !isPaused
+      ? undefined
+      : isPaused
+    const standby = !isStandby
+      ? undefined
+      : isStandby
+
     const defaultCategory = { id: '0', name: '', order: 9999, color: '', visible: true, hideWhilePrinting: true, hideWhilePaused: true, hideWhileStandby: true }
     const categories = [...state.categories, defaultCategory]
 
@@ -83,8 +93,15 @@ export const getters: GetterTree<MacrosState, RootState> = {
         hideWhilePrinting,
         hideWhilePaused,
         hideWhileStandby,
-        macros: getters.getMacrosByCategory(id).filter((macro: Macro) => macro.visible) as Macro[]
+        macros: getters.getMacrosByCategory(id)
+          .filter((macro: Macro) => (printing === undefined || (printing && !macro.hideWhilePrinting)))
+          .filter((macro: Macro) => (paused === undefined || (paused && !macro.hideWhilePaused)))
+          .filter((macro: Macro) => (standby === undefined || (standby && !macro.hideWhileStandby)))
+          .filter((macro: Macro) => macro.visible) as Macro[]
       }))
+      .filter(category => (category.id === '0' || printing === undefined || (printing && !category.hideWhilePrinting)))
+      .filter(category => (category.id === '0' || paused === undefined || (paused && !category.hideWhilePaused)))
+      .filter(category => (category.id === '0' || standby === undefined || (standby && !category.hideWhileStandby)))
       .filter(category => category.visible)
       .filter(category => category.macros.length > 0)
       .sort((a, b) => {
