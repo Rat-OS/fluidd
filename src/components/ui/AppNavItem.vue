@@ -86,6 +86,8 @@ export default class AppNavItem extends Mixins(StateMixin, BrowserMixin) {
 
   get accelerator (): string | undefined {
     if (this.to) {
+      if (this.external) return undefined
+
       const destination = this.to === '/'
         ? 'home'
         : this.to.substring(1)
