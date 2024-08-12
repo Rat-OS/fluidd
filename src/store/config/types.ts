@@ -105,6 +105,7 @@ export interface GeneralConfig {
   cameraFullscreenAction: CameraFullscreenAction;
   topNavPowerToggle: null | string;
   useSixColumns: boolean;
+  useSmallStatusButtons: boolean;
   showManualProbeDialogAutomatically: boolean;
   showBedScrewsAdjustDialogAutomatically: boolean;
   showScrewsTiltAdjustDialogAutomatically: boolean;

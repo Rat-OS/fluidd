@@ -581,6 +581,7 @@ app:
       default_toolhead_z_speed: Default toolhead Z speed
       min_col_width: Minimum dashboard column width
       use_six_cols: Use 6 instead of 4 dashboard columns
+      use_small_status_buttons: Use small print status buttons
       dotted: Dotted
       draw_background: Draw Background
       draw_origin: Draw origin

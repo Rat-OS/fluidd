@@ -62,6 +62,7 @@ export const defaultState = (): ConfigState => {
         cameraFullscreenAction: 'embed',
         topNavPowerToggle: null,
         useSixColumns: true,
+        useSmallStatusButtons: true,
         showManualProbeDialogAutomatically: true,
         showBedScrewsAdjustDialogAutomatically: true,
         showScrewsTiltAdjustDialogAutomatically: true,

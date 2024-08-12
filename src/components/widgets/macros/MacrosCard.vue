@@ -14,7 +14,7 @@
         @click="handleSettings"
       >
         <v-icon>
-          $edit
+          $pause
         </v-icon>
       </v-btn>
     </template>

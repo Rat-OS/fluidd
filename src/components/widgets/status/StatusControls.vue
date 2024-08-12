@@ -1,8 +1,76 @@
 <template>
   <div>
-    <app-btn-collapse-group>
+    <v-btn
+      v-if="useSmallStatusButtons && (printerPrinting || printerPaused)"
+      :loading="hasWait($waits.onPrintCancel)"
+      :disabled="hasWait([$waits.onPrintCancel, $waits.onPrintResume, $waits.onPrintPause])"
+      fab
+      x-small
+      text
+      class="ms-1 my-1"
+      @click="cancelPrint"
+    >
+      <v-icon>
+        $cancelled
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="useSmallStatusButtons && printerPrinting"
+      :loading="hasWait($waits.onPrintPause)"
+      :disabled="hasWait([$waits.onPrintCancel, $waits.onPrintResume, $waits.onPrintPause])"
+      fab
+      x-small
+      text
+      class="ms-1 my-1"
+      @click="pausePrint"
+    >
+      <v-icon>
+        $pause
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="useSmallStatusButtons && printerPaused"
+      :loading="hasWait($waits.onPrintResume)"
+      :disabled="hasWait([$waits.onPrintCancel, $waits.onPrintResume, $waits.onPrintPause])"
+      fab
+      x-small
+      text
+      class="ms-1 my-1"
+      @click="resumePrint"
+    >
+      <v-icon>
+        $resume
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="useSmallStatusButtons && (!printerPrinting && !printerPaused && filename)"
+      fab
+      x-small
+      text
+      class="ms-1 my-1"
+      @click="resetFile()"
+    >
+      <v-icon>
+        $refresh
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="useSmallStatusButtons && (!supportsHistoryComponent && !printerPrinting && !printerPaused && filename)"
+      fab
+      x-small
+      text
+      class="ms-1 my-1"
+      @click="$emit('print', filename)"
+    >
+      <v-icon>
+        $reprint
+      </v-icon>
+    </v-btn>
+    <app-btn-collapse-group
+      v-if="!useSmallStatusButtons"
+    >
       <app-btn
-        v-if="printerPrinting || printerPaused"
+        v-if="!printerPrinting || printerPaused"
         :loading="hasWait($waits.onPrintCancel)"
         :disabled="hasWait([$waits.onPrintCancel, $waits.onPrintResume, $waits.onPrintPause])"
         small
@@ -120,6 +188,10 @@ export default class StatusControls extends Mixins(StateMixin) {
 
   get hasParts () {
     return Object.keys(this.$store.getters['parts/getParts']).length > 0
+  }
+
+  get useSmallStatusButtons () {
+    return this.$store.state.config.uiSettings.general.useSmallStatusButtons
   }
 
   resetFile () {
