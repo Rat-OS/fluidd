@@ -24,6 +24,7 @@
     "release:minor": "npm run release -- --release-as minor",
     "release:patch": "npm run release -- --release-as patch",
     "release:rc": "npm run release -- --prerelease rc",
+    "release:experimental": "npm run release -- --prerelease",
     "test": "npm run test:unit",
     "test:unit": "vitest --environment jsdom",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
