@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.31.0-0 (2024-08-14)
+
+### Features
+
+* IDEX and MMU UX additionas and enhancements.
+
+
 ## [1.30.1](https://github.com/fluidd-core/fluidd/compare/v1.30.0...v1.30.1) (2024-06-20)
 
 
