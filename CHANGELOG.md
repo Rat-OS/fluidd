@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0-2](https://github.com/Rat-OS/fluidd/compare/v1.30.3-1...v1.31.0-2) (2024-08-15)
+
 ### [1.30.3-1](https://github.com/Rat-OS/fluidd/compare/v1.31.0-0...v1.30.3-1) (2024-08-15)
 
 
