@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.30.3-1](https://github.com/Rat-OS/fluidd/compare/v1.31.0-0...v1.30.3-1) (2024-08-15)
+
+
+### Bug Fixes
+
+* Dynamic loading of camera components ([#1479](https://github.com/Rat-OS/fluidd/issues/1479)) ([e6ac387](https://github.com/Rat-OS/fluidd/commit/e6ac387a5e9b93f43daf3a594de4d1f52e1418ba))
+
 ## [1.30.3](https://github.com/fluidd-core/fluidd/compare/v1.30.2...v1.30.3) (2024-08-14)
 
 
