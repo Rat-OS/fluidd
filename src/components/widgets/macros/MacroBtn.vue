@@ -134,7 +134,6 @@ export default class MacroBtn extends Mixins(StateMixin) {
       const params = this.isMacroWithRawParam
         ? this.params.message.value.toString()
         : Object.entries(this.params)
-          .filter(([key, param]) => key !== '' && param.value !== '')
           .map(([key, param]) => `${key.toUpperCase()}${paramSeparator}${param.value}`)
           .join(' ')
 
