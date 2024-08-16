@@ -4,7 +4,7 @@ const defaultValueRegExp = /\|\s*default\s*\(\s*((["'])(?:\\\2|.)*?\2|-?[0-9][^,
 export const gcodeMacroParamDefault = (param: string) => {
   const valueMatch = defaultValueRegExp.exec(param)
   let result = ((valueMatch && valueMatch[1]) || '').trim()
-  if (result === "''") {
+  if (result === "''" || result === '""') {
     result = ''
   }
   return result
