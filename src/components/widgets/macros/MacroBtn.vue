@@ -129,9 +129,6 @@ export default class MacroBtn extends Mixins(StateMixin) {
     const paramSeparator = this.isMacroForGcodeCommand
       ? ''
       : '='
-    const paramSeparator = this.isMacroForGcodeCommand
-      ? ''
-      : '='
 
     if (this.params) {
       const params = this.isMacroWithRawParam
