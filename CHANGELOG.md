@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0-3](https://github.com/Rat-OS/fluidd/compare/v1.31.0-2...v1.31.0-3) (2024-08-16)
+
+
+### Features
+
+* **FileSystem:** Filter KlipperScreen rolled logs ([#1482](https://github.com/Rat-OS/fluidd/issues/1482)) ([48c158f](https://github.com/Rat-OS/fluidd/commit/48c158fd0b0a59002c3216c4cbc9fd113a8d2c80))
+
+
+### Bug Fixes
+
+* don't use separator for gcode macros ([#1483](https://github.com/Rat-OS/fluidd/issues/1483)) ([7ec4626](https://github.com/Rat-OS/fluidd/commit/7ec462600df533aa321d46832da11d3e867a0ef7))
+
 ## [1.31.0-2](https://github.com/Rat-OS/fluidd/compare/v1.30.3-1...v1.31.0-2) (2024-08-15)
 
 ### [1.30.3-1](https://github.com/Rat-OS/fluidd/compare/v1.31.0-0...v1.30.3-1) (2024-08-15)
