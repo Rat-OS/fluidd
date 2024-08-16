@@ -106,6 +106,10 @@ export default class MacroBtn extends Mixins(StateMixin) {
     return ['m117', 'm118'].includes(this.macro.name)
   }
 
+  get isMacroForGcodeCommand () {
+    return /^[gm]\d+$/i.test(this.macro.name)
+  }
+
   get filteredListeners () {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { click, ...listeners } = this.$listeners
@@ -122,13 +126,16 @@ export default class MacroBtn extends Mixins(StateMixin) {
    */
   get runCommand () {
     const command = this.macro.name.toUpperCase()
+    const paramSeparator = this.isMacroForGcodeCommand
+      ? ''
+      : '='
 
     if (this.params) {
       const params = this.isMacroWithRawParam
         ? this.params.message.value.toString()
         : Object.entries(this.params)
           .filter(([key, param]) => key !== '' && param.value !== '')
-          .map(([key, param]) => `${key.toUpperCase()}=${param.value}`)
+          .map(([key, param]) => `${key.toUpperCase()}${paramSeparator}${param.value}`)
           .join(' ')
 
       if (params) {
