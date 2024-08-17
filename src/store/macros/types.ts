@@ -2,6 +2,7 @@ export interface MacrosState {
   stored: Macro[];
   categories: MacroCategory[];
   expanded: number[];
+  showLoadFilamentDialog: boolean;
 }
 
 export interface Macro {

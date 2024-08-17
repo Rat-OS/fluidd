@@ -4,7 +4,8 @@ export const defaultState = (): MacrosState => {
   return {
     stored: [],
     categories: [],
-    expanded: [0]
+    expanded: [0],
+    showLoadFilamentDialog: false
   }
 }
 

@@ -234,6 +234,7 @@ app:
         Moonraker has failed plugins, please check your logs, update your
         configuration and restart moonraker.
     label:
+      toolhead: Toolhead
       slider_input: Slider
       number_input: Number input
       accel_to_decel: Accel to Decel

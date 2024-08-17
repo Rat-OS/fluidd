@@ -155,7 +155,11 @@ export default class MacroBtn extends Mixins(StateMixin) {
   }
 
   handleClick () {
-    this.$emit('click', this.macro.name.toUpperCase())
+    if (['load_filament', 'filament_load', 'm701'].includes(this.macro.name.toLowerCase())) {
+      this.$store.state.macros.showLoadFilamentDialog = true
+    } else {
+      this.$emit('click', this.macro.name.toUpperCase())
+    }
   }
 
   mounted () {
