@@ -51,7 +51,7 @@
                 $drag
               </v-icon>
 
-              {{ filament.name.toUpperCase() }}
+              {{ filament.name.toUpperCase() }} - {{ filament.temp }}°C
             </template>
 
             <app-btn
@@ -118,7 +118,8 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     const preset: any = {
       id: -1,
       name: '',
-      temp: 0
+      temp: 0,
+      visible: true
     }
     this.dialogState = {
       active: true,

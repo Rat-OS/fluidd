@@ -16,6 +16,7 @@
           hide-details="auto"
           filled
           dense
+          @focus="$event.target.select()"
         />
       </app-setting>
 
@@ -34,6 +35,7 @@
           suffix="°C"
           filled
           dense
+          @focus="$event.target.select()"
         />
       </app-setting>
     </v-card-text>
