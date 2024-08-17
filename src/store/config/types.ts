@@ -178,6 +178,7 @@ export interface AxisConfig {
 
 export interface DashboardConfig {
   tempPresets: TemperaturePreset[];
+  filamentPresets: FilamentPreset[];
 }
 
 export interface SaveByPath {
@@ -202,6 +203,14 @@ export interface ApiConfig {
 export interface InstanceConfig extends ApiConfig {
   name: string;
   active: boolean;
+}
+
+export interface FilamentPreset {
+  id: number;
+  order: number;
+  name: string;
+  temp: number;
+  visible: boolean;
 }
 
 export interface TemperaturePreset {

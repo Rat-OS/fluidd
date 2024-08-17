@@ -133,6 +133,35 @@ export const mutations: MutationTree<ConfigState> = {
   },
 
   /**
+   * Update / Add a filament preset
+   */
+  setFilamentPreset (state, payload) {
+    if (payload.id === -1) {
+      payload.id = uuidv4()
+      state.uiSettings.dashboard.filamentPresets.push(payload)
+    } else {
+      const i = state.uiSettings.dashboard.filamentPresets.findIndex(preset => preset.id === payload.id)
+      if (i >= 0) {
+        Vue.set(state.uiSettings.dashboard.filamentPresets, i, {
+          id: payload.id,
+          order: payload.order,
+          name: payload.name,
+          temp: payload.temp,
+          visible: payload.visible
+        })
+      }
+    }
+  },
+
+  /**
+   * Remove a filament preset
+   */
+  setRemoveFilamentPreset (state, payload) {
+    const i = state.uiSettings.dashboard.filamentPresets.findIndex(preset => preset.id === payload.id)
+    state.uiSettings.dashboard.filamentPresets.splice(i, 1)
+  },
+
+  /**
    * Update / Add a temperature preset
    */
   setPreset (state, payload) {

@@ -89,7 +89,8 @@ export const defaultState = (): ConfigState => {
         codeLens: true
       },
       dashboard: {
-        tempPresets: []
+        tempPresets: [],
+        filamentPresets: []
       },
       tableHeaders: {
         gcodes_dashboard: [

@@ -45,6 +45,7 @@ export default class AppSettingsNav extends Vue {
       { name: this.$t('app.setting.title.tool'), hash: '#toolhead', visible: true },
       { name: this.$t('app.setting.title.extruder'), hash: '#extruder', visible: true },
       { name: this.$t('app.setting.title.thermal_presets'), hash: '#presets', visible: true },
+      { name: this.$t('app.setting.title.filament_presets'), hash: '#filaments', visible: true },
       { name: this.$t('app.setting.title.gcode_preview'), hash: '#gcodePreview', visible: true },
       { name: this.$t('app.general.title.timelapse'), hash: '#timelapse', visible: this.supportsTimelapse },
       { name: this.$t('app.spoolman.title.spoolman'), hash: '#spoolman', visible: this.supportsSpoolman },

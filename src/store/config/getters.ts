@@ -1,5 +1,5 @@
 import type { GetterTree } from 'vuex'
-import type { ConfigState, TemperaturePreset } from './types'
+import type { ConfigState, TemperaturePreset, FilamentPreset } from './types'
 import type { RootState } from '../types'
 import type { Heater, Fan } from '../printer/types'
 import type { AppTableHeader } from '@/types'
@@ -68,6 +68,31 @@ export const getters: GetterTree<ConfigState, RootState> = {
     return presets.sort((a, b) => {
       return a.name.localeCompare(b.name)
     })
+  },
+
+  getFilamentPresets: (state) => {
+    const filaments = state.uiSettings.dashboard.filamentPresets
+      .map(filament => {
+        const { id, order, name, temp, visible } = filament
+
+        return {
+          id,
+          order,
+          name,
+          temp,
+          visible
+        }
+      })
+    const sortedFilaments = filaments.sort((a: FilamentPreset, b: FilamentPreset) => {
+      // Sorts preferrentially by order, then by name
+      // This offers backward compatibility with filaments that have no order
+      if ((a.order !== undefined && b.order !== undefined) && a.order !== b.order) {
+        return a.order - b.order
+      }
+
+      return a.name.localeCompare(b.name)
+    })
+    return sortedFilaments
   },
 
   getCustomThemeFile: (state, getters, rootState, rootGetters) => (filename: string, extensions: string[]) => {

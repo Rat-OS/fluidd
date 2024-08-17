@@ -348,6 +348,8 @@ app:
       apply_z_offset: Apply and Save Z_Offset
       edit_category: Edit category
       add_category: Add category
+      edit_filament: Edit filament
+      add_filament: Add filament
       file_time: File
       stepper_driver: >-
         %{name} Driver
@@ -520,6 +522,7 @@ app:
     btn:
       add_camera: Add Camera
       add_category: Add Category
+      add_filament_preset: Add Preset
       add_filter: Add Filter
       add_metric: Add Metric
       add_thermal_preset: Add Preset
@@ -647,6 +650,8 @@ app:
       theme_preset: Community preset
       thermal_preset_gcode: GCode
       thermal_preset_name: Preset Name
+      filament_preset_name: Preset Name
+      filament_preset_temp: Temperature
       title: Title
       to_browser_local_storage: To browser local storage
       to_browser_session_storage: To browser session storage
@@ -683,6 +688,7 @@ app:
       macros: Macros
       theme: Theme
       thermal_presets: Thermal Presets
+      filament_presets: Filament Presets
       tool: Tool
       extruder: Extruder
     tooltip:
