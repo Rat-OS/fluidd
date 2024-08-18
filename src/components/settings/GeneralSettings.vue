@@ -291,9 +291,19 @@
           outlined
           small
           color="primary"
+          class="mr-2"
           @click="uploadSettingsFile.click()"
         >
           {{ $t('app.setting.btn.restore') }}
+        </app-btn>
+
+        <app-btn
+          outlined
+          small
+          color="primary"
+          @click="handleDefaultSettings"
+        >
+          {{ $t('app.setting.btn.default') }}
         </app-btn>
       </app-setting>
     </v-card>
@@ -312,7 +322,7 @@
 import { Component, Mixins, Ref } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import type { VInput } from '@/types'
-import { SupportedLocales, DateFormats, TimeFormats } from '@/globals'
+import { SupportedLocales, DateFormats, TimeFormats, Globals } from '@/globals'
 import type { OutputPin } from '@/store/printer/types'
 import type { Device } from '@/store/power/types'
 import type { PrintEtaCalculation, PrintInProgressLayout, PrintProgressCalculation } from '@/store/config/types'
@@ -321,6 +331,7 @@ import consola from 'consola'
 import { readFileAsTextAsync } from '@/util/file-system-entry'
 import { EventBus } from '@/eventBus'
 import { isFluiddContent, toFluiddContent } from '@/util/fluidd-content'
+import { appInit } from '@/init'
 
 @Component({
   components: {}
@@ -675,6 +686,25 @@ export default class GeneralSettings extends Mixins(StateMixin) {
       consola.error('[Settings] backup failed', e)
 
       EventBus.$emit(this.$t('app.general.msg.fluidd_settings_backup_failed').toString(), { type: 'error' })
+    }
+  }
+
+  async handleDefaultSettings () {
+    try {
+      await httpClientActions.serverDatabaseItemDelete(Globals.MOONRAKER_DB.fluidd.NAMESPACE, Globals.MOONRAKER_DB.fluidd.ROOTS.charts.name)
+      await httpClientActions.serverDatabaseItemDelete(Globals.MOONRAKER_DB.fluidd.NAMESPACE, Globals.MOONRAKER_DB.fluidd.ROOTS.console.name)
+      await httpClientActions.serverDatabaseItemDelete(Globals.MOONRAKER_DB.fluidd.NAMESPACE, Globals.MOONRAKER_DB.fluidd.ROOTS.layout.name)
+      await httpClientActions.serverDatabaseItemDelete(Globals.MOONRAKER_DB.fluidd.NAMESPACE, Globals.MOONRAKER_DB.fluidd.ROOTS.macros.name)
+      await httpClientActions.serverDatabaseItemDelete(Globals.MOONRAKER_DB.fluidd.NAMESPACE, Globals.MOONRAKER_DB.fluidd.ROOTS.uiSettings.name)
+      const instance = this.$store.getters['config/getCurrentInstance']
+      const config = await appInit(instance, this.$store.state.config.hostConfig)
+      if (config.apiConnected && config.apiAuthenticated) {
+        consola.debug('Activating socket with config', config)
+        this.$socket.connect(config.apiConfig.socketUrl)
+      }
+    } catch (e) {
+      console.error('handleDefaultSettings failed ' + e)
+      consola.error('handleDefaultSettings failed', e)
     }
   }
 

@@ -531,6 +531,7 @@ app:
       backup: Backup
       reset: Reset
       restore: Restore
+      default: Default
       select_theme: Select Theme
     camera_type_options:
       mjpegadaptive: MJPEG Adaptive
