@@ -472,6 +472,8 @@ app:
       tool: Tool
       idex_tool: Idex Tool
       tune: Tune
+      load_filament: Load Filament
+      unload_filament: Unload Filament
     tooltip:
       browse_metrics: Browse available metrics
       estop: Emergency Stop

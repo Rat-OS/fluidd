@@ -250,7 +250,3 @@ export default class SpoolJoining extends Mixins(StateMixin, ToolheadMixin) {
   padding: 0 !important;
 }
 </style>
-
-<!-- sudo cp /etc/nginx/sites-available/mainsail /etc/nginx/sites-available/fluidd
-sudo ln -s /etc/nginx/sites-available/fluidd /etc/nginx/sites-enabled/fluidd
-sudo nano /etc/nginx/sites-available/fluidd -->

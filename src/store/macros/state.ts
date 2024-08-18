@@ -5,7 +5,8 @@ export const defaultState = (): MacrosState => {
     stored: [],
     categories: [],
     expanded: [0],
-    showLoadFilamentDialog: false
+    showFilamentDialog: false,
+    filamentDialogMacro: undefined
   }
 }
 

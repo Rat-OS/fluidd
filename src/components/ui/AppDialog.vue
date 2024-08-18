@@ -117,7 +117,7 @@
 <script lang="ts">
 import BrowserMixin from '@/mixins/browser'
 import type { VForm } from '@/types'
-import { Component, Prop, VModel, Ref, PropSync, Mixins } from 'vue-property-decorator'
+import { Component, Prop, VModel, Ref, PropSync, Mixins, Watch } from 'vue-property-decorator'
 
 @Component({})
 export default class AppDialog extends Mixins(BrowserMixin) {
@@ -128,7 +128,12 @@ export default class AppDialog extends Mixins(BrowserMixin) {
   readonly disabled?: boolean
 
   @Prop({ type: String })
-  readonly title?: string
+    title?: string
+
+  @Watch('title')
+  onTitle (value: string) {
+    this.title = value
+  }
 
   @Prop({ type: String })
   readonly helpTooltip?: string

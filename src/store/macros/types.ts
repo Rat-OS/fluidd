@@ -2,7 +2,8 @@ export interface MacrosState {
   stored: Macro[];
   categories: MacroCategory[];
   expanded: number[];
-  showLoadFilamentDialog: boolean;
+  showFilamentDialog: boolean;
+  filamentDialogMacro?: Macro;
 }
 
 export interface Macro {
