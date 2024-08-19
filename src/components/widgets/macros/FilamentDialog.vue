@@ -85,7 +85,7 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   tempParameter: string = 'TEMP'
   toolheadParameter: string = 'TOOLHEAD'
   filamentParameter: string = 'FILAMENT'
-  tool: string | undefined = undefined
+  tool: string = 'T0'
   filamentMacro: Macro | undefined = undefined
   loadFilamentParams: { [index: string]: { value: string | number; reset: string | number }} = {}
 
@@ -131,8 +131,8 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   /**
    * toolheads
    */
-  get selectedTool (): string | null {
-    return this.tool ?? 'T0'
+  get selectedTool (): string {
+    return this.tool
   }
 
   set selectedTool (value: string) {
@@ -143,6 +143,7 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
    * filament macro
    */
   initFilamentMacro () {
+    this.selectedTool = 'T0'
     this.filamentMacro = this.$store.state.macros.filamentDialogMacro
     if (!this.filamentMacro?.config || !this.filamentMacro.config.gcode) return []
 
