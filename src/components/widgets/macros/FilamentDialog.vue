@@ -11,30 +11,41 @@
       dense
       class="fill-height pt-0"
     >
-      <div
+      <v-col
         v-if="loadedFilaments.length > 0"
-        class="mt-3 mb-6"
+        class="px-0 pb-0"
       >
-        <div class="pl-3 pb-3 secondary--text">
-          {{ $t('app.general.title.loaded_filament') }}
-        </div>
-        <section
-          v-for="filament in loadedFilaments"
-          :key="`filament-${filament.name}`"
+        <v-list
+          v-for="(loadedFilament, index) in loadedFilaments"
+          :key="`toolheadWarning-${index}`"
+          dense
+          nav
+          class="pa-0 ma-0 mb-2"
         >
-          <v-divider />
-          <app-setting
-            :r-cols="2"
-            @click="sendCommand(filament)"
+          <v-list-item
+            :key="`toolheadWarning-${index}`"
+            :value="loadedFilament"
+            class="pa-0 my-0 mx-2"
+            @click="alertClick(loadedFilament)"
           >
-            <template #title>
-              {{ filament.name.toUpperCase() }}
-            </template>
-            {{ filament.temp }}°C
-          </app-setting>
-        </section>
-        <v-divider />
-      </div>
+            <v-list-item-content
+              class="pa-0"
+            >
+              <v-alert
+                text
+                dense
+                :icon="isLoadFilamentMacro() ? `$warning` : `$info`"
+                :type="isLoadFilamentMacro() ? `warning` : `info`"
+                class="mb-0"
+              >
+                <div class="mb-0">
+                  Filament detected in T{{ loadedFilament.id }}: {{ loadedFilament.name.toUpperCase() }} @ {{ loadedFilament.temp }}°C
+                </div>
+              </v-alert>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
 
       <app-setting
         v-if="hasParameter(toolheadParameter) && toolChangeCommands.length > 1"
@@ -51,12 +62,6 @@
         />
       </app-setting>
 
-      <div
-        v-if="!isLoadFilamentMacro()"
-        class="pl-3 pb-3 secondary--text"
-      >
-        {{ $t('app.general.title.filament_presets') }}
-      </div>
       <section
         v-for="filament in visibleFilamentPresets"
         :key="`filament-${filament.name}`"
@@ -74,7 +79,6 @@
       </section>
       <v-divider />
     </v-card>
-
     <template #actions>
       <v-spacer v-if="isMobileViewport" />
 
@@ -152,33 +156,24 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     this.dialogTitle = val
   }
 
-  isLoadFilamentMacro () {
-    if (this.filamentMacro) {
-      return ['load_filament', 'filament_load', 'm701'].includes(this.filamentMacro.name.toLowerCase())
-    }
-    return false
-  }
-
   /**
    * data
    */
   setLoadedFilaments () {
     const loadedFilaments: FilamentPreset[] = []
-    if (!this.isLoadFilamentMacro()) {
-      const toolchangeCommands = this.toolChangeCommands
-      if (toolchangeCommands && toolchangeCommands.length > 0) {
-        for (const tcc of toolchangeCommands) {
-          console.error('tcc.filament_name ' + tcc.filament_name)
-          console.error('tcc.filament_temp ' + tcc.filament_temp)
-          if (tcc.filament_name !== '' && (tcc.filament_temp ?? 0) > 0) {
-            loadedFilaments.push({
-              id: parseInt(tcc.name.substring(1)),
-              order: parseInt(tcc.name.substring(1)),
-              name: tcc.name + ' - ' + tcc.filament_name,
-              temp: tcc.filament_temp ?? 0,
-              visible: true
-            })
-          }
+    const toolchangeCommands = this.toolChangeCommands
+    if (toolchangeCommands && toolchangeCommands.length > 0) {
+      for (const tcc of toolchangeCommands) {
+        console.error('tcc.filament_name ' + tcc.filament_name)
+        console.error('tcc.filament_temp ' + tcc.filament_temp)
+        if (tcc.filament_name !== '' && (tcc.filament_temp ?? 0) > 0) {
+          loadedFilaments.push({
+            id: parseInt(tcc.name.substring(1)),
+            order: parseInt(tcc.name.substring(1)),
+            name: tcc.filament_name ?? '',
+            temp: tcc.filament_temp ?? 0,
+            visible: true
+          })
         }
       }
     }
@@ -245,9 +240,30 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     return ['m117', 'm118'].includes(this.filamentMacro!.name)
   }
 
+  isLoadFilamentMacro () {
+    if (this.filamentMacro) {
+      return ['load_filament', 'filament_load', 'm701'].includes(this.filamentMacro.name.toLowerCase())
+    }
+    return false
+  }
+
   /**
    * send the needed gcode command and close the dialog
    */
+  async alertClick (filament: FilamentPreset) {
+    if (!this.isLoadFilamentMacro()) {
+      const result = (
+        await this.$confirm(
+          'Unload ' + filament.name + ' with ' + filament.temp + '°C from Toolhead T' + filament.id + ' ?',
+          { title: this.$tc('app.general.label.confirm'), color: 'card-heading', icon: '$error' }
+        )
+      )
+      if (result) {
+        this.sendCommand(filament)
+      }
+    }
+  }
+
   sendCommand (filament: FilamentPreset) {
     this.isOpen = false
     if (this.hasParameters) {
@@ -255,9 +271,6 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
       if (this.filamentMacro) {
         const params = []
         if (this.hasParameter(this.filamentParameter)) {
-          if (filament.name.includes(' - ')) {
-            filament.name = filament.name.split(' - ')[1]
-          }
           params.push({ key: this.filamentParameter, value: filament.name })
         }
         if (this.hasParameter(this.tempParameter)) {
