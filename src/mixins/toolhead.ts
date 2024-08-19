@@ -14,6 +14,8 @@ export type ToolChangeCommand = {
   join?: number,
   runout_sensor?: string
   alert?: ToolHeadAlert
+  filament_temp?: number,
+  filament_name?: string
 }
 
 export type ToolHeadAlert = {
@@ -298,7 +300,9 @@ export default class ToolheadMixin extends Vue {
           remap: macro?.variables?.remap,
           join: macro?.variables?.join,
           runout_sensor: macro?.variables?.runout_sensor,
-          alert: alert ?? undefined
+          alert: alert ?? undefined,
+          filament_name: macro?.variables?.filament_name ?? '',
+          filament_temp: macro?.variables?.filament_temp ?? 0
         } satisfies ToolChangeCommand
       })
       .sort((a, b) => {

@@ -11,6 +11,31 @@
       dense
       class="fill-height pt-0"
     >
+      <div
+        v-if="loadedFilaments.length > 0"
+        class="mt-3 mb-6"
+      >
+        <div class="pl-3 pb-3 secondary--text">
+          {{ $t('app.general.title.loaded_filament') }}
+        </div>
+        <section
+          v-for="filament in loadedFilaments"
+          :key="`filament-${filament.name}`"
+        >
+          <v-divider />
+          <app-setting
+            :r-cols="2"
+            @click="sendCommand(filament)"
+          >
+            <template #title>
+              {{ filament.name.toUpperCase() }}
+            </template>
+            {{ filament.temp }}°C
+          </app-setting>
+        </section>
+        <v-divider />
+      </div>
+
       <app-setting
         v-if="hasParameter(toolheadParameter) && toolChangeCommands.length > 1"
         :title="$t('app.general.label.toolhead')"
@@ -25,8 +50,15 @@
           item-text="name"
         />
       </app-setting>
+
+      <div
+        v-if="!isLoadFilamentMacro()"
+        class="pl-3 pb-3 secondary--text"
+      >
+        {{ $t('app.general.title.filament_presets') }}
+      </div>
       <section
-        v-for="filament in visibleFilaments"
+        v-for="filament in visibleFilamentPresets"
         :key="`filament-${filament.name}`"
       >
         <v-divider />
@@ -86,6 +118,7 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   toolheadParameter: string = 'TOOLHEAD'
   filamentParameter: string = 'FILAMENT'
   tool: string = 'T0'
+  detectedFilaments: FilamentPreset[] = []
   filamentMacro: Macro | undefined = undefined
   loadFilamentParams: { [index: string]: { value: string | number; reset: string | number }} = {}
 
@@ -97,7 +130,7 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     if (result) {
       this.initFilamentMacro()
       if (this.filamentMacro) {
-        if (['load_filament', 'filament_load', 'm701'].includes(this.filamentMacro.name.toLowerCase())) {
+        if (this.isLoadFilamentMacro()) {
           this.title = this.$t('app.general.title.load_filament').toString()
         } else {
           this.title = this.$t('app.general.title.unload_filament').toString()
@@ -119,10 +152,48 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     this.dialogTitle = val
   }
 
+  isLoadFilamentMacro () {
+    if (this.filamentMacro) {
+      return ['load_filament', 'filament_load', 'm701'].includes(this.filamentMacro.name.toLowerCase())
+    }
+    return false
+  }
+
   /**
    * data
    */
-  get visibleFilaments () {
+  setLoadedFilaments () {
+    const loadedFilaments: FilamentPreset[] = []
+    if (!this.isLoadFilamentMacro()) {
+      const toolchangeCommands = this.toolChangeCommands
+      if (toolchangeCommands && toolchangeCommands.length > 0) {
+        for (const tcc of toolchangeCommands) {
+          console.error('tcc.filament_name ' + tcc.filament_name)
+          console.error('tcc.filament_temp ' + tcc.filament_temp)
+          if (tcc.filament_name !== '' && (tcc.filament_temp ?? 0) > 0) {
+            loadedFilaments.push({
+              id: parseInt(tcc.name.substring(1)),
+              order: parseInt(tcc.name.substring(1)),
+              name: tcc.name + ' - ' + tcc.filament_name,
+              temp: tcc.filament_temp ?? 0,
+              visible: true
+            })
+          }
+        }
+      }
+    }
+    this.loadedFilaments = loadedFilaments
+  }
+
+  get loadedFilaments () {
+    return this.detectedFilaments
+  }
+
+  set loadedFilaments (val: FilamentPreset[]) {
+    this.detectedFilaments = val
+  }
+
+  get visibleFilamentPresets () {
     const filaments = this.$store.getters['config/getFilamentPresets']
     return filaments
       .filter((filament: FilamentPreset) => filament.visible)
@@ -146,7 +217,7 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     this.selectedTool = 'T0'
     this.filamentMacro = this.$store.state.macros.filamentDialogMacro
     if (!this.filamentMacro?.config || !this.filamentMacro.config.gcode) return []
-
+    this.setLoadedFilaments()
     if (this.isMacroWithRawParam) {
       this.$set(this.loadFilamentParams, 'message', { value: '', reset: '' })
     } else {
@@ -184,6 +255,9 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
       if (this.filamentMacro) {
         const params = []
         if (this.hasParameter(this.filamentParameter)) {
+          if (filament.name.includes(' - ')) {
+            filament.name = filament.name.split(' - ')[1]
+          }
           params.push({ key: this.filamentParameter, value: filament.name })
         }
         if (this.hasParameter(this.tempParameter)) {
