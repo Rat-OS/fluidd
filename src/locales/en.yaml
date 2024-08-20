@@ -222,6 +222,7 @@ app:
       upload_print: Upload & Print
       view: View
       reset_stats: Reset Stats
+      profiles: Profiles
     error:
       app_setup_link: >-
         Fluidd setup requirements can be found <a target="_blank"
@@ -244,6 +245,7 @@ app:
       add_camera: Add Camera
       add_filter: Add Filter
       add_preset: Add Preset
+      add_filament_preset: Add Profile
       add_user: Add user
       all: All
       api_key: Api Key
@@ -269,6 +271,7 @@ app:
       edit_camera: Edit Camera
       edit_filter: Edit Filter
       edit_preset: Edit Preset
+      edit_filament_preset: Edit Profile
       edit_user: Edit user
       extrude_length: Extrude Length
       extrude_speed: Extrude Speed
@@ -475,7 +478,7 @@ app:
       loaded_filament: Loaded Filament
       load_filament: Load Filament
       unload_filament: Unload Filament
-      filament_presets: Filament Presets
+      filament_presets: Filament Profiles
     tooltip:
       browse_metrics: Browse available metrics
       estop: Emergency Stop
@@ -527,7 +530,7 @@ app:
     btn:
       add_camera: Add Camera
       add_category: Add Category
-      add_filament_preset: Add Preset
+      add_filament_preset: Add Profile
       reload_filament_presets: Refresh
       add_filter: Add Filter
       add_metric: Add Metric
@@ -693,10 +696,10 @@ app:
       file_editor: File Editor
       gcode_preview: Gcode Preview
       general: General
-      macros: Macros
+      macros: add
       theme: Theme
       thermal_presets: Thermal Presets
-      filament_presets: Filament Presets
+      filament_presets: Filament Profiles
       tool: Tool
       extruder: Extruder
     tooltip:

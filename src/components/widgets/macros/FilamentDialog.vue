@@ -90,7 +90,7 @@
         text
         @click="openSettings"
       >
-        Presets
+        {{ $t('app.general.btn.profiles') }}
       </app-btn>
 
       <v-spacer v-if="!isMobileViewport" />

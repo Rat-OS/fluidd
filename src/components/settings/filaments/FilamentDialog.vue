@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model="open"
-    :title="(preset.id != -1) ? $t('app.general.label.edit_preset') : $t('app.general.label.add_preset')"
+    :title="(preset.id != -1) ? $t('app.general.label.edit_filament_preset') : $t('app.general.label.add_filament_preset')"
     max-width="500"
     :save-button-text="(preset.id !== -1) ? $t('app.general.btn.save') : $t('app.general.btn.add')"
     @save="handleSave"
