@@ -130,7 +130,6 @@ import type { Macro } from '@/store/macros/types'
 import type { FilamentPreset } from '@/store/config/types'
 import gcodeMacroParams from '@/util/gcode-macro-params'
 import ToolheadMixin from '@/mixins/toolhead'
-import getFilePaths from '@/util/get-file-paths'
 
 @Component({})
 export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, ToolheadMixin) {
