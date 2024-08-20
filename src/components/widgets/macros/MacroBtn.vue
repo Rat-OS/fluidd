@@ -4,6 +4,7 @@
       v-if="!(macro.hideWhilePrinting && printerPrinting) && !(macro.hideWhilePaused && printerPaused) && !(macro.hideWhileStandby && printerStandby)"
       :disabled="(macro.disabledWhilePrinting && printerPrinting) || !klippyReady"
       :style="borderStyle"
+      :loading="hasWait(`${$waits.onMacro}${macro.name}`)"
       v-on="filteredListeners"
       @click="handleClick"
     >
@@ -40,7 +41,7 @@
               style="max-width: 150px;"
             >
               <v-text-field
-                v-for="(param, i) in paramList"
+                v-for="(param, i) in paramList.filter(p => !p.startsWith('_'))"
                 :key="param"
                 v-model="params[param].value"
                 :label="param"

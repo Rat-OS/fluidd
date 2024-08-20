@@ -13,6 +13,7 @@
     >
       <v-col
         v-if="loadedFilaments.length > 0"
+        cols="12"
         class="px-0 pb-0"
       >
         <v-list
@@ -48,6 +49,21 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
+      </v-col>
+      <v-col
+        v-if="!isLoadFilamentMacro() && loadedFilaments.length == 0"
+        cols="12"
+        class="pa-2 pb-1 mb-2"
+      >
+        <v-alert
+          text
+          dense
+          icon="$warning"
+          type="warning"
+          class="ma-0"
+        >
+          No Filament detected!
+        </v-alert>
       </v-col>
 
       <app-setting
@@ -124,8 +140,8 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   dialogTitle: string = this.$t('app.general.title.load_filament').toString()
   tempParameter: string = 'TEMP'
   toolheadParameter: string = 'TOOLHEAD'
-  typeParameter: string = 'TYPE'
-  nameParameter: string = 'NAME'
+  typeParameter: string = '_TYPE'
+  nameParameter: string = '_NAME'
   tool: string = 'T0'
   detectedFilaments: FilamentPreset[] = []
   filamentMacro: Macro | undefined = undefined
@@ -182,10 +198,6 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   }
 
   setLoadedFilaments () {
-    // const gcodeFilament_type = this.currentFile.filament_type?.toLowerCase()
-    //   .split(';').map((x: string) => x.replace(/"/g, ''))
-    // console.error('gcodeFilament_type ' + gcodeFilament_type)
-
     const loadedFilaments: FilamentPreset[] = []
     const toolchangeCommands = this.toolChangeCommands
     if (toolchangeCommands && toolchangeCommands.length > 0) {
@@ -300,9 +312,9 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
           .filter(param => param.key !== '' && param.value !== '')
           .map(param => `${param.key.toUpperCase()}=${param.value}`)
           .join(' ')
-        this.sendGcode(`${command} ${_params}`)
+        this.sendGcode(`${command} ${_params}`, `${this.$waits.onMacro}${this.filamentMacro!.name}`)
       } else {
-        this.sendGcode(command)
+        this.sendGcode(command, `${this.$waits.onMacro}${this.filamentMacro!.name}`)
       }
     }
   }
