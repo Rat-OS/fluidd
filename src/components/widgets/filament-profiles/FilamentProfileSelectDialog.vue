@@ -88,7 +88,7 @@
         <v-divider />
         <app-setting
           :r-cols="2"
-          @click="sendCommand(filament)"
+          @click="sendCommand(filament, '')"
         >
           <template #title>
             {{ filament.name }}
@@ -275,12 +275,12 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
         )
       )
       if (result) {
-        this.sendCommand(filament)
+        this.sendCommand(filament, filament.id.toString())
       }
     }
   }
 
-  sendCommand (filament: FilamentPreset) {
+  sendCommand (filament: FilamentPreset, toolhead: string) {
     this.isOpen = false
     if (this.hasParameters) {
       const command = this.filamentMacro!.name.toUpperCase()
@@ -296,7 +296,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
           params.push({ key: this.tempParameter, value: filament.temp })
         }
         if (this.hasParameter(this.toolheadParameter)) {
-          params.push({ key: this.toolheadParameter, value: (this.selectedTool ?? 'T0').substring(1) })
+          params.push({ key: this.toolheadParameter, value: toolhead === '' ? (this.selectedTool ?? 'T0').substring(1) : toolhead })
         }
         const _params = params
           .filter(param => param.key !== '' && param.value !== '')
