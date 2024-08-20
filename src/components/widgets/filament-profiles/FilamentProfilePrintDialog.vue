@@ -132,7 +132,7 @@ import gcodeMacroParams from '@/util/gcode-macro-params'
 import ToolheadMixin from '@/mixins/toolhead'
 
 @Component({})
-export default class FilamentProfileSelectDialog extends Mixins(StateMixin, BrowserMixin, ToolheadMixin) {
+export default class FilamentProfilePrintDialog extends Mixins(StateMixin, BrowserMixin, ToolheadMixin) {
   /**
    * Common
    */

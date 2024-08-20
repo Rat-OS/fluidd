@@ -157,8 +157,8 @@ export default class MacroBtn extends Mixins(StateMixin) {
 
   handleClick () {
     if (['load_filament', 'filament_load', 'm701', 'unload_filament', 'filament_unload', 'm702'].includes(this.macro.name.toLowerCase())) {
-      this.$store.state.macros.filamentDialogMacro = this.macro
-      this.$store.state.macros.showFilamentDialog = true
+      this.$store.state.filamentProfiles.filamentDialogMacro = this.macro
+      this.$store.state.filamentProfiles.showFilamentSelectDialog = true
     } else {
       this.$emit('click', this.macro.name.toUpperCase())
     }

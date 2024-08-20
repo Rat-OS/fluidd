@@ -123,6 +123,8 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     preset: null
   }
 
+  currentRoot = 'gcodes'
+
   get filaments () {
     return this.$store.getters['config/getFilamentPresets']
   }
@@ -130,8 +132,6 @@ export default class FilamentSettings extends Mixins(StateMixin) {
   set filaments (filaments: FilamentPreset[]) {
     this.$store.dispatch('config/saveAllFilamentPresetsOrder', filaments)
   }
-
-  currentRoot = 'gcodes'
 
   get currentPath () {
     return this.$store.getters['files/getCurrentPathByRoot'](this.currentRoot) || this.currentRoot
@@ -156,8 +156,6 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     this.currentPath = this.currentRoot
     const files: FileBrowserEntry[] = this.files
     for (let i = 0; i < files.length; i++) {
-      console.error('files[i].name ' + files[i].name)
-      // const filename = files[i].path ? `${files[i].path}/${files[i].filename}` : files[i].filename
       SocketActions.serverFilesMetadata(files[i].name)
     }
   }
