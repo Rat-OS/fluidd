@@ -94,7 +94,7 @@
         </section>
       </app-draggable>
 
-      <filament-dialog
+      <filament-profile-edit-dialog
         v-if="dialogState.active"
         v-model="dialogState.active"
         :preset="dialogState.preset"
@@ -106,7 +106,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
-import FilamentDialog from './FilamentDialog.vue'
+import FilamentProfileEditDialog from './FilamentProfileEditDialog.vue'
 import StateMixin from '@/mixins/state'
 import type { FilamentPreset } from '@/store/config/types'
 import type { AppFileWithMeta, FileBrowserEntry } from '@/store/files/types'
@@ -114,7 +114,7 @@ import { SocketActions } from '@/api/socketActions'
 
 @Component({
   components: {
-    FilamentDialog
+    FilamentProfileEditDialog
   }
 })
 export default class FilamentSettings extends Mixins(StateMixin) {

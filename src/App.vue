@@ -81,7 +81,7 @@
             (!socketConnected && authenticated)"
       />
 
-      <filament-dialog />
+      <filament-profile-select-dialog />
       <file-system-download-dialog />
       <updating-dialog />
       <spool-selection-dialog />
@@ -108,7 +108,7 @@ import BrowserMixin from '@/mixins/browser'
 import type { LinkPropertyHref, MetaPropertyName } from 'vue-meta'
 import FileSystemDownloadDialog from '@/components/widgets/filesystem/FileSystemDownloadDialog.vue'
 import SpoolSelectionDialog from '@/components/widgets/spoolman/SpoolSelectionDialog.vue'
-import FilamentDialog from '@/components/widgets/macros/FilamentDialog.vue'
+import FilamentProfileSelectDialog from '@/components/widgets/filament-profiles/FilamentProfileSelectDialog.vue'
 import type { FlashMessage } from '@/types'
 import { getFilesFromDataTransfer, hasFilesInDataTransfer } from './util/file-system-entry'
 import type { ThemeConfig } from '@/store/config/types'
@@ -129,7 +129,7 @@ import { eventTargetIsContentEditable, keyboardEventToKeyboardShortcut } from '.
     FileSystemDownloadDialog,
     ActionCommandPromptDialog,
     KeyboardShortcutsDialog,
-    FilamentDialog
+    FilamentProfileSelectDialog
   }
 })
 export default class App extends Mixins(StateMixin, FilesMixin, BrowserMixin) {

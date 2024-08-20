@@ -20,7 +20,7 @@
         <toolhead-settings />
         <extruder-settings />
         <preset-settings />
-        <filament-settings />
+        <filament-profiles-settings />
         <gcode-preview-settings />
         <timelapse-settings v-if="supportsTimelapse" />
         <spoolman-settings v-if="supportsSpoolman" />
@@ -37,7 +37,7 @@ import StateMixin from '@/mixins/state'
 import MacroSettings from '@/components/settings/macros/MacroSettings.vue'
 import GeneralSettings from '@/components/settings/GeneralSettings.vue'
 import PresetSettings from '@/components/settings/presets/PresetSettings.vue'
-import FilamentSettings from '@/components/settings/filaments/FilamentSettings.vue'
+import FilamentProfilesSettings from '@/components/settings/filament-profiles/FilamentProfilesSettings.vue'
 import CameraSettings from '@/components/settings/cameras/CameraSettings.vue'
 import ToolheadSettings from '@/components/settings/ToolheadSettings.vue'
 import ExtruderSettings from '@/components/settings/ExtruderSettings.vue'
@@ -58,7 +58,7 @@ import SpoolmanSettings from '@/components/settings/SpoolmanSettings.vue'
     MacroSettings,
     GeneralSettings,
     PresetSettings,
-    FilamentSettings,
+    FilamentProfilesSettings,
     CameraSettings,
     ToolheadSettings,
     ExtruderSettings,

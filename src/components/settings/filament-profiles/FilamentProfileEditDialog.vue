@@ -62,7 +62,7 @@ import { Component, Vue, Prop, VModel } from 'vue-property-decorator'
 import type { FilamentPreset } from '@/store/config/types'
 
 @Component({})
-export default class FilamentDialog extends Vue {
+export default class FilamentProfileEditDialog extends Vue {
   @VModel({ type: Boolean })
     open?: boolean
 
