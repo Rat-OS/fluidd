@@ -38,8 +38,11 @@
                 :type="isLoadFilamentMacro() ? `warning` : `info`"
                 class="mb-0"
               >
-                <div class="mb-0">
-                  Filament detected in T{{ loadedFilament.id }}: {{ loadedFilament.name.toUpperCase() }} @ {{ loadedFilament.temp }}°C
+                <div class="mb-1">
+                  Filament detected in T{{ loadedFilament.id }}
+                </div>
+                <div>
+                  <span style="font-size: 14px;">{{ loadedFilament.name }} - {{ loadedFilament.temp }}°C</span>
                 </div>
               </v-alert>
             </v-list-item-content>
@@ -72,7 +75,7 @@
           @click="sendCommand(filament)"
         >
           <template #title>
-            {{ filament.name.toUpperCase() }}
+            {{ filament.name }}
           </template>
           {{ filament.temp }}°C
         </app-setting>
@@ -111,6 +114,7 @@ import type { Macro } from '@/store/macros/types'
 import type { FilamentPreset } from '@/store/config/types'
 import gcodeMacroParams from '@/util/gcode-macro-params'
 import ToolheadMixin from '@/mixins/toolhead'
+import getFilePaths from '@/util/get-file-paths'
 
 @Component({})
 export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, ToolheadMixin) {
@@ -120,7 +124,8 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   dialogTitle: string = this.$t('app.general.title.load_filament').toString()
   tempParameter: string = 'TEMP'
   toolheadParameter: string = 'TOOLHEAD'
-  filamentParameter: string = 'FILAMENT'
+  typeParameter: string = 'TYPE'
+  nameParameter: string = 'NAME'
   tool: string = 'T0'
   detectedFilaments: FilamentPreset[] = []
   filamentMacro: Macro | undefined = undefined
@@ -156,20 +161,40 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     this.dialogTitle = val
   }
 
+  get selectedTool (): string {
+    return this.tool
+  }
+
+  set selectedTool (value: string) {
+    this.tool = value
+  }
+
   /**
    * data
    */
+  get currentFileName () {
+    return this.$store.state.printer.printer.print_stats.filename
+  }
+
+  get currentFile () {
+    const { filename, rootPath } = getFilePaths(this.currentFileName, 'gcodes')
+    return this.$store.getters['files/getFile'](rootPath, filename)
+  }
+
   setLoadedFilaments () {
+    // const gcodeFilament_type = this.currentFile.filament_type?.toLowerCase()
+    //   .split(';').map((x: string) => x.replace(/"/g, ''))
+    // console.error('gcodeFilament_type ' + gcodeFilament_type)
+
     const loadedFilaments: FilamentPreset[] = []
     const toolchangeCommands = this.toolChangeCommands
     if (toolchangeCommands && toolchangeCommands.length > 0) {
       for (const tcc of toolchangeCommands) {
-        console.error('tcc.filament_name ' + tcc.filament_name)
-        console.error('tcc.filament_temp ' + tcc.filament_temp)
-        if (tcc.filament_name !== '' && (tcc.filament_temp ?? 0) > 0) {
+        if (tcc.filament_name !== '' && tcc.filament_type !== '' && (tcc.filament_temp ?? 0) > 0) {
           loadedFilaments.push({
             id: parseInt(tcc.name.substring(1)),
             order: parseInt(tcc.name.substring(1)),
+            type: tcc.filament_type ?? '',
             name: tcc.filament_name ?? '',
             temp: tcc.filament_temp ?? 0,
             visible: true
@@ -192,17 +217,6 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     const filaments = this.$store.getters['config/getFilamentPresets']
     return filaments
       .filter((filament: FilamentPreset) => filament.visible)
-  }
-
-  /**
-   * toolheads
-   */
-  get selectedTool (): string {
-    return this.tool
-  }
-
-  set selectedTool (value: string) {
-    this.tool = value
   }
 
   /**
@@ -248,13 +262,13 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   }
 
   /**
-   * send the needed gcode command and close the dialog
+   * actions
    */
   async alertClick (filament: FilamentPreset) {
     if (!this.isLoadFilamentMacro()) {
       const result = (
         await this.$confirm(
-          'Unload ' + filament.name + ' with ' + filament.temp + '°C from Toolhead T' + filament.id + ' ?',
+          'Unload ' + filament.name + ' with ' + filament.temp + '°C from T' + filament.id + ' ?',
           { title: this.$tc('app.general.label.confirm'), color: 'card-heading', icon: '$error' }
         )
       )
@@ -270,8 +284,11 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
       const command = this.filamentMacro!.name.toUpperCase()
       if (this.filamentMacro) {
         const params = []
-        if (this.hasParameter(this.filamentParameter)) {
-          params.push({ key: this.filamentParameter, value: filament.name })
+        if (this.hasParameter(this.nameParameter)) {
+          params.push({ key: this.nameParameter, value: `'"${filament.name}"'` })
+        }
+        if (this.hasParameter(this.typeParameter)) {
+          params.push({ key: this.typeParameter, value: `'"${filament.type}"'` })
         }
         if (this.hasParameter(this.tempParameter)) {
           params.push({ key: this.tempParameter, value: filament.temp })
@@ -290,9 +307,6 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
     }
   }
 
-  /**
-   * navigate to the filament presets settings
-   */
   openSettings () {
     this.isOpen = false
     this.$router.push('/settings/#filaments')

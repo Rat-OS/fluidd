@@ -329,7 +329,7 @@ export default class FileSystem extends Mixins(StateMixin, FilesMixin, ServicesM
         { text: this.$t('app.general.table.header.filament_used'), value: 'history.filament_used', configurable: true },
         { text: this.$t('app.general.table.header.nozzle_diameter'), value: 'nozzle_diameter', configurable: true },
         { text: this.$t('app.general.table.header.slicer'), value: 'slicer', configurable: true },
-        { text: this.$t('app.general.table.header.slicer_version'), value: 'slicer_version', configurable: true },
+        { text: this.$t('app.general.table.header.slicer_version'), value: '', configurable: true },
         { text: this.$t('app.general.table.header.estimated_time'), value: 'estimated_time', configurable: true },
         { text: this.$t('app.general.table.header.print_duration'), value: 'history.print_duration', configurable: true },
         { text: this.$t('app.general.table.header.total_duration'), value: 'history.total_duration', configurable: true },

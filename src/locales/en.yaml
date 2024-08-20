@@ -528,6 +528,7 @@ app:
       add_camera: Add Camera
       add_category: Add Category
       add_filament_preset: Add Preset
+      reload_filament_presets: Refresh
       add_filter: Add Filter
       add_metric: Add Metric
       add_thermal_preset: Add Preset
@@ -656,7 +657,8 @@ app:
       theme_preset: Community preset
       thermal_preset_gcode: GCode
       thermal_preset_name: Preset Name
-      filament_preset_name: Preset Name
+      filament_preset_type: Slicer Filament Type
+      filament_preset_name: Slicer Profile Name
       filament_preset_temp: Temperature
       title: Title
       to_browser_local_storage: To browser local storage

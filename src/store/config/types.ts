@@ -208,6 +208,7 @@ export interface InstanceConfig extends ApiConfig {
 export interface FilamentPreset {
   id: number;
   order: number;
+  type: string;
   name: string;
   temp: number;
   visible: boolean;

@@ -13,6 +13,21 @@
           outlined
           small
           color="primary"
+          class="mr-3"
+          @click="handleReload"
+        >
+          <v-icon
+            small
+            left
+          >
+            $reset
+          </v-icon>
+          {{ $t('app.setting.btn.reload_filament_presets') }}
+        </app-btn>
+        <app-btn
+          outlined
+          small
+          color="primary"
           @click="openAddDialog"
         >
           <v-icon
@@ -50,16 +65,16 @@
               >
                 $drag
               </v-icon>
-
-              {{ filament.name.toUpperCase() }} - {{ filament.temp }}°C
+              {{ filament.name }}
             </template>
 
+            {{ filament.temp }}°C
             <app-btn
               fab
               text
               x-small
               color=""
-              class="mr-3"
+              class="mr-3 ml-3"
               @click.stop="handleRemovePreset(filament)"
             >
               <v-icon color="">
@@ -94,6 +109,8 @@ import { Component, Mixins } from 'vue-property-decorator'
 import FilamentDialog from './FilamentDialog.vue'
 import StateMixin from '@/mixins/state'
 import type { FilamentPreset } from '@/store/config/types'
+import type { AppFileWithMeta, FileBrowserEntry } from '@/store/files/types'
+import { SocketActions } from '@/api/socketActions'
 
 @Component({
   components: {
@@ -114,9 +131,47 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     this.$store.dispatch('config/saveAllFilamentPresetsOrder', filaments)
   }
 
+  currentRoot = 'gcodes'
+
+  get currentPath () {
+    return this.$store.getters['files/getCurrentPathByRoot'](this.currentRoot) || this.currentRoot
+  }
+
+  set currentPath (path: string) {
+    this.$store.dispatch('files/updateCurrentPathByRoot', { root: this.currentRoot, path })
+  }
+
+  getAllFiles () {
+    const items = this.$store.getters['files/getDirectory'](this.currentPath) as FileBrowserEntry[] | undefined
+    console.error('items ' + items)
+    return items ?? []
+  }
+
+  get files (): FileBrowserEntry[] {
+    const files = this.getAllFiles()
+    return files
+  }
+
+  handleReload () {
+    this.currentPath = this.currentRoot
+    const files: FileBrowserEntry[] = this.files
+    for (let i = 0; i < files.length; i++) {
+      console.error('files[i].name ' + files[i].name)
+      // const filename = files[i].path ? `${files[i].path}/${files[i].filename}` : files[i].filename
+      SocketActions.serverFilesMetadata(files[i].name)
+    }
+  }
+
+  handleRefreshMetadata (file: AppFileWithMeta) {
+    const filename = file.path ? `${file.path}/${file.filename}` : file.filename
+
+    SocketActions.serverFilesMetadata(filename)
+  }
+
   openAddDialog () {
     const preset: any = {
       id: -1,
+      type: '',
       name: '',
       temp: 0,
       visible: true

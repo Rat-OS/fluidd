@@ -146,6 +146,11 @@ export const actions: ActionTree<ConfigState, RootState> = {
   /**
    * Add or update a given filament preset
    */
+  async addFilamentPresetFromMetaData ({ commit, state }, payload) {
+    commit('setFilamentPresetFromMetaData', payload)
+    SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)
+  },
+
   async updateFilamentPreset ({ commit, state }, payload) {
     commit('setFilamentPreset', payload)
     SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)

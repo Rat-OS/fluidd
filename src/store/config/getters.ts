@@ -73,11 +73,12 @@ export const getters: GetterTree<ConfigState, RootState> = {
   getFilamentPresets: (state) => {
     const filaments = state.uiSettings.dashboard.filamentPresets
       .map(filament => {
-        const { id, order, name, temp, visible } = filament
+        const { id, order, type, name, temp, visible } = filament
 
         return {
           id,
           order,
+          type,
           name,
           temp,
           visible

@@ -7,6 +7,21 @@
     @save="handleSave"
   >
     <v-card-text class="pa-0">
+      <app-setting :title="$t('app.setting.label.filament_preset_type')">
+        <v-text-field
+          v-model="preset.type"
+          :rules="[
+            $rules.required
+          ]"
+          hide-details="auto"
+          filled
+          dense
+          @focus="$event.target.select()"
+        />
+      </app-setting>
+
+      <v-divider />
+
       <app-setting :title="$t('app.setting.label.filament_preset_name')">
         <v-text-field
           v-model="preset.name"
