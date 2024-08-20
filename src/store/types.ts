@@ -21,7 +21,6 @@ import type { WaitState } from './wait/types'
 import type { WebcamsState } from './webcams/types'
 import type { JobQueueState } from './jobQueue/types'
 import type { SpoolmanState } from './spoolman/types'
-import type { FilamentProfilesState } from './filament-profiles/types'
 import type { MoonrakerSensorsState } from './sensors/types'
 
 export interface RootState {
@@ -48,6 +47,5 @@ export interface RootState {
   webcams: WebcamsState;
   jobQueue: JobQueueState;
   spoolman: SpoolmanState;
-  filamentProfiles: FilamentProfilesState;
   sensors: MoonrakerSensorsState;
 }

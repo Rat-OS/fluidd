@@ -150,7 +150,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    * dialog state
    */
   get isOpen () {
-    const result = this.klippyReady && this.$store.state.filamentProfiles.showFilamentSelectDialog
+    const result = this.klippyReady && this.$store.state.macros.showFilamentDialog
     if (result) {
       this.initFilamentMacro()
       if (this.filamentMacro) {
@@ -165,7 +165,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
   }
 
   set isOpen (val: boolean) {
-    this.$store.state.filamentProfiles.showFilamentSelectDialog = val
+    this.$store.state.macros.showFilamentDialog = val
   }
 
   get title () {
@@ -226,7 +226,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    */
   initFilamentMacro () {
     this.selectedTool = 'T0'
-    this.filamentMacro = this.$store.state.filamentProfiles.filamentDialogMacro
+    this.filamentMacro = this.$store.state.macros.filamentDialogMacro
     if (!this.filamentMacro?.config || !this.filamentMacro.config.gcode) return []
     this.setLoadedFilaments()
     if (this.isMacroWithRawParam) {
