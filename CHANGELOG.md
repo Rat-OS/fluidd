@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0-11](https://github.com/Rat-OS/fluidd/compare/v1.31.0-10...v1.31.0-11) (2024-08-20)
+
+
+### Features
+
+* hides macro parameters starting with "_" ([#1485](https://github.com/Rat-OS/fluidd/issues/1485)) ([872e9d8](https://github.com/Rat-OS/fluidd/commit/872e9d8455cdb82d3e522d61fd6a95e6a8c457b7))
+
+
+### Bug Fixes
+
+* null check cards on layout init ([#1484](https://github.com/Rat-OS/fluidd/issues/1484)) ([3f1d22e](https://github.com/Rat-OS/fluidd/commit/3f1d22ea0e48aa0809461171da2f340c2417382a))
+
 ## [1.31.0-10](https://github.com/Rat-OS/fluidd/compare/v1.31.0-9...v1.31.0-10) (2024-08-19)
 
 ## [1.31.0-9](https://github.com/Rat-OS/fluidd/compare/v1.31.0-8...v1.31.0-9) (2024-08-19)
