@@ -188,15 +188,6 @@ export default class FilamentDialog extends Mixins(StateMixin, BrowserMixin, Too
   /**
    * data
    */
-  get currentFileName () {
-    return this.$store.state.printer.printer.print_stats.filename
-  }
-
-  get currentFile () {
-    const { filename, rootPath } = getFilePaths(this.currentFileName, 'gcodes')
-    return this.$store.getters['files/getFile'](rootPath, filename)
-  }
-
   setLoadedFilaments () {
     const loadedFilaments: FilamentPreset[] = []
     const toolchangeCommands = this.toolChangeCommands
