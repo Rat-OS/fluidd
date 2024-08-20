@@ -41,7 +41,7 @@
               style="max-width: 150px;"
             >
               <v-text-field
-                v-for="(param, i) in paramList.filter(p => !p.startsWith('_'))"
+                v-for="(param, i) in paramList"
                 :key="param"
                 v-model="params[param].value"
                 :label="param"
