@@ -101,6 +101,7 @@ export default class MacroBtn extends Mixins(StateMixin) {
   @Prop({ type: Object, required: true })
   readonly category!: MacroCategory
 
+  tempParameter: string = 'TEMP'
   params: { [index: string]: { value: string | number; reset: string | number }} = {}
 
   get isMacroWithRawParam () {
@@ -156,7 +157,7 @@ export default class MacroBtn extends Mixins(StateMixin) {
   }
 
   handleClick () {
-    if (['load_filament', 'filament_load', 'm701', 'unload_filament', 'filament_unload', 'm702'].includes(this.macro.name.toLowerCase())) {
+    if (['load_filament', 'filament_load', 'm701', 'unload_filament', 'filament_unload', 'm702'].includes(this.macro.name.toLowerCase()) && this.paramList.includes(this.tempParameter)) {
       this.$store.commit('filamentProfiles/setFilamentSelectDialogState', {
         show: true,
         macro: this.macro
