@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 import type { MutationTree } from 'vuex'
 import { defaultState } from './state'
 import type {
-  FilamentProfilesState
+  FilamentProfilesState,
+  FilamentSelectDialogState
 } from '@/store/filament-profiles/types'
 
 export const mutations: MutationTree<FilamentProfilesState> = {
@@ -20,6 +21,10 @@ export const mutations: MutationTree<FilamentProfilesState> = {
       if (typeof payload.filamentProfiles[0] === 'string') payload.filamentProfiles = []
     }
     if (payload) Object.assign(state, payload)
+  },
+
+  setFilamentSelectDialogState (state, payload: FilamentSelectDialogState) {
+    state.filamentSelectDialogState = payload
   },
 
   /**

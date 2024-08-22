@@ -1,9 +1,13 @@
 import type { Macro } from '@/store/macros/types'
 
 export interface FilamentProfilesState {
-  showFilamentDialog: boolean;
-  filamentDialogMacro?: Macro;
   filamentProfiles: FilamentProfile[];
+  filamentSelectDialogState?: FilamentSelectDialogState;
+}
+
+export interface FilamentSelectDialogState {
+  show: boolean;
+  macro?: Macro;
 }
 
 export interface FilamentProfile {
