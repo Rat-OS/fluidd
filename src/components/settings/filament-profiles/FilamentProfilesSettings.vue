@@ -110,7 +110,7 @@ import FilamentProfileEditDialog from './FilamentProfileEditDialog.vue'
 import StateMixin from '@/mixins/state'
 import type { FilamentProfile } from '@/store/filament-profiles/types'
 import type { FileBrowserEntry, KlipperFileMeta } from '@/store/files/types'
-import { SocketActions } from '@/api/socketActions'
+// import { SocketActions } from '@/api/socketActions'
 
 @Component({
   components: {
