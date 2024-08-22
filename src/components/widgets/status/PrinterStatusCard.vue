@@ -76,6 +76,7 @@ import StatusControls from './StatusControls.vue'
 import StatusTab from './StatusTab.vue'
 import ReprintTab from './ReprintTab.vue'
 import type { TimeEstimates } from '@/store/printer/types'
+import type { KlipperFileMeta } from '@/store/files/types'
 
 @Component({
   components: {
@@ -122,9 +123,23 @@ export default class PrinterStatusCard extends Mixins(StateMixin) {
   init (filename: string) {
     if (filename !== '') {
       this.tab = 0
+      const metaData = this.getFileMetaData(filename)
+      if (metaData) {
+        this.$store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', {
+          type: metaData.filament_type,
+          name: metaData.filament_name,
+          temp: metaData.first_layer_extr_temp,
+          visible: true
+        })
+      }
     } else {
       this.tab = 1
     }
+  }
+
+  getFileMetaData (filename: string) {
+    const file = this.$store.getters['files/getFile']('gcodes', filename) as KlipperFileMeta
+    return file ?? undefined
   }
 
   handlePrint (filename: string) {
