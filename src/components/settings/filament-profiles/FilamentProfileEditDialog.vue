@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, VModel } from 'vue-property-decorator'
-import type { FilamentPreset } from '@/store/config/types'
+import type { FilamentProfile } from '@/store/filament-profiles/types'
 
 @Component({})
 export default class FilamentProfileEditDialog extends Vue {
@@ -67,7 +67,7 @@ export default class FilamentProfileEditDialog extends Vue {
     open?: boolean
 
   @Prop({ type: Object, required: true })
-  readonly preset!: FilamentPreset
+  readonly preset!: FilamentProfile
 
   handleSave () {
     this.$emit('save', this.preset)

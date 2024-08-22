@@ -29,6 +29,7 @@ import { webcams } from './webcams'
 import { jobQueue } from './jobQueue'
 import { spoolman } from './spoolman'
 import { sensors } from './sensors'
+import { filamentProfiles } from './filament-profiles'
 
 Vue.use(Vuex)
 
@@ -58,7 +59,8 @@ export default new Vuex.Store<RootState>({
     webcams,
     jobQueue,
     spoolman,
-    sensors
+    sensors,
+    filamentProfiles
   },
   mutations: {},
   actions: {

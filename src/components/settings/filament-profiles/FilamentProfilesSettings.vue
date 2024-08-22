@@ -108,7 +108,7 @@
 import { Component, Mixins } from 'vue-property-decorator'
 import FilamentProfileEditDialog from './FilamentProfileEditDialog.vue'
 import StateMixin from '@/mixins/state'
-import type { FilamentPreset } from '@/store/config/types'
+import type { FilamentProfile } from '@/store/filament-profiles/types'
 import type { AppFileWithMeta, FileBrowserEntry } from '@/store/files/types'
 import { SocketActions } from '@/api/socketActions'
 
@@ -124,11 +124,11 @@ export default class FilamentSettings extends Mixins(StateMixin) {
   }
 
   get filaments () {
-    return this.$store.getters['config/getFilamentPresets']
+    return this.$store.getters['filamentProfiles/getFilamentProfiles']
   }
 
-  set filaments (filaments: FilamentPreset[]) {
-    this.$store.dispatch('config/saveAllFilamentPresetsOrder', filaments)
+  set filaments (filaments: FilamentProfile[]) {
+    this.$store.dispatch('filamentProfiles/saveAllFilamentProfilesOrder', filaments)
   }
 
   currentRoot = 'gcodes'
@@ -182,26 +182,26 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     }
   }
 
-  openEditDialog (preset: FilamentPreset) {
+  openEditDialog (preset: FilamentProfile) {
     this.dialogState = {
       active: true,
       preset
     }
   }
 
-  handleRemovePreset (filament: FilamentPreset) {
-    this.$store.dispatch('config/removeFilamentPreset', filament)
+  handleRemovePreset (filament: FilamentProfile) {
+    this.$store.dispatch('filamentProfiles/removeFilamentProfile', filament)
   }
 
-  handleSavePreset (preset: FilamentPreset) {
-    this.$store.dispatch('config/updateFilamentPreset', preset)
+  handleSavePreset (preset: FilamentProfile) {
+    this.$store.dispatch('filamentProfiles/updateFilamentProfile', preset)
   }
 
-  handlePresetVisible (preset: FilamentPreset, value: boolean) {
+  handlePresetVisible (preset: FilamentProfile, value: boolean) {
     const newPreset = {
       ...preset, visible: value
     }
-    this.$store.dispatch('config/updateFilamentPreset', newPreset)
+    this.$store.dispatch('filamentProfiles/updateFilamentProfile', newPreset)
   }
 }
 </script>

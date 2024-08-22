@@ -1,6 +1,6 @@
 import vuetify from '@/plugins/vuetify'
 import type { ActionTree } from 'vuex'
-import type { ConfigState, SaveByPath, InitConfig, InstanceConfig, UiSettings, ThemeConfig, FilamentPreset } from './types'
+import type { ConfigState, SaveByPath, InitConfig, InstanceConfig, UiSettings, ThemeConfig } from './types'
 import type { RootState } from '../types'
 import { SocketActions } from '@/api/socketActions'
 import { loadLocaleMessagesAsync, getStartingLocale } from '@/plugins/i18n'
@@ -141,40 +141,6 @@ export const actions: ActionTree<ConfigState, RootState> = {
     if (config.server) {
       SocketActions.serverWrite(config.path, config.value)
     }
-  },
-
-  /**
-   * Add or update a given filament preset
-   */
-  async addFilamentPresetFromMetaData ({ commit, state }, payload) {
-    commit('setFilamentPresetFromMetaData', payload)
-    SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)
-  },
-
-  async updateFilamentPreset ({ commit, state }, payload) {
-    commit('setFilamentPreset', payload)
-    SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)
-  },
-
-  saveAllFilamentPresetsOrder ({ state, commit }, payload: FilamentPreset[]) {
-    // Commit the change...
-    payload.forEach((filament, index) => {
-      commit('setFilamentPreset', {
-        ...filament,
-        order: index
-      })
-    })
-
-    // Save to moonraker.
-    SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)
-  },
-
-  /**
-   * Remove a filament preset
-   */
-  async removeFilamentPreset ({ commit, state }, payload) {
-    commit('setRemoveFilamentPreset', payload)
-    SocketActions.serverWrite('uiSettings.dashboard.filamentPresets', state.uiSettings.dashboard.filamentPresets)
   },
 
   /**

@@ -82,7 +82,7 @@
       </app-setting>
 
       <section
-        v-for="filament in visibleFilamentPresets"
+        v-for="filament in visibleFilamentProfiles"
         :key="`filament-${filament.name}`"
       >
         <v-divider />
@@ -127,7 +127,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
 import BrowserMixin from '@/mixins/browser'
 import type { Macro } from '@/store/macros/types'
-import type { FilamentPreset } from '@/store/config/types'
+import type { FilamentProfile } from '@/store/filament-profiles/types'
 import gcodeMacroParams from '@/util/gcode-macro-params'
 import ToolheadMixin from '@/mixins/toolhead'
 
@@ -142,7 +142,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
   typeParameter: string = '_TYPE'
   nameParameter: string = '_NAME'
   tool: string = 'T0'
-  detectedFilaments: FilamentPreset[] = []
+  detectedFilaments: FilamentProfile[] = []
   filamentMacro: Macro | undefined = undefined
   loadFilamentParams: { [index: string]: { value: string | number; reset: string | number }} = {}
 
@@ -150,7 +150,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    * dialog state
    */
   get isOpen () {
-    const result = this.klippyReady && this.$store.state.macros.showFilamentDialog
+    const result = this.klippyReady && this.$store.state.filamentProfiles.showFilamentDialog
     if (result) {
       this.initFilamentMacro()
       if (this.filamentMacro) {
@@ -165,7 +165,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
   }
 
   set isOpen (val: boolean) {
-    this.$store.state.macros.showFilamentDialog = val
+    this.$store.state.filamentProfiles.showFilamentDialog = val
   }
 
   get title () {
@@ -188,7 +188,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    * data
    */
   setLoadedFilaments () {
-    const loadedFilaments: FilamentPreset[] = []
+    const loadedFilaments: FilamentProfile[] = []
     const toolchangeCommands = this.toolChangeCommands
     if (toolchangeCommands && toolchangeCommands.length > 0) {
       for (const tcc of toolchangeCommands) {
@@ -211,14 +211,14 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
     return this.detectedFilaments
   }
 
-  set loadedFilaments (val: FilamentPreset[]) {
+  set loadedFilaments (val: FilamentProfile[]) {
     this.detectedFilaments = val
   }
 
-  get visibleFilamentPresets () {
-    const filaments = this.$store.getters['config/getFilamentPresets']
+  get visibleFilamentProfiles () {
+    const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
     return filaments
-      .filter((filament: FilamentPreset) => filament.visible)
+      .filter((filament: FilamentProfile) => filament.visible)
   }
 
   /**
@@ -226,7 +226,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    */
   initFilamentMacro () {
     this.selectedTool = 'T0'
-    this.filamentMacro = this.$store.state.macros.filamentDialogMacro
+    this.filamentMacro = this.$store.state.filamentProfiles.filamentDialogMacro
     if (!this.filamentMacro?.config || !this.filamentMacro.config.gcode) return []
     this.setLoadedFilaments()
     if (this.isMacroWithRawParam) {
@@ -266,7 +266,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
   /**
    * actions
    */
-  async alertClick (filament: FilamentPreset) {
+  async alertClick (filament: FilamentProfile) {
     if (!this.isLoadFilamentMacro()) {
       const result = (
         await this.$confirm(
@@ -280,7 +280,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
     }
   }
 
-  sendCommand (filament: FilamentPreset, toolhead: string) {
+  sendCommand (filament: FilamentProfile, toolhead: string) {
     this.isOpen = false
     if (this.hasParameters) {
       const command = this.filamentMacro!.name.toUpperCase()

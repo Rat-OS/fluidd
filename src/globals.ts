@@ -199,7 +199,8 @@ export const Globals = Object.freeze({
         charts: { name: 'charts', dispatch: 'charts/initCharts' },
         cameras: { name: 'cameras', dispatch: 'webcams/initLegacyCameras', migrate_only: true },
         webcams: { name: 'webcams', dispatch: 'webcams/initWebcams' },
-        layout: { name: 'layout', dispatch: 'layout/initLayout' }
+        layout: { name: 'layout', dispatch: 'layout/initLayout' },
+        filamentProfiles: { name: 'filamentProfiles', dispatch: 'filamentProfiles/initFilamentProfiles' }
       }
     },
     webcams: {

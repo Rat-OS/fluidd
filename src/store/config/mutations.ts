@@ -133,62 +133,6 @@ export const mutations: MutationTree<ConfigState> = {
   },
 
   /**
-   * Update / Add a filament preset
-   */
-  setFilamentPreset (state, payload) {
-    if (payload.id === -1) {
-      payload.id = uuidv4()
-      state.uiSettings.dashboard.filamentPresets.push(payload)
-    } else {
-      const i = state.uiSettings.dashboard.filamentPresets.findIndex(preset => preset.id === payload.id)
-      if (i >= 0) {
-        Vue.set(state.uiSettings.dashboard.filamentPresets, i, {
-          id: payload.id,
-          order: payload.order,
-          type: payload.type,
-          name: payload.name,
-          temp: payload.temp,
-          visible: payload.visible
-        })
-      }
-    }
-  },
-
-  setFilamentPresetFromMetaData (state, payload) {
-    if (payload.name.includes('";"')) {
-      const names: string[] = payload.name.split(';')
-      const types: string[] = payload.type.split(';')
-      for (let i = 0; i < names.length; i++) {
-        const preset = state.uiSettings.dashboard.filamentPresets.find(preset => preset.name === names[i].replace(/"/g, ''))
-        if (!preset) {
-          const filamentPreset: any = {
-            id: uuidv4(),
-            type: types[i].replace(/"/g, ''),
-            name: names[i].replace(/"/g, ''),
-            temp: payload.temp,
-            visible: true
-          }
-          state.uiSettings.dashboard.filamentPresets.push(filamentPreset)
-        }
-      }
-    } else {
-      const preset = state.uiSettings.dashboard.filamentPresets.find(preset => preset.name === payload.name)
-      if (!preset) {
-        payload.id = uuidv4()
-        state.uiSettings.dashboard.filamentPresets.push(payload)
-      }
-    }
-  },
-
-  /**
-   * Remove a filament preset
-   */
-  setRemoveFilamentPreset (state, payload) {
-    const i = state.uiSettings.dashboard.filamentPresets.findIndex(preset => preset.id === payload.id)
-    state.uiSettings.dashboard.filamentPresets.splice(i, 1)
-  },
-
-  /**
    * Update / Add a temperature preset
    */
   setPreset (state, payload) {

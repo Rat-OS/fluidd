@@ -45,14 +45,13 @@ export const actions: ActionTree<FilesState, RootState> = {
 
     const metaData: KlipperFileWithMeta = payload
     if (metaData.filament_type && metaData.filament_name && metaData.first_layer_extr_temp) {
-      const filamentPreset: any = {
+      const filamentProfile: any = {
         type: metaData.filament_type,
         name: metaData.filament_name,
         temp: metaData.first_layer_extr_temp,
         visible: true
       }
-      store.dispatch('config/addFilamentPresetFromMetaData', filamentPreset)
-      // dispatch('config/addFilamentPresetFromMetaData', filamentPreset)
+      store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', filamentProfile)
     }
 
     if (!paths.filtered) {
