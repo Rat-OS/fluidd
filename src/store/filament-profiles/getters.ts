@@ -1,9 +1,9 @@
 import type { GetterTree } from 'vuex'
 import type { FilamentProfile, FilamentProfilesState } from './types'
 import type { RootState } from '../types'
-import type { FileBrowserEntry } from '../files/types'
-import { SocketActions } from '@/api/socketActions'
-import files from '..'
+// import type { FileBrowserEntry } from '../files/types'
+// import { SocketActions } from '@/api/socketActions'
+// import files from '..'
 
 export const getters: GetterTree<FilamentProfilesState, RootState> = {
   getHasFilamentProfiles: (state, getters) => {
@@ -13,15 +13,15 @@ export const getters: GetterTree<FilamentProfilesState, RootState> = {
 
   getFilamentProfiles: (state) => {
     const allFilamentProfiles = state.filamentProfiles
-    if (!allFilamentProfiles || allFilamentProfiles.length === 0) {
-      const gcodeFiles = files.getters['files/getDirectory']('gcodes') as FileBrowserEntry[] | undefined
-      if (gcodeFiles && gcodeFiles.length > 0) {
-        for (let i = 0; i < gcodeFiles.length; i++) {
-          SocketActions.serverFilesMetadata(gcodeFiles[i].name)
-        }
-      }
-      SocketActions.serverWrite('filamentProfiles', state.filamentProfiles)
-    }
+    // if (!allFilamentProfiles || allFilamentProfiles.length === 0) {
+    //   const gcodeFiles = files.getters['files/getDirectory']('gcodes') as FileBrowserEntry[] | undefined
+    //   if (gcodeFiles && gcodeFiles.length > 0) {
+    //     for (let i = 0; i < gcodeFiles.length; i++) {
+    //       SocketActions.serverFilesMetadata(gcodeFiles[i].name)
+    //     }
+    //   }
+    //   SocketActions.serverWrite('filamentProfiles', state.filamentProfiles)
+    // }
     const filaments = allFilamentProfiles
       .map(filament => {
         const { id, order, type, name, temp, visible } = filament
