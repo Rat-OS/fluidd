@@ -34,7 +34,7 @@ import StateMixin from '@/mixins/state'
 import BrowserMixin from '@/mixins/browser'
 import ToolheadMixin from '@/mixins/toolhead'
 import type { FilamentPrintDialogState, FilamentProfile } from '@/store/filament-profiles/types'
-import type { KlipperFileMeta } from '@/store/files/types'
+import type { FileBrowserEntry, KlipperFileMeta } from '@/store/files/types'
 import { SocketActions } from '@/api/socketActions'
 
 @Component({})
@@ -42,6 +42,7 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
   /**
    * Common
    */
+  hasScannedFilaments = false
   detectedFilaments: FilamentProfile[] = []
 
   /**
@@ -125,8 +126,50 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
    */
   get visibleFilamentProfiles () {
     const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
+    if (!this.hasScannedFilaments && (!filaments || filaments.length === 0)) {
+      this.hasScannedFilaments = true
+      this.scanFilamentProfiles()
+    }
+    this.hasScannedFilaments = true
     return filaments
       .filter((filament: FilamentProfile) => filament.visible)
+  }
+
+  currentRoot = 'gcodes'
+
+  get currentPath () {
+    return this.$store.getters['files/getCurrentPathByRoot'](this.currentRoot) || this.currentRoot
+  }
+
+  set currentPath (path: string) {
+    this.$store.dispatch('files/updateCurrentPathByRoot', { root: this.currentRoot, path })
+  }
+
+  getAllFiles () {
+    const items = this.$store.getters['files/getDirectory'](this.currentPath) as FileBrowserEntry[] | undefined
+    return items ?? []
+  }
+
+  get files (): FileBrowserEntry[] {
+    const files = this.getAllFiles()
+    return files
+  }
+
+  scanFilamentProfiles () {
+    this.currentPath = this.currentRoot
+    const files: FileBrowserEntry[] = this.files
+    for (let i = 0; i < files.length; i++) {
+      // SocketActions.serverFilesMetadata(files[i].name)
+      const metaData = this.getFileMetaData(files[i].name)
+      if (metaData) {
+        this.$store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', {
+          type: metaData.filament_type,
+          name: metaData.filament_name,
+          temp: metaData.first_layer_extr_temp,
+          visible: true
+        })
+      }
+    }
   }
 }
 </script>

@@ -14,7 +14,7 @@
           small
           color="primary"
           class="mr-3"
-          @click="handleReload"
+          @click="scanFilamentProfiles"
         >
           <v-icon
             small
@@ -118,13 +118,20 @@ import type { FileBrowserEntry, KlipperFileMeta } from '@/store/files/types'
   }
 })
 export default class FilamentSettings extends Mixins(StateMixin) {
+  hasScannedFilaments = false
+
   dialogState: any = {
     active: false,
     preset: null
   }
 
   get filaments () {
-    return this.$store.getters['filamentProfiles/getFilamentProfiles']
+    const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
+    if (!this.hasScannedFilaments && (!filaments || filaments.length === 0)) {
+      this.scanFilamentProfiles()
+    }
+    this.hasScannedFilaments = true
+    return filaments
   }
 
   set filaments (filaments: FilamentProfile[]) {
@@ -151,7 +158,7 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     return files
   }
 
-  handleReload () {
+  scanFilamentProfiles () {
     this.currentPath = this.currentRoot
     const files: FileBrowserEntry[] = this.files
     for (let i = 0; i < files.length; i++) {

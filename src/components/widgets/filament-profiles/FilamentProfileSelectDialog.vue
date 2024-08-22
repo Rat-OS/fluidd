@@ -129,12 +129,14 @@ import type { Macro } from '@/store/macros/types'
 import type { FilamentProfile } from '@/store/filament-profiles/types'
 import gcodeMacroParams from '@/util/gcode-macro-params'
 import ToolheadMixin from '@/mixins/toolhead'
+import type { FileBrowserEntry, KlipperFileMeta } from '@/store/files/types'
 
 @Component({})
 export default class FilamentProfileSelectDialog extends Mixins(StateMixin, BrowserMixin, ToolheadMixin) {
   /**
    * Common
    */
+  hasScannedFilaments = false
   dialogTitle: string = this.$t('app.general.title.load_filament').toString()
   tempParameter: string = 'TEMP'
   toolheadParameter: string = 'TOOLHEAD'
@@ -216,8 +218,55 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
 
   get visibleFilamentProfiles () {
     const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
+    if (!this.hasScannedFilaments && (!filaments || filaments.length === 0)) {
+      this.hasScannedFilaments = true
+      this.scanFilamentProfiles()
+    }
+    this.hasScannedFilaments = true
     return filaments
       .filter((filament: FilamentProfile) => filament.visible)
+  }
+
+  currentRoot = 'gcodes'
+
+  get currentPath () {
+    return this.$store.getters['files/getCurrentPathByRoot'](this.currentRoot) || this.currentRoot
+  }
+
+  set currentPath (path: string) {
+    this.$store.dispatch('files/updateCurrentPathByRoot', { root: this.currentRoot, path })
+  }
+
+  getAllFiles () {
+    const items = this.$store.getters['files/getDirectory'](this.currentPath) as FileBrowserEntry[] | undefined
+    return items ?? []
+  }
+
+  get files (): FileBrowserEntry[] {
+    const files = this.getAllFiles()
+    return files
+  }
+
+  scanFilamentProfiles () {
+    this.currentPath = this.currentRoot
+    const files: FileBrowserEntry[] = this.files
+    for (let i = 0; i < files.length; i++) {
+      // SocketActions.serverFilesMetadata(files[i].name)
+      const metaData = this.getFileMetaData(files[i].name)
+      if (metaData) {
+        this.$store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', {
+          type: metaData.filament_type,
+          name: metaData.filament_name,
+          temp: metaData.first_layer_extr_temp,
+          visible: true
+        })
+      }
+    }
+  }
+
+  getFileMetaData (filename: string) {
+    const file = this.$store.getters['files/getFile']('gcodes', filename) as KlipperFileMeta
+    return file ?? undefined
   }
 
   /**
