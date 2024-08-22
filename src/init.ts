@@ -11,8 +11,6 @@ import webSocketWrapper from './util/web-socket-wrapper'
 import promiseAny from './util/promise-any'
 import sleep from './util/sleep'
 import { isFluiddContent } from '@/util/fluidd-content'
-import type { FileBrowserEntry } from './store/files/types'
-import { SocketActions } from './api/socketActions'
 
 // Load API configuration
 /**
