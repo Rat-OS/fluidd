@@ -22,7 +22,6 @@ export const actions: ActionTree<FilamentProfilesState, RootState> = {
    * Add or update a given filament profile
    */
   async addFilamentProfileFromMetaData ({ commit, rootState }, payload) {
-    console.error('addFilamentProfileFromMetaData ' + payload)
     commit('setFilamentProfileFromMetaData', payload)
     SocketActions.serverWrite('filamentProfiles', rootState.filamentProfiles)
   },

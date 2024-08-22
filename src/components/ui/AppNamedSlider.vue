@@ -294,7 +294,6 @@ export default class AppNamedSlider extends Mixins(BrowserMixin) {
 
   handleReset () {
     if (this.resetValue !== undefined) {
-      console.error('handleReset ' + this.resetValue)
       this.$emit('change', this.resetValue)
       this.submitValue(this.resetValue)
     }

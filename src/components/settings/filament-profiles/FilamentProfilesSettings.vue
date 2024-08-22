@@ -143,7 +143,6 @@ export default class FilamentSettings extends Mixins(StateMixin) {
 
   getAllFiles () {
     const items = this.$store.getters['files/getDirectory'](this.currentPath) as FileBrowserEntry[] | undefined
-    console.error('items ' + items)
     return items ?? []
   }
 
