@@ -1,9 +1,9 @@
 import type { GetterTree } from 'vuex'
 import type { FilamentProfile, FilamentProfilesState } from './types'
 import type { RootState } from '../types'
-import store from '..'
-import type { FileBrowserEntry } from '../files/types'
-import { SocketActions } from '@/api/socketActions'
+// import store from '..' // circular reference!!!
+// import type { FileBrowserEntry } from '../files/types'
+// import { SocketActions } from '@/api/socketActions'
 
 export const getters: GetterTree<FilamentProfilesState, RootState> = {
   getHasFilamentProfiles: (state, getters) => {
@@ -13,17 +13,17 @@ export const getters: GetterTree<FilamentProfilesState, RootState> = {
 
   getFilamentProfiles: (state) => {
     const allFilamentProfiles = state.filamentProfiles
-    if (!allFilamentProfiles || allFilamentProfiles.length === 0) {
-      const gcodeFiles = store.getters['files/getDirectory']('gcodes') as FileBrowserEntry[] | undefined
-      console.error('gcodeFiles ' + gcodeFiles)
-      if (gcodeFiles && gcodeFiles.length > 0) {
-        for (let i = 0; i < gcodeFiles.length; i++) {
-          console.error('gcodeFiles[i].name ' + gcodeFiles[i].name)
-          SocketActions.serverFilesMetadata(gcodeFiles[i].name)
-        }
-      }
-      SocketActions.serverWrite('filamentProfiles', state.filamentProfiles)
-    }
+    // if (!allFilamentProfiles || allFilamentProfiles.length === 0) {
+    //   const gcodeFiles = store.getters['files/getDirectory']('gcodes') as FileBrowserEntry[] | undefined
+    //   console.error('gcodeFiles ' + gcodeFiles)
+    //   if (gcodeFiles && gcodeFiles.length > 0) {
+    //     for (let i = 0; i < gcodeFiles.length; i++) {
+    //       console.error('gcodeFiles[i].name ' + gcodeFiles[i].name)
+    //       SocketActions.serverFilesMetadata(gcodeFiles[i].name)
+    //     }
+    //   }
+    //   SocketActions.serverWrite('filamentProfiles', state.filamentProfiles)
+    // }
     const filaments = allFilamentProfiles
       .map(filament => {
         const { id, order, type, name, temp, visible } = filament

@@ -5,7 +5,7 @@ import formatAsFile from '@/util/format-as-file'
 import getFilePaths from '@/util/get-file-paths'
 import { SocketActions } from '@/api/socketActions'
 import { Globals } from '@/globals'
-import store from '..'
+// import store from '..' // circular reference!!!
 
 export const actions: ActionTree<FilesState, RootState> = {
   /**
@@ -43,16 +43,18 @@ export const actions: ActionTree<FilesState, RootState> = {
     const root = 'gcodes' // We'd only ever load metadata for gcode files.
     const paths = getFilePaths(payload.filename, root)
 
-    const metaData: KlipperFileWithMeta = payload
-    if (metaData.filament_type && metaData.filament_name && metaData.first_layer_extr_temp) {
-      const filamentProfile: any = {
-        type: metaData.filament_type,
-        name: metaData.filament_name,
-        temp: metaData.first_layer_extr_temp,
-        visible: true
-      }
-      store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', filamentProfile)
-    }
+    // const metaData: KlipperFileWithMeta = payload
+    // if (metaData.filament_type && metaData.filament_name && metaData.first_layer_extr_temp) {
+    //   const filamentProfile: any = {
+    //     type: metaData.filament_type,
+    //     name: metaData.filament_name,
+    //     temp: metaData.first_layer_extr_temp,
+    //     visible: true
+    //   }
+    //   commit('setFilamentProfileFromMetaData', filamentProfile)
+    //   SocketActions.serverWrite('filamentProfiles', filamentProfile)
+    //   // state.dispatch('filamentProfiles/addFilamentProfileFromMetaData', filamentProfile)
+    // }
 
     if (!paths.filtered) {
       const file = formatAsFile(root, payload)

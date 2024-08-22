@@ -109,7 +109,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import FilamentProfileEditDialog from './FilamentProfileEditDialog.vue'
 import StateMixin from '@/mixins/state'
 import type { FilamentProfile } from '@/store/filament-profiles/types'
-import type { FileBrowserEntry } from '@/store/files/types'
+import type { FileBrowserEntry, KlipperFileMeta } from '@/store/files/types'
 import { SocketActions } from '@/api/socketActions'
 
 @Component({
@@ -155,8 +155,22 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     this.currentPath = this.currentRoot
     const files: FileBrowserEntry[] = this.files
     for (let i = 0; i < files.length; i++) {
-      SocketActions.serverFilesMetadata(files[i].name)
+      // SocketActions.serverFilesMetadata(files[i].name)
+      const metaData = this.getFileMetaData(files[i].name)
+      if (metaData) {
+        this.$store.dispatch('filamentProfiles/addFilamentProfileFromMetaData', {
+          type: metaData.filament_type,
+          name: metaData.filament_name,
+          temp: metaData.first_layer_extr_temp,
+          visible: true
+        })
+      }
     }
+  }
+
+  getFileMetaData (filename: string) {
+    const file = this.$store.getters['files/getFile']('gcodes', filename) as KlipperFileMeta
+    return file ?? undefined
   }
 
   openAddDialog () {
