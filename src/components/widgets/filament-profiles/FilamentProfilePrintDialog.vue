@@ -54,7 +54,6 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
       if (dialogState.filename) {
         const metaData = this.getFileMetaData(dialogState.filename)
         if (metaData) {
-          console.error('file ' + metaData.filament_name)
           this.setLoadedFilaments()
           if (this.loadedFilaments.length > 0) {
             if (this.loadedFilaments[0].name !== metaData.filament_name) {
