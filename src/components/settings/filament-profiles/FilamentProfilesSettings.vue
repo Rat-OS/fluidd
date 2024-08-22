@@ -109,7 +109,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import FilamentProfileEditDialog from './FilamentProfileEditDialog.vue'
 import StateMixin from '@/mixins/state'
 import type { FilamentProfile } from '@/store/filament-profiles/types'
-import type { AppFileWithMeta, FileBrowserEntry } from '@/store/files/types'
+import type { FileBrowserEntry } from '@/store/files/types'
 import { SocketActions } from '@/api/socketActions'
 
 @Component({
@@ -156,16 +156,8 @@ export default class FilamentSettings extends Mixins(StateMixin) {
     this.currentPath = this.currentRoot
     const files: FileBrowserEntry[] = this.files
     for (let i = 0; i < files.length; i++) {
-      console.error('files[i].name ' + files[i].name)
-      // const filename = files[i].path ? `${files[i].path}/${files[i].filename}` : files[i].filename
       SocketActions.serverFilesMetadata(files[i].name)
     }
-  }
-
-  handleRefreshMetadata (file: AppFileWithMeta) {
-    const filename = file.path ? `${file.path}/${file.filename}` : file.filename
-
-    SocketActions.serverFilesMetadata(filename)
   }
 
   openAddDialog () {
