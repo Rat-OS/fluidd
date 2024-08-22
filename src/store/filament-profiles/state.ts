@@ -6,6 +6,10 @@ export const defaultState = (): FilamentProfilesState => {
     filamentSelectDialogState: {
       show: false,
       macro: undefined
+    },
+    filamentPrintDialogState: {
+      show: false,
+      filename: undefined
     }
   }
 }

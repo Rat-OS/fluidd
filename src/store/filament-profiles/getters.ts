@@ -3,6 +3,11 @@ import type { FilamentProfile, FilamentProfilesState } from './types'
 import type { RootState } from '../types'
 
 export const getters: GetterTree<FilamentProfilesState, RootState> = {
+  getHasFilamentProfiles: (state, getters) => {
+    const filamentProfiles = getters.getFilamentProfiles
+    return filamentProfiles && filamentProfiles.length > 0
+  },
+
   getFilamentProfiles: (state) => {
     const filaments = state.filamentProfiles
       .map(filament => {

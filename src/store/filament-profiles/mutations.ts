@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { MutationTree } from 'vuex'
 import { defaultState } from './state'
 import type {
+  FilamentPrintDialogState,
   FilamentProfilesState,
   FilamentSelectDialogState
 } from '@/store/filament-profiles/types'
@@ -17,14 +18,29 @@ export const mutations: MutationTree<FilamentProfilesState> = {
 
   // Sets filament profile state from db
   initFilamentProfiles (state, payload: FilamentProfilesState) {
+    payload.filamentPrintDialogState = {
+      show: false,
+      filename: undefined
+    }
+    payload.filamentSelectDialogState = {
+      show: false,
+      macro: undefined
+    }
     if (payload && payload.filamentProfiles) {
       if (typeof payload.filamentProfiles[0] === 'string') payload.filamentProfiles = []
     }
     if (payload) Object.assign(state, payload)
   },
 
+  /**
+   * set dialog states
+   */
   setFilamentSelectDialogState (state, payload: FilamentSelectDialogState) {
     state.filamentSelectDialogState = payload
+  },
+
+  setFilamentPrintDialogState (state, payload: FilamentPrintDialogState) {
+    state.filamentPrintDialogState = payload
   },
 
   /**

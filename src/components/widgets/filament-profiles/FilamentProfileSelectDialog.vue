@@ -1,6 +1,5 @@
 <template>
   <app-dialog
-    ref="appDialog"
     v-model="isOpen"
     scrollable
     :max-width="450"

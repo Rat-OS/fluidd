@@ -82,6 +82,7 @@
       />
 
       <filament-profile-select-dialog />
+      <filament-profile-print-dialog />
       <file-system-download-dialog />
       <updating-dialog />
       <spool-selection-dialog />
@@ -109,6 +110,7 @@ import type { LinkPropertyHref, MetaPropertyName } from 'vue-meta'
 import FileSystemDownloadDialog from '@/components/widgets/filesystem/FileSystemDownloadDialog.vue'
 import SpoolSelectionDialog from '@/components/widgets/spoolman/SpoolSelectionDialog.vue'
 import FilamentProfileSelectDialog from '@/components/widgets/filament-profiles/FilamentProfileSelectDialog.vue'
+import FilamentProfilePrintDialog from '@/components/widgets/filament-profiles/FilamentProfilePrintDialog.vue'
 import type { FlashMessage } from '@/types'
 import { getFilesFromDataTransfer, hasFilesInDataTransfer } from './util/file-system-entry'
 import type { ThemeConfig } from '@/store/config/types'
@@ -129,7 +131,8 @@ import { eventTargetIsContentEditable, keyboardEventToKeyboardShortcut } from '.
     FileSystemDownloadDialog,
     ActionCommandPromptDialog,
     KeyboardShortcutsDialog,
-    FilamentProfileSelectDialog
+    FilamentProfileSelectDialog,
+    FilamentProfilePrintDialog
   }
 })
 export default class App extends Mixins(StateMixin, FilesMixin, BrowserMixin) {

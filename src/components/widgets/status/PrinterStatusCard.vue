@@ -139,6 +139,16 @@ export default class PrinterStatusCard extends Mixins(StateMixin) {
       return
     }
 
+    const hasFilamentProfiles = this.$store.getters['filamentProfiles/getHasFilamentProfiles']
+    if (hasFilamentProfiles) {
+      this.$store.commit('filamentProfiles/setFilamentPrintDialogState', {
+        show: true,
+        filename
+      })
+
+      return
+    }
+
     SocketActions.printerPrintStart(filename)
   }
 }

@@ -476,6 +476,7 @@ app:
       idex_tool: Idex Tool
       tune: Tune
       loaded_filament: Loaded Filament
+      filament_profile_mismatch: Filament Profile mismatch
       load_filament: Load Filament
       unload_filament: Unload Filament
       filament_presets: Filament Profiles

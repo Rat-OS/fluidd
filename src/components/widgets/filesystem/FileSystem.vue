@@ -142,7 +142,7 @@
 <script lang="ts">
 import { Component, Prop, Mixins, Watch } from 'vue-property-decorator'
 import { SocketActions } from '@/api/socketActions'
-import type { AppDirectory, AppFile, AppFileWithMeta, FilesUpload, FileFilterType, FileBrowserEntry, RootProperties } from '@/store/files/types'
+import type { AppDirectory, AppFile, AppFileWithMeta, FilesUpload, FileFilterType, FileBrowserEntry, RootProperties, KlipperFileMeta } from '@/store/files/types'
 import StateMixin from '@/mixins/state'
 import FilesMixin from '@/mixins/files'
 import ServicesMixin from '@/mixins/services'
@@ -741,6 +741,16 @@ export default class FileSystem extends Mixins(StateMixin, FilesMixin, ServicesM
     const autoSpoolSelectionDialog = this.$store.state.config.uiSettings.spoolman.autoSpoolSelectionDialog
     if (spoolmanSupported && autoSpoolSelectionDialog) {
       this.$store.commit('spoolman/setDialogState', {
+        show: true,
+        filename
+      })
+
+      return
+    }
+
+    const hasFilamentProfiles = this.$store.getters['filamentProfiles/getHasFilamentProfiles']
+    if (hasFilamentProfiles) {
+      this.$store.commit('filamentProfiles/setFilamentPrintDialogState', {
         show: true,
         filename
       })
