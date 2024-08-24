@@ -154,6 +154,7 @@ app:
       auth_unsure: Unsure why you're seeing this?
       calibrate: Calibrate
       cancel: Cancel
+      print_anyway: Print anyway
       clear_profile: Clear Profile
       close: Close
       config_reference: Config Reference
@@ -355,6 +356,8 @@ app:
       edit_filament: Edit filament
       add_filament: Add filament
       file_time: File
+      slicer_filament: Slicer Filament
+      printer_filament: Printer Filament
       stepper_driver: >-
         %{name} Driver
     msg:

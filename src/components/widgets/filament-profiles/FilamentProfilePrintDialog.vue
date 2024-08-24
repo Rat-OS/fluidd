@@ -1,6 +1,6 @@
 <template>
   <app-dialog
-    v-model="isOpen"
+    v-model="open"
     scrollable
     :max-width="450"
     :title="$t('app.general.title.filament_profile_mismatch')"
@@ -10,17 +10,115 @@
       dense
       class="fill-height pt-0"
     >
-      <div>
-        Test
-      </div>
+      <v-col
+        cols="12"
+        class="px-0 pb-1"
+      >
+        <v-col
+          cols="12"
+          class="pt-0"
+        >
+          {{ $t('app.general.label.slicer_filament') }}
+        </v-col>
+        <v-list
+          v-for="(filament, index) in gcodeFilaments"
+          :key="`gcodeFilaments-${index}`"
+          dense
+          nav
+          class="pa-0 ma-0 mb-2"
+        >
+          <v-list-item
+            :key="`gcodeFilamentsAlert-${index}`"
+            :value="filament"
+            class="pa-0 my-0 mx-2"
+          >
+            <v-list-item-content
+              class="pa-0"
+            >
+              <v-alert
+                text
+                dense
+                icon="$info"
+                type="info"
+                class="mb-0"
+              >
+                <div class="mb-1">
+                  Slicer Filament T{{ filament.id }}
+                </div>
+                <div>
+                  <span style="font-size: 14px;">{{ filament.name }} - {{ filament.temp }}°C</span>
+                </div>
+              </v-alert>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
+
+      <v-divider />
+
+      <v-col
+        cols="12"
+        class="px-0 pb-1"
+      >
+        <v-col
+          cols="12"
+          class="pt-0"
+        >
+          {{ $t('app.general.label.printer_filament') }}
+        </v-col>
+        <v-list
+          v-for="(filament, index) in loadedFilaments"
+          :key="`loadedFilaments-${index}`"
+          dense
+          nav
+          class="pa-0 ma-0 mb-2"
+        >
+          <v-list-item
+            :key="`loadedFilamentsAlert-${index}`"
+            :value="filament"
+            class="pa-0 my-0 mx-2"
+          >
+            <v-list-item-content
+              class="pa-0"
+            >
+              <v-alert
+                text
+                dense
+                :icon="filament.name === gcodeFilaments[index].name ? `$success` : `$error`"
+                :type="filament.name === gcodeFilaments[index].name ? `success` : `error`"
+                class="mb-0"
+              >
+                <div class="mb-1">
+                  Printer Filament T{{ filament.id }}
+                </div>
+                <div>
+                  <span style="font-size: 14px;">{{ filament.name }} - {{ filament.temp }}°C</span>
+                </div>
+              </v-alert>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-col>
+
+      <v-divider />
     </v-card>
     <template #actions>
+      <v-spacer v-if="isMobileViewport" />
+
+      <app-btn
+        text
+        color="success"
+        @click="printFile()"
+      >
+        {{ $t('app.general.btn.print_anyway') }}
+      </app-btn>
+
       <v-spacer v-if="!isMobileViewport" />
 
       <app-btn
         text
         color="warning"
-        @click="isOpen = false"
+        @click="open = false"
       >
         {{ $t('app.general.btn.cancel') }}
       </app-btn>
@@ -43,42 +141,41 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
    * Common
    */
   hasScannedFilaments = false
-  detectedFilaments: FilamentProfile[] = []
+  gcodeFilaments: FilamentProfile[] = []
+  loadedFilaments: FilamentProfile[] = []
+  dialogState: FilamentPrintDialogState | undefined = undefined
 
   /**
    * dialog state
    */
-  get isOpen () {
-    const dialogState: FilamentPrintDialogState = this.$store.state.filamentProfiles.filamentPrintDialogState
+  get open () {
+    this.dialogState = this.$store.state.filamentProfiles.filamentPrintDialogState
     if (this.klippyReady && this.$store.state.filamentProfiles.filamentPrintDialogState.show) {
       this.$store.state.filamentProfiles.filamentPrintDialogState.show = false
-      if (dialogState.filename) {
-        const metaData = this.getFileMetaData(dialogState.filename)
+      if (this.dialogState?.filename) {
+        const metaData = this.getFileMetaData(this.dialogState.filename)
         if (metaData) {
           this.setLoadedFilaments()
-          if (this.loadedFilaments.length > 0) {
-            if (this.loadedFilaments[0].name !== metaData.filament_name) {
-              this.$store.state.filamentProfiles.filamentPrintDialogState.show = true
+          this.setGcodeFilaments(metaData)
+          if (this.loadedFilaments?.length > 0 && this.gcodeFilaments?.length > 0) {
+            for (let i = 0; i < this.loadedFilaments.length; i++) {
+              if (this.loadedFilaments[i].name !== this.gcodeFilaments[i].name) {
+                this.$store.state.filamentProfiles.filamentPrintDialogState.show = true
+                break
+              }
             }
           }
         }
       }
       if (!this.$store.state.filamentProfiles.filamentPrintDialogState.show) {
-        if (dialogState.filename) {
-          SocketActions.printerPrintStart(dialogState.filename)
-
-          // If we aren't on the dashboard, push the user back there.
-          if (this.$router.currentRoute.path !== '/') {
-            this.$router.push({ path: '/' })
-          }
-        }
+        this.printFile()
       }
     }
 
     return this.$store.state.filamentProfiles.filamentPrintDialogState.show
   }
 
-  set isOpen (val: boolean) {
+  set open (val: boolean) {
     this.$store.state.filamentProfiles.filamentPrintDialogState.show = val
   }
 
@@ -91,8 +188,28 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
   }
 
   /**
-   * loaded filaments
+   * filaments
    */
+  setGcodeFilaments (metaData: KlipperFileMeta) {
+    const gcodeFilaments: FilamentProfile[] = []
+    const names: string[] | undefined = metaData.filament_name?.split(';')
+    const types: string[] | undefined = metaData.filament_type?.split(';')
+    const temp: number | undefined = metaData.first_layer_extr_temp
+    if (names && types) {
+      for (let i = 0; i < names.length; i++) {
+        gcodeFilaments.push({
+          id: i,
+          order: i,
+          type: types[i] ?? '',
+          name: names[i] ?? '',
+          temp: temp ?? 0,
+          visible: true
+        })
+      }
+    }
+    this.gcodeFilaments = gcodeFilaments
+  }
+
   setLoadedFilaments () {
     const loadedFilaments: FilamentProfile[] = []
     const toolchangeCommands = this.toolChangeCommands
@@ -111,14 +228,6 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
       }
     }
     this.loadedFilaments = loadedFilaments
-  }
-
-  get loadedFilaments () {
-    return this.detectedFilaments
-  }
-
-  set loadedFilaments (val: FilamentProfile[]) {
-    this.detectedFilaments = val
   }
 
   /**
@@ -168,6 +277,21 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
           temp: metaData.first_layer_extr_temp,
           visible: true
         })
+      }
+    }
+  }
+
+  /**
+   * actions
+   */
+  printFile () {
+    this.$store.state.filamentProfiles.filamentPrintDialogState.show = false
+    if (this.dialogState?.filename) {
+      SocketActions.printerPrintStart(this.dialogState.filename)
+
+      // If we aren't on the dashboard, push the user back there.
+      if (this.$router.currentRoute.path !== '/') {
+        this.$router.push({ path: '/' })
       }
     }
   }

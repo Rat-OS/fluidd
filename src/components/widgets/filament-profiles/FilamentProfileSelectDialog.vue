@@ -363,26 +363,3 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  @import 'vuetify/src/styles/styles.sass';
-
-  @include theme(app-toolchanger-control) using ($material) {
-    .extruder-color {
-      border-color: black;
-    }
-  }
-
-  .app-toolchanger-control .extruder-color {
-    width: 15px;
-    height: 15px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 50%;
-
-    &.active {
-      border-color: black;
-    }
-  }
-
-</style>
