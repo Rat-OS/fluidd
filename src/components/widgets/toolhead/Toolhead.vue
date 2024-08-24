@@ -12,8 +12,8 @@
             <toolhead-control-circle v-else-if="toolheadControlStyle === 'circle'" />
             <z-height-adjust />
             <speed-adjust class="mb-2" />
-            <toolhead-remapping />
-            <spool-joining />
+            <toolhead-remapping v-if="toolChangeCommands.length > 1" />
+            <spool-joining v-if="toolChangeCommands.length > 1" />
           </template>
         </v-col>
       </v-row>
