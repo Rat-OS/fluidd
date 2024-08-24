@@ -105,7 +105,7 @@
               sm="6"
             >
               <status-label :label="$t('app.general.label.requested_speed')">
-                <span v-if="liveVelocity > 0">{{ liveVelocity.toFixed(1) }} mm/s</span>
+                <span v-if="liveVelocity > 0">{{ liveVelocity.toFixed(0) }} mm/s</span>
               </status-label>
 
               <status-label :label="$t('app.general.label.flow')">
