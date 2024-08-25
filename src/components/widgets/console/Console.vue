@@ -16,7 +16,7 @@
         ref="scroller"
         :items="flipLayout ? [...items].reverse() : items"
         :min-item-size="24"
-        class="console-scroller"
+        :style="!fullscreen ? `height: ${consoleHeight}px;` : undefined"
         :class="{
           'console-scroller-fullscreen': fullscreen
         }"
@@ -93,6 +93,13 @@ export default class Console extends Mixins(StateMixin) {
 
   set currentCommand (val: string) {
     this.$store.commit('console/setConsoleCommand', val)
+  }
+
+  get consoleHeight (): number {
+    return this.$store.state.config.uiSettings.general.consoleHeight ?? 400
+  }
+
+  set consoleHeight (_) {
   }
 
   get flipLayout (): boolean {
@@ -204,9 +211,6 @@ export default class Console extends Mixins(StateMixin) {
     padding-left: 4px;
   }
 
-  .console-scroller {
-    height: 450px;
-  }
   .console-scroller-fullscreen {
     height: calc(100vh - 240px);
     height: calc(100svh - 240px);

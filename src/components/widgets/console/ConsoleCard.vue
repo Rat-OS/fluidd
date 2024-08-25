@@ -104,6 +104,28 @@
             </v-list-item-content>
           </v-list-item>
 
+          <v-divider
+            v-if="!fullscreen"
+            class="mt-2"
+          />
+
+          <v-list-item v-if="!fullscreen">
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-slider
+                  v-model="consoleHeight"
+                  label="Height"
+                  :min="100"
+                  :max="800"
+                  step="50"
+                  class="pb-0 mt-2"
+                  hide-details
+                  tick-size="4"
+                />
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
           <template v-if="filters && filters.length">
             <v-divider />
 
@@ -168,6 +190,20 @@ export default class ConsoleCard extends Vue {
       value,
       server: true
     })
+  }
+
+  get consoleHeight (): number {
+    return this.$store.state.config.uiSettings.general.consoleHeight
+  }
+
+  set consoleHeight (value: number) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.consoleHeight',
+      value,
+      server: true
+    })
+
+    this.consoleElement.consoleHeight = value
   }
 
   get flipLayout (): boolean {

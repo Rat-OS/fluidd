@@ -59,6 +59,7 @@ export const defaultState = (): ConfigState => {
         showSaveConfigAndRestart: true,
         showUploadAndPrint: true,
         flipConsoleLayout: false,
+        consoleHeight: 400,
         cameraFullscreenAction: 'embed',
         topNavPowerToggle: null,
         useSixColumns: true,

@@ -102,6 +102,7 @@ export interface GeneralConfig {
   showSaveConfigAndRestart: boolean;
   showUploadAndPrint: boolean;
   flipConsoleLayout: boolean;
+  consoleHeight: number;
   cameraFullscreenAction: CameraFullscreenAction;
   topNavPowerToggle: null | string;
   useSixColumns: boolean;
