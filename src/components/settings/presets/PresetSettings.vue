@@ -50,17 +50,17 @@
               >
                 $drag
               </v-icon>
-              {{ preset.name }}:
-              <span
-                v-for="(value, k) in preset.values"
-                v-show="value.active"
-                :key="k"
-                class="mr-2"
-              >
-                {{ k }}: {{ value.value }}<small>°C</small>
-              </span>
+              {{ preset.name }}
             </template>
 
+            <span
+              v-for="(value, k) in preset.values"
+              v-show="value.active"
+              :key="k"
+              class="mr-2"
+            >
+              {{ value.value }}<small>°C</small>
+            </span>
             <app-btn
               fab
               text

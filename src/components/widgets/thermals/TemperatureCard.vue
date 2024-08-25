@@ -59,14 +59,14 @@
                   <span
                     class="mr-2"
                   >
-                    {{ preset.name }}:
+                    {{ preset.name }}
                   </span>
                   <span
                     v-for="(value, k) in preset.values"
                     :key="k"
                     class="mr-2"
                   >
-                    {{ k }}: {{ value.value }}<small>°C</small>
+                    {{ value.value }}<small>°C</small>
                   </span>
                 </v-list-item-title>
               </v-list-item-content>

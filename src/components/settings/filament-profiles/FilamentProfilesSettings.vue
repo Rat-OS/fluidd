@@ -68,7 +68,7 @@
               {{ filament.name }}
             </template>
 
-            {{ filament.temp }}°C
+            {{ filament.temp }}<small>°C</small>
             <app-btn
               fab
               text
