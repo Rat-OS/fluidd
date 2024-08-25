@@ -44,6 +44,7 @@
             style="border-radius: 0px; height: 36px; margin-left: 2px;"
             min-width="10"
             class="px-0"
+            elevation="0"
             :color="'btncolor'"
             @click="decrementValue()"
           >
@@ -61,6 +62,7 @@
             :style="{
               'border-bottom-right-radius': quickSelectors && quickSelectors.length > 0 ? '0px' : '4px',
             }"
+            elevation="0"
             :color="'btncolor'"
             min-width="10"
             class="px-0"
@@ -86,6 +88,7 @@
           v-for="value in quickSelectors"
           :key="value"
           :disabled="printerPrinting"
+          elevation="0"
           class="px-0 flex-grow-1"
           style="height:24px; margin-top: 3px;"
           :color="value == inputValue ? 'btncolor' : ''"

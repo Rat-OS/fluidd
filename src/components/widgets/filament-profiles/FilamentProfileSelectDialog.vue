@@ -316,15 +316,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
    */
   async alertClick (filament: FilamentProfile) {
     if (!this.isLoadFilamentMacro()) {
-      const result = (
-        await this.$confirm(
-          'Unload ' + filament.name + ' with ' + filament.temp + '°C from T' + filament.id + ' ?',
-          { title: this.$tc('app.general.label.confirm'), color: 'card-heading', icon: '$error' }
-        )
-      )
-      if (result) {
-        this.sendCommand(filament, filament.id.toString())
-      }
+      this.sendCommand(filament, filament.id.toString())
     }
   }
 
