@@ -307,7 +307,9 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
   }
 
   get presets () {
-    return this.$store.getters['config/getTempPresets']
+    const presets = this.$store.getters['config/getTempPresets']
+    return presets
+      .filter((preset: TemperaturePreset) => preset.visible)
   }
 
   handleApplyPreset (preset: TemperaturePreset) {

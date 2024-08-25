@@ -1,6 +1,6 @@
 import vuetify from '@/plugins/vuetify'
 import type { ActionTree } from 'vuex'
-import type { ConfigState, SaveByPath, InitConfig, InstanceConfig, UiSettings, ThemeConfig } from './types'
+import type { ConfigState, SaveByPath, InitConfig, InstanceConfig, UiSettings, ThemeConfig, TemperaturePreset } from './types'
 import type { RootState } from '../types'
 import { SocketActions } from '@/api/socketActions'
 import { loadLocaleMessagesAsync, getStartingLocale } from '@/plugins/i18n'
@@ -148,6 +148,18 @@ export const actions: ActionTree<ConfigState, RootState> = {
    */
   async updatePreset ({ commit, state }, payload) {
     commit('setPreset', payload)
+    SocketActions.serverWrite('uiSettings.dashboard.tempPresets', state.uiSettings.dashboard.tempPresets)
+  },
+
+  saveAllPresetOrder ({ commit, state }, payload: TemperaturePreset[]) {
+    // Commit the change...
+    payload.forEach((preset, index) => {
+      commit('setPreset', {
+        ...preset,
+        order: index
+      })
+    })
+    // Save to moonraker.
     SocketActions.serverWrite('uiSettings.dashboard.tempPresets', state.uiSettings.dashboard.tempPresets)
   },
 

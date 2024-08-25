@@ -25,43 +25,66 @@
         </app-btn>
       </app-setting>
 
-      <v-divider v-if="presets.length > 0" />
-
-      <template v-for="(preset, i) in presets">
-        <app-setting
-          :key="preset.index"
-          :title="preset.name"
-          :r-cols="2"
-          @click="openEditDialog(preset)"
+      <app-draggable
+        v-model="presets"
+        :options="{
+          animation: 200,
+          handle: '.handle',
+          ghostClass: 'ghost'
+        }"
+      >
+        <section
+          v-for="(preset, i) in presets"
+          :key="`preset-${i}`"
         >
-          <template #sub-title>
-            <span
-              v-for="(value, k) in preset.values"
-              v-show="value.active"
-              :key="k"
-              class="mr-2"
-            >
-              {{ k }}: {{ value.value }}<small>°C</small>
-            </span>
-          </template>
-          <app-btn
-            fab
-            text
-            x-small
-            color=""
-            @click.stop="handleRemovePreset(preset)"
-          >
-            <v-icon color="">
-              $close
-            </v-icon>
-          </app-btn>
-        </app-setting>
+          <v-divider />
 
-        <v-divider
-          v-if="i < presets.length - 1 && presets.length > 0"
-          :key="preset.id"
-        />
-      </template>
+          <app-setting
+            :r-cols="2"
+            @click="openEditDialog(preset)"
+          >
+            <template #title>
+              <v-icon
+                class="handle"
+                left
+              >
+                $drag
+              </v-icon>
+              {{ preset.name }}:
+              <span
+                v-for="(value, k) in preset.values"
+                v-show="value.active"
+                :key="k"
+                class="mr-2"
+              >
+                {{ k }}: {{ value.value }}<small>°C</small>
+              </span>
+            </template>
+
+            <app-btn
+              fab
+              text
+              x-small
+              color=""
+              class="mr-3"
+              @click.stop="handleRemovePreset(preset)"
+            >
+              <v-icon color="">
+                $close
+              </v-icon>
+            </app-btn>
+
+            <v-switch
+              class="mt-0 pt-0"
+              :input-value="preset.visible"
+              color="primary"
+              hide-details
+              @click.stop
+              @change="handlePresetVisible(preset, $event)"
+            />
+          </app-setting>
+        </section>
+      </app-draggable>
 
       <preset-dialog
         v-if="dialogState.active"
@@ -94,8 +117,17 @@ export default class TemperaturePresetSettings extends Mixins(StateMixin) {
     return this.$store.getters['printer/getOutputs'](['temperature_fan'])
   }
 
+  _presets?: TemperaturePreset[] = undefined
   get presets () {
-    return this.$store.getters['config/getTempPresets']
+    if (this._presets === undefined) {
+      this._presets = this.$store.getters['config/getTempPresets']
+    }
+    return this._presets ?? []
+  }
+
+  set presets (presets: TemperaturePreset[]) {
+    this.$store.dispatch('config/saveAllPresetOrder', presets)
+    this._presets = presets
   }
 
   dialogState: any = {
@@ -113,8 +145,10 @@ export default class TemperaturePresetSettings extends Mixins(StateMixin) {
   openAddDialog () {
     const preset: any = {
       id: -1,
+      order: -1,
       name: '',
-      values: {}
+      values: {},
+      visible: true
     }
     for (const item of this.heaters) {
       preset.values[item.name] = { value: 0, type: 'heater', active: true }
@@ -134,6 +168,13 @@ export default class TemperaturePresetSettings extends Mixins(StateMixin) {
 
   handleRemovePreset (preset: TemperaturePreset) {
     this.$store.dispatch('config/removePreset', preset)
+  }
+
+  handlePresetVisible (preset: TemperaturePreset, value: boolean) {
+    const newPreset = {
+      ...preset, visible: value
+    }
+    this.$store.dispatch('config/updatePreset', newPreset)
   }
 }
 </script>

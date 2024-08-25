@@ -64,8 +64,13 @@ export const getters: GetterTree<ConfigState, RootState> = {
 
       presets.push(preset)
     })
+    return presets.sort((a: TemperaturePreset, b: TemperaturePreset) => {
+      // Sorts preferrentially by order, then by name
+      // This offers backward compatibility with filaments that have no order
+      if ((a.order !== undefined && b.order !== undefined) && a.order !== b.order) {
+        return a.order - b.order
+      }
 
-    return presets.sort((a, b) => {
       return a.name.localeCompare(b.name)
     })
   },
@@ -74,15 +79,12 @@ export const getters: GetterTree<ConfigState, RootState> = {
     const files = rootGetters['files/getRootFiles']('config') as MoonrakerRootFile[] | undefined
 
     if (files) {
-      if (filename === 'default') console.error('template files found')
       for (const extension of extensions) {
         const path = `.fluidd-theme/${filename}${extension}`
         if (files.some(f => f.path === path)) {
           return path
         }
       }
-    } else {
-      if (filename === 'default') console.error('template files not found')
     }
   },
 
