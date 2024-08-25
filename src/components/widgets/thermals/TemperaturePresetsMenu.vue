@@ -33,13 +33,14 @@
     </template>
     <v-list dense>
       <v-list-item @click="$emit('applyOff')">
-        <v-list-item-icon>
-          <v-icon color="info">
-            $snowflakeAlert
-          </v-icon>
-        </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>
+            <v-icon
+              color="info"
+              class="mb-1 mr-1"
+            >
+              $snowflakeAlert
+            </v-icon>
             {{ $t('app.general.btn.heaters_off') }}
           </v-list-item-title>
         </v-list-item-content>
@@ -47,22 +48,32 @@
 
       <v-divider class="mb-2 mt-2" />
 
-      <span class="ml-4">
-        Thermal Presets
+      <span class="text--secondary ml-4">
+        {{ $t('app.general.title.thermal_presets') }}
       </span>
       <template v-for="(preset) of presets">
         <v-list-item
           :key="`thermalPreset-${preset.index}`"
           @click="$emit('applyPreset', preset)"
         >
-          <v-list-item-icon>
-            <v-icon color="error">
-              $fire
-            </v-icon>
-          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>
-              {{ preset.name }}
+              <v-icon
+                color="error"
+                class="mb-1 mr-1"
+              >
+                $fire
+              </v-icon>
+              <span class="mr-2">
+                {{ preset.name }}
+              </span>
+              <span
+                v-for="(value, k) in preset.values"
+                :key="k"
+                class="mr-2"
+              >
+                {{ value.value }}<small>°C</small>
+              </span>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -70,22 +81,28 @@
 
       <v-divider class="mb-2 mt-2" />
 
-      <span class="ml-4">
-        Filament Profiles
+      <span class="text--secondary ml-4">
+        {{ $t('app.general.title.filament_presets') }}
       </span>
       <template v-for="(filament) of filamentProfiles">
         <v-list-item
           :key="`filamentProfile-${filament.id}`"
           @click="$emit('applyFilamentProfile', filament)"
         >
-          <v-list-item-icon>
-            <v-icon color="error">
-              $fire
-            </v-icon>
-          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>
-              {{ filament.name }}
+              <v-icon
+                color="error"
+                class="mb-1 mr-1"
+              >
+                $fire
+              </v-icon>
+              <span class="mr-2">
+                {{ filament.name }}
+              </span>
+              <span>
+                {{ filament.temp }}<small>°C</small>
+              </span>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
