@@ -151,7 +151,7 @@ export const actions: ActionTree<ConfigState, RootState> = {
     SocketActions.serverWrite('uiSettings.dashboard.tempPresets', state.uiSettings.dashboard.tempPresets)
   },
 
-  saveAllPresetOrder ({ commit, state }, payload: TemperaturePreset[]) {
+  saveAllPresestOrder ({ commit, state }, payload: TemperaturePreset[]) {
     // Commit the change...
     payload.forEach((preset, index) => {
       commit('setPreset', {

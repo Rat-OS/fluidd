@@ -68,7 +68,7 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator'
 import StateMixin from '@/mixins/state'
-import type { TemperaturePreset } from '@/store/config/types';
+import type { TemperaturePreset } from '@/store/config/types'
 
 @Component({})
 export default class TemperaturePresetsMenu extends Mixins(StateMixin) {

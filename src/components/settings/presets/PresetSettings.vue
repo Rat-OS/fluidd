@@ -34,8 +34,8 @@
         }"
       >
         <section
-          v-for="(preset, i) in presets"
-          :key="`preset-${i}`"
+          v-for="preset in presets"
+          :key="`preset-${preset.id}`"
         >
           <v-divider />
 
@@ -117,17 +117,12 @@ export default class TemperaturePresetSettings extends Mixins(StateMixin) {
     return this.$store.getters['printer/getOutputs'](['temperature_fan'])
   }
 
-  _presets?: TemperaturePreset[] = undefined
   get presets () {
-    if (this._presets === undefined) {
-      this._presets = this.$store.getters['config/getTempPresets']
-    }
-    return this._presets ?? []
+    return this.$store.getters['config/getTempPresets']
   }
 
   set presets (presets: TemperaturePreset[]) {
-    this.$store.dispatch('config/saveAllPresetOrder', presets)
-    this._presets = presets
+    this.$store.dispatch('config/saveAllPresestOrder', presets)
   }
 
   dialogState: any = {
