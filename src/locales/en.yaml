@@ -483,7 +483,7 @@ app:
       filament_profile_mismatch: Filament Profile mismatch
       load_filament: Load Filament
       unload_filament: Unload Filament
-      thermal_presets: Thermal Profiles
+      thermal_presets: Thermal Presets
       filament_presets: Filament Profiles
     tooltip:
       browse_metrics: Browse available metrics
