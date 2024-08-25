@@ -15,6 +15,7 @@
         <temperature-presets-menu
           @applyOff="handleApplyOff"
           @applyPreset="handleApplyPreset"
+          @applyFilamentProfile="handleApplyFilamentProfile"
         />
       </app-btn-collapse-group>
 
@@ -44,6 +45,9 @@
         </template>
 
         <v-list dense>
+          <span class="ml-4">
+            Thermal Presets
+          </span>
           <template v-for="(preset) of presets">
             <v-list-item
               :key="preset.index"
@@ -67,6 +71,34 @@
                     class="mr-2"
                   >
                     {{ value.value }}<small>°C</small>
+                  </span>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+
+          <v-divider class="mb-2 mt-2" />
+
+          <span class="ml-4">
+            Filament Profiles
+          </span>
+          <template v-for="(filament) of filamentProfiles">
+            <v-list-item
+              :key="`filamentProfile-${filament.id}`"
+              @click="handleApplyFilamentProfile(filament)"
+            >
+              <v-list-item-icon>
+                <v-icon color="error">
+                  $fire
+                </v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span class="mr-2">
+                    {{ filament.name }}
+                  </span>
+                  <span class="mr-2">
+                    {{ filament.temp }}<small>°C</small>
                   </span>
                 </v-list-item-title>
               </v-list-item-content>
@@ -199,6 +231,7 @@ import ThermalChart from '@/components/widgets/thermals/ThermalChart.vue'
 import TemperatureTargets from '@/components/widgets/thermals/TemperatureTargets.vue'
 import TemperaturePresetsMenu from './TemperaturePresetsMenu.vue'
 import type { TemperaturePreset } from '@/store/config/types'
+import type { FilamentProfile } from '@/store/filament-profiles/types'
 
 @Component({
   components: {
@@ -332,6 +365,14 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
     }
   }
 
+  handleApplyFilamentProfile (filament: FilamentProfile) {
+    if (filament) {
+      if (filament.temp) {
+        this.sendGcode(`SET_HEATER_TEMPERATURE HEATER=extruder TARGET=${filament.temp}`)
+      }
+    }
+  }
+
   async handleApplyOff () {
     const result = (
       !['printing', 'busy', 'paused'].includes(this.$store.getters['printer/getPrinterState']) ||
@@ -344,6 +385,12 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
     if (result) {
       this.sendGcode('TURN_OFF_HEATERS')
     }
+  }
+
+  get filamentProfiles () {
+    const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
+    return filaments
+      .filter((filament: FilamentProfile) => filament.visible)
   }
 }
 </script>
