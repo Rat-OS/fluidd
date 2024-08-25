@@ -702,7 +702,7 @@ app:
       file_editor: File Editor
       gcode_preview: Gcode Preview
       general: General
-      macros: add
+      macros: Macros
       theme: Theme
       thermal_presets: Thermal Presets
       filament_presets: Filament Profiles
