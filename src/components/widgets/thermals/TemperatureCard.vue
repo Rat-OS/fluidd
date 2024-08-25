@@ -8,12 +8,89 @@
     layout-path="dashboard.temperature-card"
   >
     <template #menu>
-      <app-btn-collapse-group :collapsed="menuCollapsed">
+      <app-btn-collapse-group
+        v-if="!useSmallThermalButtons"
+        :collapsed="menuCollapsed"
+      >
         <temperature-presets-menu
           @applyOff="handleApplyOff"
           @applyPreset="handleApplyPreset"
         />
       </app-btn-collapse-group>
+
+      <v-menu
+        v-if="useSmallThermalButtons && presets.length > 0"
+        bottom
+        left
+        offset-y
+        transition="slide-y-transition"
+        :close-on-content-click="true"
+      >
+        <template #activator="{ on, attrs }">
+          <v-btn
+            fab
+            x-small
+            text
+            v-bind="attrs"
+            class="ms-1 my-1"
+            v-on="on"
+          >
+            <v-icon
+              color="error"
+            >
+              $fire
+            </v-icon>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <template v-for="(preset) of presets">
+            <v-list-item
+              :key="preset.index"
+              @click="handleApplyPreset(preset)"
+            >
+              <v-list-item-icon>
+                <v-icon color="error">
+                  $fire
+                </v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <span
+                    class="mr-2"
+                  >
+                    {{ preset.name }}:
+                  </span>
+                  <span
+                    v-for="(value, k) in preset.values"
+                    :key="k"
+                    class="mr-2"
+                  >
+                    {{ k }}: {{ value.value }}<small>°C</small>
+                  </span>
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>
+      </v-menu>
+
+      <v-btn
+        v-if="useSmallThermalButtons"
+        :loading="hasWait($waits.onPrintCancel)"
+        :disabled="hasWait([$waits.onPrintCancel, $waits.onPrintResume, $waits.onPrintPause])"
+        fab
+        x-small
+        text
+        class="ms-1 my-1"
+        @click="handleApplyOff"
+      >
+        <v-icon
+          color="info"
+        >
+          $snowflakeAlert
+        </v-icon>
+      </v-btn>
 
       <v-menu
         bottom
@@ -223,6 +300,14 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
       value,
       server: true
     })
+  }
+
+  get useSmallThermalButtons () {
+    return this.$store.state.config.uiSettings.general.useSmallThermalButtons
+  }
+
+  get presets () {
+    return this.$store.getters['config/getTempPresets']
   }
 
   handleApplyPreset (preset: TemperaturePreset) {

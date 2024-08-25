@@ -600,6 +600,7 @@ app:
       min_col_width: Minimum dashboard column width
       use_six_cols: Use 6 instead of 4 dashboard columns
       use_small_status_buttons: Use small print status buttons
+      use_small_thermal_buttons: Use small thermal presets buttons
       dotted: Dotted
       draw_background: Draw Background
       draw_origin: Draw origin

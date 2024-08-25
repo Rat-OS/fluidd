@@ -63,6 +63,7 @@ export const defaultState = (): ConfigState => {
         topNavPowerToggle: null,
         useSixColumns: true,
         useSmallStatusButtons: true,
+        useSmallThermalButtons: true,
         showManualProbeDialogAutomatically: true,
         showBedScrewsAdjustDialogAutomatically: true,
         showScrewsTiltAdjustDialogAutomatically: true,

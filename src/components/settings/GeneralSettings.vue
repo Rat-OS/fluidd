@@ -245,6 +245,18 @@
       <v-divider />
 
       <app-setting
+        :title="$t('app.setting.label.use_small_thermal_buttons')"
+      >
+        <v-switch
+          v-model="useSmallThermalButtons"
+          hide-details
+          class="mt-0 mb-4"
+        />
+      </app-setting>
+
+      <v-divider />
+
+      <app-setting
         :title="$t('app.setting.label.use_six_cols')"
       >
         <v-switch
@@ -442,6 +454,18 @@ export default class GeneralSettings extends Mixins(StateMixin) {
   set useSmallStatusButtons (value: boolean) {
     this.$store.dispatch('config/saveByPath', {
       path: 'uiSettings.general.useSmallStatusButtons',
+      value,
+      server: true
+    })
+  }
+
+  get useSmallThermalButtons () {
+    return this.$store.state.config.uiSettings.general.useSmallThermalButtons
+  }
+
+  set useSmallThermalButtons (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.useSmallThermalButtons',
       value,
       server: true
     })

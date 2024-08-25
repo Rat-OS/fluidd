@@ -106,6 +106,7 @@ export interface GeneralConfig {
   topNavPowerToggle: null | string;
   useSixColumns: boolean;
   useSmallStatusButtons: boolean;
+  useSmallThermalButtons: boolean;
   showManualProbeDialogAutomatically: boolean;
   showBedScrewsAdjustDialogAutomatically: boolean;
   showScrewsTiltAdjustDialogAutomatically: boolean;
