@@ -20,7 +20,7 @@
       </app-btn-collapse-group>
 
       <v-menu
-        v-if="useSmallThermalButtons && presets.length > 0"
+        v-if="useSmallThermalButtons && (presets.length > 0 || (showFilamentProfiles && filamentProfiles.length > 0))"
         bottom
         left
         offset-y
@@ -46,7 +46,7 @@
 
         <v-list dense>
           <span
-            v-if="showFilamentProfiles"
+            v-if="showFilamentProfiles && presets.length > 0"
             class="text--secondary ml-4"
           >
             {{ $t('app.general.title.thermal_presets') }}
@@ -80,9 +80,15 @@
           </template>
 
           <div v-if="showFilamentProfiles">
-            <v-divider class="mb-2 mt-2" />
+            <v-divider
+              v-if="presets.length > 0"
+              class="mb-2 mt-2"
+            />
 
-            <span class="text--secondary ml-4">
+            <span
+              v-if="presets.length > 0"
+              class="text--secondary ml-4"
+            >
               {{ $t('app.general.title.filament_presets') }}
             </span>
             <template v-for="(filament) of filamentProfiles">
