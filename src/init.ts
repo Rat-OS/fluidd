@@ -225,7 +225,8 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
   // if no moonraker config has been loaded check for a default template inside .fluidd-theme folder
   if (!configLoaded) {
     try {
-      const defaultTemplateFile = apiConfig.apiUrl + '/server/files/config/.fluidd-theme/default.json'
+      const now = new Date()
+      const defaultTemplateFile = apiConfig.apiUrl + '/server/files/config/.fluidd-theme/default.json?t=' + now.getTime().toString()
       if (defaultTemplateFile?.length > 0) {
         const backupData = await (await fetch(defaultTemplateFile)).json()
         if (backupData) {
@@ -233,11 +234,26 @@ export const appInit = async (apiConfig?: ApiConfig, hostConfig?: HostConfig): P
             for (const key in backupData.data) {
               if (key !== 'webcams') {
                 await httpClientActions.serverDatabaseItemPost('fluidd', key, backupData.data[key])
-                if (key === 'charts') await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.charts.dispatch, backupData.data[key] || {})
-                if (key === 'console') await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.console.dispatch, backupData.data[key] || {})
-                if (key === 'layout') await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.layout.dispatch, backupData.data[key] || {})
-                if (key === 'macros') await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.macros.dispatch, backupData.data[key] || {})
-                if (key === 'uiSettings') await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.uiSettings.dispatch, backupData.data[key] || {})
+                if (key === 'charts') {
+                  console.error(key)
+                  await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.charts.dispatch, backupData.data[key] || {})
+                }
+                if (key === 'console') {
+                  console.error(key)
+                  await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.console.dispatch, backupData.data[key] || {})
+                }
+                if (key === 'layout') {
+                  console.error(key)
+                  await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.layout.dispatch, backupData.data[key] || {})
+                }
+                if (key === 'macros') {
+                  console.error(key)
+                  await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.macros.dispatch, backupData.data[key] || {})
+                }
+                if (key === 'uiSettings') {
+                  console.error(key)
+                  await store.dispatch(Globals.MOONRAKER_DB.fluidd.ROOTS.uiSettings.dispatch, backupData.data[key] || {})
+                }
               }
             }
           } else {
