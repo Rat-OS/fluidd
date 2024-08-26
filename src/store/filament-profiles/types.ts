@@ -1,7 +1,6 @@
 import type { Macro } from '@/store/macros/types'
 
 export interface FilamentProfilesState {
-  autoLoaded: boolean;
   filamentProfiles: FilamentProfile[];
   filamentSelectDialogState?: FilamentSelectDialogState;
   filamentPrintDialogState?: FilamentPrintDialogState;
