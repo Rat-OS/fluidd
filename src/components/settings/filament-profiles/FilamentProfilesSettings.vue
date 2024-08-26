@@ -68,7 +68,12 @@
               {{ filament.name }}
             </template>
 
-            {{ filament.temp }}<small>°C</small>
+            <span class="mr-4">
+              {{ filament.temp }}<small>°C</small>
+            </span>
+            <span>
+              {{ filament.bed_temp }}<small>°C</small>
+            </span>
             <app-btn
               fab
               text
@@ -168,6 +173,7 @@ export default class FilamentSettings extends Mixins(StateMixin) {
           type: metaData.filament_type,
           name: metaData.filament_name,
           temp: metaData.first_layer_extr_temp,
+          bed_temp: metaData.first_layer_bed_temp,
           visible: true
         })
       }
@@ -185,6 +191,7 @@ export default class FilamentSettings extends Mixins(StateMixin) {
       type: '',
       name: '',
       temp: 0,
+      bed_temp: 0,
       visible: true
     }
     this.dialogState = {

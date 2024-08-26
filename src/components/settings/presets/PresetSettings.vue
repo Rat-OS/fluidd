@@ -57,7 +57,7 @@
               v-for="(value, k) in preset.values"
               v-show="value.active"
               :key="k"
-              class="mr-2"
+              class="mr-4"
             >
               {{ value.value }}<small>°C</small>
             </span>

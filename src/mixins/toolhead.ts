@@ -17,6 +17,7 @@ export type ToolChangeCommand = {
   filament_type?: string,
   filament_name?: string,
   filament_temp?: number
+  filament_bed_temp?: number
 }
 
 export type ToolHeadAlert = {
@@ -304,7 +305,8 @@ export default class ToolheadMixin extends Vue {
           alert: alert ?? undefined,
           filament_type: macro?.variables?.filament_type ?? '',
           filament_name: macro?.variables?.filament_name ?? '',
-          filament_temp: macro?.variables?.filament_temp ?? 0
+          filament_temp: macro?.variables?.filament_temp ?? 0,
+          filament_bed_temp: macro?.variables?.filament_bed_temp ?? 0
         } satisfies ToolChangeCommand
       })
       .sort((a, b) => {

@@ -45,7 +45,10 @@
         </template>
 
         <v-list dense>
-          <span class="text--secondary ml-4">
+          <span
+            v-if="showFilamentProfiles"
+            class="text--secondary ml-4"
+          >
             {{ $t('app.general.title.thermal_presets') }}
           </span>
           <template v-for="(preset) of presets">
@@ -76,34 +79,42 @@
             </v-list-item>
           </template>
 
-          <v-divider class="mb-2 mt-2" />
+          <div v-if="showFilamentProfiles">
+            <v-divider class="mb-2 mt-2" />
 
-          <span class="text--secondary ml-4">
-            {{ $t('app.general.title.filament_presets') }}
-          </span>
-          <template v-for="(filament) of filamentProfiles">
-            <v-list-item
-              :key="`filamentProfile-${filament.id}`"
-              @click="handleApplyFilamentProfile(filament)"
-            >
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-icon
-                    color="error"
-                    class="mb-1 mr-1"
-                  >
-                    $fire
-                  </v-icon>
-                  <span class="mr-2">
-                    {{ filament.name }}
-                  </span>
-                  <span>
-                    {{ filament.temp }}<small>°C</small>
-                  </span>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
+            <span class="text--secondary ml-4">
+              {{ $t('app.general.title.filament_presets') }}
+            </span>
+            <template v-for="(filament) of filamentProfiles">
+              <v-list-item
+                :key="`filamentProfile-${filament.id}`"
+                @click="handleApplyFilamentProfile(filament)"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <v-icon
+                      color="error"
+                      class="mb-1 mr-1"
+                    >
+                      $fire
+                    </v-icon>
+                    <span class="mr-2">
+                      {{ filament.name }}
+                    </span>
+                    <span>
+                      {{ filament.temp }}<small>°C</small>
+                    </span>
+                    <span
+                      v-if="heatBedFromFilamentProfile"
+                      class="ml-2"
+                    >
+                      {{ filament.bed_temp }}<small>°C</small>
+                    </span>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </div>
         </v-list>
       </v-menu>
 
@@ -198,6 +209,33 @@
             <v-list-item-content>
               <v-list-item-title>
                 {{ $t('app.setting.label.show_gas_resistance') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-divider class="my-2" />
+
+          <v-list-item @click="showFilamentProfiles = !showFilamentProfiles">
+            <v-list-item-action class="my-0">
+              <v-checkbox :input-value="showFilamentProfiles" />
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.setting.label.show_filament_profiles') }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item
+            :disabled="!showFilamentProfiles"
+            @click="heatBedFromFilamentProfile = !heatBedFromFilamentProfile"
+          >
+            <v-list-item-action class="my-0">
+              <v-checkbox :input-value="heatBedFromFilamentProfile" />
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ $t('app.setting.label.heat_bed_from_filament_profile') }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -335,6 +373,30 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
     })
   }
 
+  get showFilamentProfiles () {
+    return this.$store.state.config.uiSettings.general.showFilamentProfiles
+  }
+
+  set showFilamentProfiles (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.showFilamentProfiles',
+      value,
+      server: true
+    })
+  }
+
+  get heatBedFromFilamentProfile () {
+    return this.$store.state.config.uiSettings.general.heatBedFromFilamentProfile
+  }
+
+  set heatBedFromFilamentProfile (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.heatBedFromFilamentProfile',
+      value,
+      server: true
+    })
+  }
+
   get useSmallThermalButtons () {
     return this.$store.state.config.uiSettings.general.useSmallThermalButtons
   }
@@ -367,8 +429,11 @@ export default class TemperatureCard extends Mixins(StateMixin, BrowserMixin) {
 
   handleApplyFilamentProfile (filament: FilamentProfile) {
     if (filament) {
-      if (filament.temp) {
+      if (filament.temp && filament.temp > 0) {
         this.sendGcode(`SET_HEATER_TEMPERATURE HEATER=extruder TARGET=${filament.temp}`)
+      }
+      if (this.heatBedFromFilamentProfile && filament.bed_temp && filament.bed_temp > 0) {
+        this.sendGcode(`SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=${filament.bed_temp}`)
       }
     }
   }

@@ -195,6 +195,7 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
     const names: string[] | undefined = metaData.filament_name?.split(';')
     const types: string[] | undefined = metaData.filament_type?.split(';')
     const temp: number | undefined = metaData.first_layer_extr_temp
+    const bed_temp: number | undefined = metaData.first_layer_bed_temp
     if (names && types) {
       for (let i = 0; i < names.length; i++) {
         gcodeFilaments.push({
@@ -203,6 +204,7 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
           type: types[i] ?? '',
           name: names[i] ?? '',
           temp: temp ?? 0,
+          bed_temp: bed_temp ?? 0,
           visible: true
         })
       }
@@ -222,6 +224,7 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
             type: tcc.filament_type ?? '',
             name: tcc.filament_name ?? '',
             temp: tcc.filament_temp ?? 0,
+            bed_temp: tcc.filament_bed_temp ?? 0,
             visible: true
           })
         }
@@ -275,6 +278,7 @@ export default class FilamentProfilePrintDialog extends Mixins(StateMixin, Brows
           type: metaData.filament_type,
           name: metaData.filament_name,
           temp: metaData.first_layer_extr_temp,
+          bed_temp: metaData.first_layer_bed_temp,
           visible: true
         })
       }

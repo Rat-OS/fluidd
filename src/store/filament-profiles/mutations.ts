@@ -59,6 +59,7 @@ export const mutations: MutationTree<FilamentProfilesState> = {
           type: payload.type,
           name: payload.name,
           temp: payload.temp,
+          bed_temp: payload.bed_temp,
           visible: payload.visible
         })
       }
@@ -77,6 +78,7 @@ export const mutations: MutationTree<FilamentProfilesState> = {
             type: types[i].replace(/"/g, ''),
             name: names[i].replace(/"/g, ''),
             temp: payload.temp,
+            bed_temp: payload.bed_temp,
             visible: true
           }
           state.filamentProfiles.push(filamentProfile)

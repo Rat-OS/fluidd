@@ -129,6 +129,7 @@ export default class PrinterStatusCard extends Mixins(StateMixin) {
           type: metaData.filament_type,
           name: metaData.filament_name,
           temp: metaData.first_layer_extr_temp,
+          bed_temp: metaData.first_layer_bed_temp,
           visible: true
         })
       }

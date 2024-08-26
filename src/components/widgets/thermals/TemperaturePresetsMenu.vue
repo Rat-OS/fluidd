@@ -48,7 +48,10 @@
 
       <v-divider class="mb-2 mt-2" />
 
-      <span class="text--secondary ml-4">
+      <span
+        v-if="showFilamentProfiles"
+        class="text--secondary ml-4"
+      >
         {{ $t('app.general.title.thermal_presets') }}
       </span>
       <template v-for="(preset) of presets">
@@ -79,13 +82,20 @@
         </v-list-item>
       </template>
 
-      <v-divider class="mb-2 mt-2" />
+      <v-divider
+        v-if="showFilamentProfiles"
+        class="mb-2 mt-2"
+      />
 
-      <span class="text--secondary ml-4">
+      <span
+        v-if="showFilamentProfiles"
+        class="text--secondary ml-4"
+      >
         {{ $t('app.general.title.filament_presets') }}
       </span>
       <template v-for="(filament) of filamentProfiles">
         <v-list-item
+          v-if="showFilamentProfiles"
           :key="`filamentProfile-${filament.id}`"
           @click="$emit('applyFilamentProfile', filament)"
         >
@@ -102,6 +112,12 @@
               </span>
               <span>
                 {{ filament.temp }}<small>°C</small>
+              </span>
+              <span
+                v-if="heatBedFromFilamentProfile"
+                class="ml-2"
+              >
+                {{ filament.bed_temp }}<small>°C</small>
               </span>
             </v-list-item-title>
           </v-list-item-content>
@@ -129,6 +145,30 @@ export default class TemperaturePresetsMenu extends Mixins(StateMixin) {
     const filaments = this.$store.getters['filamentProfiles/getFilamentProfiles']
     return filaments
       .filter((filament: FilamentProfile) => filament.visible)
+  }
+
+  get showFilamentProfiles () {
+    return this.$store.state.config.uiSettings.general.showFilamentProfiles
+  }
+
+  set showFilamentProfiles (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.showFilamentProfiles',
+      value,
+      server: true
+    })
+  }
+
+  get heatBedFromFilamentProfile () {
+    return this.$store.state.config.uiSettings.general.heatBedFromFilamentProfile
+  }
+
+  set heatBedFromFilamentProfile (value: boolean) {
+    this.$store.dispatch('config/saveByPath', {
+      path: 'uiSettings.general.heatBedFromFilamentProfile',
+      value,
+      server: true
+    })
   }
 }
 </script>

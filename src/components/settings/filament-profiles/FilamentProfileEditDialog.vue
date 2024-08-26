@@ -53,6 +53,25 @@
           @focus="$event.target.select()"
         />
       </app-setting>
+
+      <v-divider />
+
+      <app-setting :title="$t('app.setting.label.filament_preset_bed_temp')">
+        <v-text-field
+          v-model.number="preset.bed_temp"
+          :rules="[
+            $rules.required,
+            $rules.numberValid,
+            $rules.numberGreaterThanOrEqual(0)
+          ]"
+          hide-details="auto"
+          type="number"
+          suffix="°C"
+          filled
+          dense
+          @focus="$event.target.select()"
+        />
+      </app-setting>
     </v-card-text>
   </app-dialog>
 </template>

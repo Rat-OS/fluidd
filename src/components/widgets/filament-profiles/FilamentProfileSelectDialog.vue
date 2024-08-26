@@ -200,6 +200,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
             type: tcc.filament_type ?? '',
             name: tcc.filament_name ?? '',
             temp: tcc.filament_temp ?? 0,
+            bed_temp: tcc.filament_bed_temp ?? 0,
             visible: true
           })
         }
@@ -258,6 +259,7 @@ export default class FilamentProfileSelectDialog extends Mixins(StateMixin, Brow
           type: metaData.filament_type,
           name: metaData.filament_name,
           temp: metaData.first_layer_extr_temp,
+          bed_temp: metaData.first_layer_bed_temp,
           visible: true
         })
       }

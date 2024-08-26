@@ -99,6 +99,8 @@ export interface GeneralConfig {
   showRelativeHumidity: boolean;
   showBarometricPressure: boolean;
   showGasResistance: boolean;
+  heatBedFromFilamentProfile: boolean;
+  showFilamentProfiles: boolean;
   showSaveConfigAndRestart: boolean;
   showUploadAndPrint: boolean;
   flipConsoleLayout: boolean;

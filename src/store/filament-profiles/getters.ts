@@ -12,7 +12,7 @@ export const getters: GetterTree<FilamentProfilesState, RootState> = {
     const allFilamentProfiles = state.filamentProfiles
     const filaments = allFilamentProfiles
       .map(filament => {
-        const { id, order, type, name, temp, visible } = filament
+        const { id, order, type, name, temp, bed_temp, visible } = filament
 
         return {
           id,
@@ -20,6 +20,7 @@ export const getters: GetterTree<FilamentProfilesState, RootState> = {
           type,
           name,
           temp,
+          bed_temp,
           visible
         }
       })

@@ -23,5 +23,6 @@ export interface FilamentProfile {
   type: string;
   name: string;
   temp: number;
+  bed_temp: number;
   visible: boolean;
 }
