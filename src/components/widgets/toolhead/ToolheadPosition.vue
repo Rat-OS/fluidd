@@ -102,7 +102,7 @@
           :disabled="!klippyReady || (!xHomed && !xForceMove)"
           :readonly="printerBusy"
           :value="(useGcodeCoords) ? gcodePosition[0].toFixed(2) : toolheadPosition[0].toFixed(2)"
-          @change="moveTo('X', $event)"
+          @change="moveAxisTo('X', $event)"
           @focus="$event.target.select()"
         />
       </v-col>
@@ -121,7 +121,7 @@
           :disabled="!klippyReady || (!yHomed && !yForceMove)"
           :readonly="printerBusy"
           :value="(useGcodeCoords) ? gcodePosition[1].toFixed(2) : toolheadPosition[1].toFixed(2)"
-          @change="moveTo('Y', $event)"
+          @change="moveAxisTo('Y', $event)"
           @focus="$event.target.select()"
         />
       </v-col>
@@ -140,7 +140,7 @@
           :disabled="!klippyReady || (!zHomed && !zForceMove)"
           :readonly="printerBusy"
           :value="(useGcodeCoords) ? gcodePosition[2].toFixed(2) : toolheadPosition[2].toFixed(2)"
-          @change="moveTo('Z', $event)"
+          @change="moveAxisTo('Z', $event)"
           @focus="$event.target.select()"
         />
       </v-col>
@@ -207,7 +207,7 @@ export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) 
     return this.$store.state.printer.printer.bed_mesh as KlipperBedMesh
   }
 
-  moveTo (axis: string, pos: string) {
+  moveAxisTo (axis: string, pos: string) {
     const axisIndexMap: any = { X: 0, Y: 1, Z: 2 }
     const currentPos = (this.useGcodeCoords)
       ? this.gcodePosition[axisIndexMap[axis]]
@@ -222,10 +222,16 @@ export default class ToolheadPosition extends Mixins(StateMixin, ToolheadMixin) 
           : this.$store.state.printer.printer.toolhead.max_accel
         this.sendGcode(`FORCE_MOVE STEPPER=stepper_${axis.toLowerCase()} DISTANCE=${pos} VELOCITY=${rate} ACCEL=${accel}`)
       } else {
-        this.sendGcode(`G90
-G1 ${axis}${pos} F${rate * 60}`)
+        this.sendMoveGcode(`${axis}${pos}`, rate, true)
       }
     }
   }
 }
 </script>
+
+<style type="scss" scoped>
+  .positioning-toggle-button {
+    min-width: 20px !important;
+    width: 50%;
+  }
+</style>
