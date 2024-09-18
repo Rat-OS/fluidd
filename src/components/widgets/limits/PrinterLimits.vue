@@ -71,15 +71,14 @@
             v-if="minimumCruiseRatio != null"
             v-model="minimumCruiseRatio"
             :label="$t('app.general.label.minimum_cruise_ratio')"
-            suffix="mm/s²"
+            suffix="%"
             overridable
             :reset-value="defaultMinimumCruiseRatio"
             :disabled="!klippyReady"
             :loading="hasWait($waits.onSetMinimumCruiseRatio)"
             :locked="isMobileViewport"
             :min="0"
-            :max="1"
-            :step="0.1"
+            :max="99"
             :input-width="150"
             @submit="setMinimumCruiseRatio"
           />
@@ -183,14 +182,17 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     return defaultMinimumCruiseRatio ?? 0.5
   }
 
-  get minimumCruiseRatio (): number {
-    return this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number
+  get minimumCruiseRatio (): number | undefined {
+    const minimumCruiseRatio = this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number | undefined
+    return minimumCruiseRatio != null
+      ? Math.round(minimumCruiseRatio * 100)
+      : undefined
   }
 
   setMinimumCruiseRatio (value: number) {
     if (value !== this.minimumCruiseRatio_value) {
       this.minimumCruiseRatio_value = value
-      this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${value}`, this.$waits.onSetMinimumCruiseRatio)
+      this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${value / 100}`, this.$waits.onSetMinimumCruiseRatio)
     }
   }
 
