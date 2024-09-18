@@ -3,11 +3,15 @@ const defaultValueRegExp = /\|\s*default\s*\(\s*((["'])(?:\\\2|.)*?\2|-?\d[^,)]*
 
 export const gcodeMacroParamDefault = (param: string) => {
   const valueMatch = defaultValueRegExp.exec(param)
-  let result = ((valueMatch && valueMatch[1]) || '').trim()
-  if (result === "''" || result === '""') {
-    result = ''
+  if (!valueMatch) {
+    return ''
   }
-  return result
+
+  const value = (valueMatch[1] || '').trim()
+
+  return valueMatch[2]
+    ? value.substring(1, value.length - 1)
+    : value
 }
 
 const gcodeMacroParams = (gcode: string) => {
