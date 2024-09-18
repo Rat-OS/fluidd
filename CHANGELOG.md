@@ -2,102 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.31.0-36](https://github.com/Rat-OS/fluidd/compare/v1.31.0-35...v1.31.0-36) (2024-09-13)
-
-## [1.31.0-35](https://github.com/Rat-OS/fluidd/compare/v1.31.0-34...v1.31.0-35) (2024-09-13)
-
-## [1.31.0-34](https://github.com/Rat-OS/fluidd/compare/v1.31.0-33...v1.31.0-34) (2024-08-28)
-
-## [1.31.0-33](https://github.com/Rat-OS/fluidd/compare/v1.31.0-32...v1.31.0-33) (2024-08-26)
-
-## [1.31.0-32](https://github.com/Rat-OS/fluidd/compare/v1.31.0-31...v1.31.0-32) (2024-08-26)
-
-## [1.31.0-31](https://github.com/Rat-OS/fluidd/compare/v1.31.0-30...v1.31.0-31) (2024-08-26)
-
-## [1.31.0-30](https://github.com/Rat-OS/fluidd/compare/v1.31.0-29...v1.31.0-30) (2024-08-25)
-
-## [1.31.0-29](https://github.com/Rat-OS/fluidd/compare/v1.31.0-28...v1.31.0-29) (2024-08-25)
-
-## [1.31.0-28](https://github.com/Rat-OS/fluidd/compare/v1.31.0-27...v1.31.0-28) (2024-08-25)
-
-## [1.31.0-27](https://github.com/Rat-OS/fluidd/compare/v1.31.0-26...v1.31.0-27) (2024-08-25)
-
-## [1.31.0-26](https://github.com/Rat-OS/fluidd/compare/v1.31.0-25...v1.31.0-26) (2024-08-25)
-
-## [1.31.0-25](https://github.com/Rat-OS/fluidd/compare/v1.31.0-24...v1.31.0-25) (2024-08-25)
-
-## [1.31.0-24](https://github.com/Rat-OS/fluidd/compare/v1.31.0-23...v1.31.0-24) (2024-08-24)
-
-## [1.31.0-23](https://github.com/Rat-OS/fluidd/compare/v1.31.0-22...v1.31.0-23) (2024-08-24)
-
-## [1.31.0-22](https://github.com/Rat-OS/fluidd/compare/v1.31.0-21...v1.31.0-22) (2024-08-22)
-
-## [1.31.0-21](https://github.com/Rat-OS/fluidd/compare/v1.31.0-20...v1.31.0-21) (2024-08-22)
-
-## [1.31.0-20](https://github.com/Rat-OS/fluidd/compare/v1.31.0-19...v1.31.0-20) (2024-08-22)
-
-## [1.31.0-19](https://github.com/Rat-OS/fluidd/compare/v1.31.0-18...v1.31.0-19) (2024-08-22)
-
-## [1.31.0-18](https://github.com/Rat-OS/fluidd/compare/v1.31.0-17...v1.31.0-18) (2024-08-22)
-
-## [1.31.0-17](https://github.com/Rat-OS/fluidd/compare/v1.31.0-16...v1.31.0-17) (2024-08-22)
-
-## [1.31.0-16](https://github.com/Rat-OS/fluidd/compare/v1.31.0-15...v1.31.0-16) (2024-08-22)
-
-## [1.31.0-15](https://github.com/Rat-OS/fluidd/compare/v1.31.0-14...v1.31.0-15) (2024-08-22)
-
-## [1.31.0-14](https://github.com/Rat-OS/fluidd/compare/v1.31.0-13...v1.31.0-14) (2024-08-22)
-
-## [1.31.0-13](https://github.com/Rat-OS/fluidd/compare/v1.31.0-12...v1.31.0-13) (2024-08-22)
-
-## [1.31.0-12](https://github.com/Rat-OS/fluidd/compare/v1.31.0-11...v1.31.0-12) (2024-08-22)
-
-## [1.31.0-11](https://github.com/Rat-OS/fluidd/compare/v1.31.0-10...v1.31.0-11) (2024-08-20)
+## [1.30.4](https://github.com/fluidd-core/fluidd/compare/v1.30.3...v1.30.4) (2024-09-12)
 
 
 ### Features
 
-* hides macro parameters starting with "_" ([#1485](https://github.com/Rat-OS/fluidd/issues/1485)) ([872e9d8](https://github.com/Rat-OS/fluidd/commit/872e9d8455cdb82d3e522d61fd6a95e6a8c457b7))
+* don't show quotes on default macro params ([#1487](https://github.com/fluidd-core/fluidd/issues/1487)) ([f0f0764](https://github.com/fluidd-core/fluidd/commit/f0f076450eceb1c41d065a4d1c935842caaccac8))
+* **FileSystem:** Filter KlipperScreen rolled logs ([#1482](https://github.com/fluidd-core/fluidd/issues/1482)) ([48c158f](https://github.com/fluidd-core/fluidd/commit/48c158fd0b0a59002c3216c4cbc9fd113a8d2c80))
+* hides macro parameters starting with "_" ([#1485](https://github.com/fluidd-core/fluidd/issues/1485)) ([872e9d8](https://github.com/fluidd-core/fluidd/commit/872e9d8455cdb82d3e522d61fd6a95e6a8c457b7))
+* **i18n-fr:** Update French translations ([e4567ac](https://github.com/fluidd-core/fluidd/commit/e4567ac4409bf09591754e0edbf08c2580378ccf))
+* **i18n-pt_BR:** Update Portuguese (Brazil) translations ([6c8008a](https://github.com/fluidd-core/fluidd/commit/6c8008a2d6b8e10ad7769ca78395d18c1642416c))
+* **i18n-tr:** Update Turkish translations ([cd73dda](https://github.com/fluidd-core/fluidd/commit/cd73dda48b7cfb7da02afc25ba696c3b47ee12fc))
+* restore positioning mode after extrude/move ([#1492](https://github.com/fluidd-core/fluidd/issues/1492)) ([4418256](https://github.com/fluidd-core/fluidd/commit/441825668ee52febc146d404a94b77cf41164d09))
+* show Minimum Cruise Ratio as percentage ([62fe156](https://github.com/fluidd-core/fluidd/commit/62fe1564faec39370ca7713855dd4d1507c0321b))
 
 
 ### Bug Fixes
 
-* null check cards on layout init ([#1484](https://github.com/Rat-OS/fluidd/issues/1484)) ([3f1d22e](https://github.com/Rat-OS/fluidd/commit/3f1d22ea0e48aa0809461171da2f340c2417382a))
-
-## [1.31.0-10](https://github.com/Rat-OS/fluidd/compare/v1.31.0-9...v1.31.0-10) (2024-08-19)
-
-## [1.31.0-9](https://github.com/Rat-OS/fluidd/compare/v1.31.0-8...v1.31.0-9) (2024-08-19)
-
-## [1.31.0-8](https://github.com/Rat-OS/fluidd/compare/v1.31.0-7...v1.31.0-8) (2024-08-19)
-
-## [1.31.0-7](https://github.com/Rat-OS/fluidd/compare/v1.31.0-6...v1.31.0-7) (2024-08-18)
-
-## [1.31.0-6](https://github.com/Rat-OS/fluidd/compare/v1.31.0-5...v1.31.0-6) (2024-08-18)
-
-## [1.31.0-5](https://github.com/Rat-OS/fluidd/compare/v1.31.0-4...v1.31.0-5) (2024-08-18)
-
-## [1.31.0-4](https://github.com/Rat-OS/fluidd/compare/v1.31.0-3...v1.31.0-4) (2024-08-16)
-
-## [1.31.0-3](https://github.com/Rat-OS/fluidd/compare/v1.31.0-2...v1.31.0-3) (2024-08-16)
-
-
-### Features
-
-* **FileSystem:** Filter KlipperScreen rolled logs ([#1482](https://github.com/Rat-OS/fluidd/issues/1482)) ([48c158f](https://github.com/Rat-OS/fluidd/commit/48c158fd0b0a59002c3216c4cbc9fd113a8d2c80))
-
-
-### Bug Fixes
-
-* don't use separator for gcode macros ([#1483](https://github.com/Rat-OS/fluidd/issues/1483)) ([7ec4626](https://github.com/Rat-OS/fluidd/commit/7ec462600df533aa321d46832da11d3e867a0ef7))
-
-## [1.31.0-2](https://github.com/Rat-OS/fluidd/compare/v1.30.3-1...v1.31.0-2) (2024-08-15)
-
-### [1.30.3-1](https://github.com/Rat-OS/fluidd/compare/v1.31.0-0...v1.30.3-1) (2024-08-15)
-
-
-### Bug Fixes
-
-* Dynamic loading of camera components ([#1479](https://github.com/Rat-OS/fluidd/issues/1479)) ([e6ac387](https://github.com/Rat-OS/fluidd/commit/e6ac387a5e9b93f43daf3a594de4d1f52e1418ba))
+* don't use separator for gcode macros ([#1483](https://github.com/fluidd-core/fluidd/issues/1483)) ([7ec4626](https://github.com/fluidd-core/fluidd/commit/7ec462600df533aa321d46832da11d3e867a0ef7))
+* null check cards on layout init ([#1484](https://github.com/fluidd-core/fluidd/issues/1484)) ([3f1d22e](https://github.com/fluidd-core/fluidd/commit/3f1d22ea0e48aa0809461171da2f340c2417382a))
 
 ## [1.30.3](https://github.com/fluidd-core/fluidd/compare/v1.30.2...v1.30.3) (2024-08-14)
 
