@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0-37](https://github.com/Rat-OS/fluidd/compare/v1.31.0-36...v1.31.0-37) (2024-09-18)
+
+
+### Features
+
+* don't show quotes on default macro params ([#1487](https://github.com/Rat-OS/fluidd/issues/1487)) ([f0f0764](https://github.com/Rat-OS/fluidd/commit/f0f076450eceb1c41d065a4d1c935842caaccac8))
+* **i18n-fr:** Update French translations ([e4567ac](https://github.com/Rat-OS/fluidd/commit/e4567ac4409bf09591754e0edbf08c2580378ccf))
+* **i18n-pt_BR:** Update Portuguese (Brazil) translations ([6c8008a](https://github.com/Rat-OS/fluidd/commit/6c8008a2d6b8e10ad7769ca78395d18c1642416c))
+* **i18n-tr:** Update Turkish translations ([cd73dda](https://github.com/Rat-OS/fluidd/commit/cd73dda48b7cfb7da02afc25ba696c3b47ee12fc))
+* restore positioning mode after extrude/move ([#1492](https://github.com/Rat-OS/fluidd/issues/1492)) ([4418256](https://github.com/Rat-OS/fluidd/commit/441825668ee52febc146d404a94b77cf41164d09))
+* show Minimum Cruise Ratio as percentage ([62fe156](https://github.com/Rat-OS/fluidd/commit/62fe1564faec39370ca7713855dd4d1507c0321b))
+
+
+### Bug Fixes
+
+* no pointer events on images ([8e2c501](https://github.com/Rat-OS/fluidd/commit/8e2c501f844d1d185dcb468ba3960c576da2addc))
+* set Minimum Cruise Ratio maximum to 99% ([0bddef2](https://github.com/Rat-OS/fluidd/commit/0bddef26a72826dd677e4beca4cba4cd48633b46))
+
 ## [1.31.0-36](https://github.com/Rat-OS/fluidd/compare/v1.31.0-35...v1.31.0-36) (2024-09-13)
 
 ## [1.31.0-35](https://github.com/Rat-OS/fluidd/compare/v1.31.0-34...v1.31.0-35) (2024-09-13)
