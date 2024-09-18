@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col class="pa-0 mt-1">
+      <v-col class="pa-0 mt-2">
         <!--
           Inspired on Pronterface and Mainsail Toolhead Circle controls
         -->
@@ -9,7 +9,7 @@
           xmlns="http://www.w3.org/2000/svg"
           width="100%"
           height="100%"
-          viewBox="0 0 426.5 347"
+          viewBox="0 0 414 347"
           class="app-circle-control"
           :class="{
             [$vuetify.theme.dark ? 'theme--dark': 'theme--light']: true,
@@ -43,6 +43,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 25.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[3] }}
             </text>
@@ -76,6 +79,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 60.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[2] }}
             </text>
@@ -109,6 +115,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 95.663)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[1] }}
             </text>
@@ -142,6 +151,9 @@
               :class="zStepClasses"
               transform="translate(382.5, 130.664)"
               text-anchor="middle"
+              :style="{
+                fill: zHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsZ[0] }}
             </text>
@@ -153,6 +165,9 @@
               v-if="printerSupportsLeveling"
               class="cc-btn"
               :class="levelingClasses"
+              :style="{
+                fill: printerBedLeveled ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendLevelingGcode"
             >
               <circle
@@ -161,12 +176,18 @@
                 r="25"
                 class="cc-btn-container"
               />
-              <path d="m396.25,169.25v2.833h-25.5v-2.833h25.5Zm-17.657,12.75h9.815l-4.907-8.5-4.907,8.5Z" />
+              <path
+                :style="!printerBedLeveled ? 'transform: rotate(-15deg); transform-origin: 383.5px 173.5px' : ''"
+                d="m396.25,169.25v2.833h-25.5v-2.833h25.5Zm-17.657,12.75h9.815l-4.907-8.5-4.907,8.5Z"
+              />
             </a>
             <a
               v-else
               class="cc-btn primary"
               :class="motorsOffClasses"
+              :style="{
+                fill: xHomed || yHomed || zHomed || hasSteppersEnabled ? 'black' : 'white'
+              }"
               @click="sendGcode('M84')"
             >
               <circle
@@ -205,6 +226,9 @@
             <a
               class="cc-btn outer"
               :class="yStepClasses"
+              :style="{
+                fill: xyHomed ? 'black' : 'white'
+              }"
               @click="moveAxisBy('Y', stepsXY[3], false)"
             >
               <path
@@ -229,6 +253,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 25.664)"
               text-anchor="middle"
+              :style="{
+                fill: yHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[3] }}
             </text>
@@ -284,6 +311,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 60.664)"
               text-anchor="middle"
+              :style="{
+                fill: yHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[2] }}
             </text>
@@ -339,6 +369,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 95.664)"
               text-anchor="middle"
+              :style="{
+                fill: yHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[1] }}
             </text>
@@ -394,6 +427,9 @@
               :class="xyStepClasses"
               transform="translate(173.5, 130.664)"
               text-anchor="middle"
+              :style="{
+                fill: yHomed ? 'black' : 'white'
+              }"
             >
               {{ stepsXY[0] }}
             </text>
@@ -405,6 +441,9 @@
               v-if="!enableXYHoming"
               class="cc-btn"
               :class="centerToolheadClasses"
+              :style="{
+                fill: allHomed ? $vuetify.theme.dark ? 'black' : 'white' : 'black'
+              }"
               @click="sendMoveCenterGcode()"
             >
               <circle
@@ -420,6 +459,9 @@
               v-else
               class="cc-btn"
               :class="xyzHomeClasses"
+              :style="{
+                fill: allHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="homeAll"
             >
               <circle
@@ -438,6 +480,9 @@
             <a
               class="cc-btn large"
               :class="xHomeClasses"
+              :style="{
+                fill: xHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendGcode('G28 X', $waits.onHomeX)"
             >
               <path
@@ -452,6 +497,9 @@
             <a
               class="cc-btn large"
               :class="yHomeClasses"
+              :style="{
+                fill: yHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendGcode('G28 Y', $waits.onHomeX)"
             >
               <path
@@ -469,6 +517,9 @@
             <a
               class="cc-btn large"
               :class="zHomeClasses"
+              :style="{
+                fill: zHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendGcode('G28 Z', $waits.onHomeZ)"
             >
               <path
@@ -487,6 +538,9 @@
               v-if="enableXYHoming"
               class="cc-btn large"
               :class="xyHomeClasses"
+              :style="{
+                fill: xyHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="sendGcode('G28 X Y', $waits.onHomeXY)"
             >
               <path
@@ -502,6 +556,9 @@
               v-else
               class="cc-btn large"
               :class="xyzHomeClasses"
+              :style="{
+                fill: allHomed ? $vuetify.theme.dark ? 'white' : 'black' : 'black'
+              }"
               @click="homeAll"
             >
               <path
@@ -549,21 +606,6 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   get printerSettings () {
     return this.$store.getters['printer/getPrinterSettings']()
-  }
-
-  get printerSupportsQuadGantryLevel (): boolean {
-    return 'quad_gantry_level' in this.printerSettings
-  }
-
-  get printerSupportsZTiltAdjust (): boolean {
-    return 'z_tilt' in this.printerSettings
-  }
-
-  get printerSupportsLeveling (): boolean {
-    return (
-      this.printerSupportsQuadGantryLevel ||
-      this.printerSupportsZTiltAdjust
-    )
   }
 
   get xStepClasses () {
@@ -679,17 +721,11 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
   }
 
   get levelingClasses () {
-    const [primary, disabled] = this.printerSupportsQuadGantryLevel
-      ? [
-          !this.$store.state.printer.printer.quad_gantry_level?.applied,
-          this.hasWait(this.$waits.onQGL)
-        ]
+    const disabled = this.printerSupportsQuadGantryLevel
+      ? this.hasWait(this.$waits.onQGL)
       : this.printerSupportsZTiltAdjust
-        ? [
-            !this.$store.state.printer.printer.z_tilt?.applied,
-            this.hasWait(this.$waits.onZTilt)
-          ]
-        : []
+        ? this.hasWait(this.$waits.onZTilt)
+        : false
 
     return {
       disabled: (
@@ -698,7 +734,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
         !this.allHomed ||
         disabled
       ),
-      primary
+      primary: !this.printerBedLeveled
     }
   }
 
@@ -763,7 +799,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
     const bedCenter = this.bedCenter
     const rate = this.$store.state.config.uiSettings.general.defaultToolheadXYSpeed
 
-    this.sendMoveGcode(`X${bedCenter.x} Y${bedCenter.y}`, rate, true)
+    this.sendGcode(`G1 X${bedCenter.x} Y${bedCenter.y} F${rate * 60}`)
   }
 }
 </script>
@@ -773,13 +809,13 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   @include theme(app-circle-control) using ($material) {
     .disabled {
-      fill: map-deep-get($material, 'buttons', 'disabled') !important;
+      fill: var(--v-btncolor-darken4) !important;
       stroke: map-deep-get($material, 'buttons', 'disabled') !important;
     }
 
     .cc-btn,
     .cc-lbl {
-      fill: map-deep-get($material, 'text', 'primary');
+      fill: var(--v-btncolor-darken4);
       stroke: map-deep-get($material, 'text', 'primary');
     }
   }
@@ -815,7 +851,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
 
   .app-circle-control {
     font-size: 16px;
-    max-height: 350px;
+    max-height: 400px;
     min-height: 275px;
     user-select: none;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.2)) drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.12));
@@ -869,6 +905,7 @@ export default class ToolheadControlCircle extends Mixins(StateMixin, ToolheadMi
           'var(--v-primary-darken2)',
           'var(--v-primary-darken1)');
       }
+
     }
 
     .cc-section:hover .cc-lbl {

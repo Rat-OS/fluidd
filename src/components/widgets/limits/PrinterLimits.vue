@@ -1,104 +1,101 @@
 <template>
-  <!-- Speed and Flow Adjust -->
+  <!-- Printer Limits -->
   <div>
-    <v-card-text class="mb-0">
+    <v-card-text
+      v-if="klippyReady"
+      class="mb-0 mt-1"
+    >
       <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
           <app-named-slider
+            v-model="velocity"
             :label="$t('app.general.label.velocity')"
-            :value="velocity"
+            :suffix="'mm/s'"
             :reset-value="defaultVelocity"
-            :min="1"
-            :max="defaultVelocity"
             :disabled="!klippyReady"
-            overridable
-            :locked="isMobileViewport"
             :loading="hasWait($waits.onSetVelocity)"
-            suffix="mm/s"
+            :locked="isMobileViewport"
+            :min="0"
+            :max="1000"
+            :step="10"
+            :input-width="150"
             @submit="setVelocity"
           />
         </v-col>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
         >
           <app-named-slider
-            :label="$t('app.general.label.sqv')"
-            :value="squareCornerVelocity"
-            :reset-value="defaultSquareCornerVelocity"
-            :min="0"
-            :max="defaultSquareCornerVelocity"
-            :step="0.1"
-            :disabled="!klippyReady"
-            overridable
-            :locked="isMobileViewport"
-            :loading="hasWait($waits.onSetSquareCornerVelocity)"
-            suffix="mm/s"
-            @submit="setSquareCornerVelocity"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-          md="12"
-          lg="6"
-        >
-          <app-named-slider
+            v-model="accel"
             :label="$t('app.general.label.acceleration')"
-            :value="accel"
-            :reset-value="defaultAccel"
-            :min="1"
-            :max="defaultAccel"
-            :disabled="!klippyReady"
-            overridable
-            :locked="isMobileViewport"
-            :loading="hasWait($waits.onSetAcceleration)"
             suffix="mm/s²"
+            overridable
+            :reset-value="defaultAccel"
+            :disabled="!klippyReady"
+            :loading="hasWait($waits.onSetAcceleration)"
+            :locked="isMobileViewport"
+            :min="0"
+            :max="100000"
+            :step="10"
+            :input-width="150"
             @submit="setAccel"
           />
         </v-col>
+      </v-row>
+      <v-row>
         <v-col
           cols="12"
-          sm="6"
-          md="12"
-          lg="6"
+        >
+          <app-named-slider
+            v-model="squareCornerVelocity"
+            :label="$t('app.general.label.sqv')"
+            :suffix="'mm/s'"
+            overridable
+            :reset-value="defaultSquareCornerVelocity"
+            :disabled="!klippyReady"
+            :loading="hasWait($waits.onSetSquareCornerVelocity)"
+            :locked="isMobileViewport"
+            :min="0"
+            :max="100"
+            :step="1"
+            :input-width="150"
+            @submit="setSquareCornerVelocity"
+          />
+        </v-col>
+        <v-col
+          cols="12"
         >
           <app-named-slider
             v-if="minimumCruiseRatio != null"
+            v-model="minimumCruiseRatio"
             :label="$t('app.general.label.minimum_cruise_ratio')"
-            :value="minimumCruiseRatio"
+            suffix="%"
+            overridable
             :reset-value="defaultMinimumCruiseRatio"
+            :disabled="!klippyReady"
+            :loading="hasWait($waits.onSetMinimumCruiseRatio)"
+            :locked="isMobileViewport"
             :min="0"
             :max="99"
-            :disabled="!klippyReady"
-            :locked="isMobileViewport"
-            :loading="hasWait($waits.onSetMinimumCruiseRatio)"
-            suffix="%"
+            :input-width="150"
             @submit="setMinimumCruiseRatio"
           />
-
           <app-named-slider
-            v-else-if="accelToDecel != null"
+            v-if="accelToDecel != null"
+            v-model="accelToDecel"
             :label="$t('app.general.label.accel_to_decel')"
-            :value="accelToDecel"
-            :reset-value="defaultAccelToDecel"
-            :min="1"
-            :max="defaultAccelToDecel"
-            :disabled="!klippyReady"
-            overridable
-            :locked="isMobileViewport"
-            :loading="hasWait($waits.onSetAccelToDecel)"
             suffix="mm/s²"
+            overridable
+            :reset-value="defaultAccelToDecel"
+            :disabled="!klippyReady"
+            :loading="hasWait($waits.onSetAccelToDecel)"
+            :locked="isMobileViewport"
+            :min="0"
+            :max="100000"
+            :step="10"
+            :input-width="150"
             @submit="setAccelToDecel"
           />
         </v-col>
@@ -114,6 +111,11 @@ import BrowserMixin from '@/mixins/browser'
 
 @Component({})
 export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
+  /**
+   * Velocity
+   */
+  velocity_value = -1
+
   get defaultVelocity (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.max_velocity') as number
   }
@@ -121,6 +123,18 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
   get velocity (): number {
     return this.$store.state.printer.printer.toolhead.max_velocity as number
   }
+
+  setVelocity (value: number) {
+    if (value !== this.velocity_value) {
+      this.velocity_value = value
+      this.sendGcode(`SET_VELOCITY_LIMIT VELOCITY=${value}`, this.$waits.onSetVelocity)
+    }
+  }
+
+  /**
+   * Acceleration
+   */
+  accel_value = -1
 
   get defaultAccel (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.max_accel')
@@ -130,29 +144,62 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     return this.$store.state.printer.printer.toolhead.max_accel as number
   }
 
+  setAccel (value: number) {
+    if (value !== this.accel_value) {
+      this.accel_value = value
+      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL=${value}`, this.$waits.onSetAcceleration)
+    }
+  }
+
+  /**
+   * Acceleration To Deceleration
+   */
+  accelToDecel_value = -1
+
   get defaultAccelToDecel (): number {
     const defaultAccelToDecel = this.$store.getters['printer/getPrinterSettings']('printer.max_accel_to_decel') as number | undefined
-
     return defaultAccelToDecel ?? this.defaultAccel / 2
   }
 
-  get accelToDecel (): number | undefined {
-    return this.$store.state.printer.printer.toolhead.max_accel_to_decel as number | undefined
+  get accelToDecel (): number {
+    return this.$store.state.printer.printer.toolhead.max_accel_to_decel as number
   }
+
+  setAccelToDecel (value: number) {
+    if (value !== this.accelToDecel_value) {
+      this.accelToDecel_value = value
+      this.sendGcode(`SET_VELOCITY_LIMIT ACCEL_TO_DECEL=${value}`, this.$waits.onSetAccelToDecel)
+    }
+  }
+
+  /**
+   * Minimum Cruise Ratio
+   */
+  minimumCruiseRatio_value = -1
 
   get defaultMinimumCruiseRatio (): number {
     const defaultMinimumCruiseRatio = this.$store.getters['printer/getPrinterSettings']('printer.minimum_cruise_ratio') as number | undefined
-
-    return Math.round((defaultMinimumCruiseRatio ?? 0.5) * 100)
+    return defaultMinimumCruiseRatio ?? 0.5
   }
 
   get minimumCruiseRatio (): number | undefined {
     const minimumCruiseRatio = this.$store.state.printer.printer.toolhead.minimum_cruise_ratio as number | undefined
-
     return minimumCruiseRatio != null
       ? Math.round(minimumCruiseRatio * 100)
       : undefined
   }
+
+  setMinimumCruiseRatio (value: number) {
+    if (value !== this.minimumCruiseRatio_value) {
+      this.minimumCruiseRatio_value = value
+      this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${value / 100}`, this.$waits.onSetMinimumCruiseRatio)
+    }
+  }
+
+  /**
+   * Square Corner Velocity
+   */
+  squareCornerVelocity_value = -1
 
   get defaultSquareCornerVelocity (): number {
     return this.$store.getters['printer/getPrinterSettings']('printer.square_corner_velocity') as number || 5
@@ -162,24 +209,11 @@ export default class PrinterLimits extends Mixins(StateMixin, BrowserMixin) {
     return this.$store.state.printer.printer.toolhead.square_corner_velocity as number
   }
 
-  setVelocity (val: number) {
-    this.sendGcode(`SET_VELOCITY_LIMIT VELOCITY=${val}`, this.$waits.onSetVelocity)
-  }
-
-  setAccel (val: number) {
-    this.sendGcode(`SET_VELOCITY_LIMIT ACCEL=${val}`, this.$waits.onSetAcceleration)
-  }
-
-  setAccelToDecel (val: number) {
-    this.sendGcode(`SET_VELOCITY_LIMIT ACCEL_TO_DECEL=${val}`, this.$waits.onSetAccelToDecel)
-  }
-
-  setMinimumCruiseRatio (val: number) {
-    this.sendGcode(`SET_VELOCITY_LIMIT MINIMUM_CRUISE_RATIO=${val / 100}`, this.$waits.onSetMinimumCruiseRatio)
-  }
-
-  setSquareCornerVelocity (val: number) {
-    this.sendGcode(`SET_VELOCITY_LIMIT SQUARE_CORNER_VELOCITY=${val}`, this.$waits.onSetSquareCornerVelocity)
+  setSquareCornerVelocity (value: number) {
+    if (value !== this.squareCornerVelocity_value) {
+      this.squareCornerVelocity_value = value
+      this.sendGcode(`SET_VELOCITY_LIMIT SQUARE_CORNER_VELOCITY=${value}`, this.$waits.onSetSquareCornerVelocity)
+    }
   }
 }
 </script>
